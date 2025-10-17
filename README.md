@@ -6,7 +6,7 @@ Multi-service platform for Iron Foundry an OSRS Clan & Community.
 - [Server Service](https://github.com/Iron-Foundry/discord-server) - Discord bot for Server, User & Flow Management (Tickets, Roles, Channels)
 - [Util Service](https://github.com/Iron-Foundry/discord-utils) - Discord bot with Server & User Utils
 - [Event Service](https://github.com/Iron-Foundry/discord-event) - Discord bot for Event Management & Registry
-- [Api Service](https://github.com/Iron-Foundry/api-backend) - Backend API for all Services
+- [Api Service](https://github.com/Iron-Foundry/api-backend) - Backend API for all Services | FastAPI
 
 ## Frontend (Node.js, React, TS)
 - [Website](https://github.com/Iron-Foundry/web-app) - React web application
