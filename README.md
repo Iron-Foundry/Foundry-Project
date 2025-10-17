@@ -1,33 +1,73 @@
-# Project Overview
+# ⚔️ The Iron Foundry Project
 
-Multi-service platform for Iron Foundry an OSRS Clan & Community.
+> **A comprehensive multi-service project powering the Iron Foundry OSRS Clan & Community**
 
-## Backend Services (Python + UV)
-- [Server Service](https://github.com/Iron-Foundry/discord-server) - Discord bot for Server, User & Flow Management (Tickets, Roles, Channels)
-- [Util Service](https://github.com/Iron-Foundry/discord-utils) - Discord bot with Server & User Utils
-- [Event Service](https://github.com/Iron-Foundry/discord-event) - Discord bot for Event Management & Registry
-- [Api Service](https://github.com/Iron-Foundry/api-backend) - Backend API for all Services | FastAPI
+[![Discord](https://img.shields.io/badge/Discord-Join%20Us-7289da?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ironfoundry)
+[![OSRS](https://img.shields.io/badge/OSRS-Ironman%20Community-cd7f32?style=for-the-badge)](https://ironfoundry.cc)
 
-## Frontend (Node.js, React, TS)
-- [Website](https://github.com/Iron-Foundry/web-app) - React web application
+---
+
+### 🤖 Discord Bot Services
+
+<table>
+<tr>
+<td width="33%">
+
+**🛡️ Server Service**  
+[View Repository →](https://github.com/Iron-Foundry/discord-server)
+
+Core server management including:
+- 🎫 Ticket system
+- 👥 Role management  
+- 📢 Channel automation
+- 🔄 Rank Structure
+
+</td>
+<td width="33%">
+
+**🛠️ Utils Service**  
+[View Repository →](https://github.com/Iron-Foundry/discord-utils)
+</td>
+<td width="33%">
+
+**📅 Events Service**  
+[View Repository →](https://github.com/Iron-Foundry/discord-event)
+</td>
+</tr>
+</table>
+
+**🔌 API Service**  
+[View Repository →](https://github.com/Iron-Foundry/api-backend)
+
+### 🌐 Frontend
+**🎨 Web Application**  
+[View Repository →](https://github.com/Iron-Foundry/web-app)
+
+**📋 Ticket Archive**  
+[View Repository →](https://github.com/Iron-Foundry/ticket-archive)  
+*Secure storage for user support tickets and moderation records*
+
+---
+
+### Project Leadership
+- **SaltisRS** - *Project Owner & Lead Developer*
+
+### Clan Administration
+| Role | Members |
+|------|---------|
+| 👑 **Co-Owners** | Salt • Martyrs |
+| 🌟 **Senior Staff** | aBtw |
+| 🎯 **Event Lead** | Prayer |
+| 📢 **Recruiter** | Fe Gate |
+| ⚖️ **Moderators** | Dunkies • Edgehimville • gfe zanothe • Iron Pyke • Prayer • Fe Gate |
 
 
-## Ticket Repo (private)
-- [Tickets](https://github.com/Iron-Foundry/ticket-archive) - Private repo for archiving user tickets.
 
 
+<div align="center">
 
-### Contributors
-- SaltisRS | Project Owner
+**Built with ❤️ for the Iron Foundry Community**
 
+[Discord](https://discord.gg/ironfoundry) • [Website](https://ironfoundry.cc)
 
-### Clan Staff
-- Salt | Co-owner
-- Martyrs | Co-owner
-- aBtw | Senior Staff
-- Prayer | Moderator, Event Lead
-- Fe Gate | Moderator, Recruiter
-- Dunkies | Moderator
-- Edgehimville | Moderator
-- gfe zanothe | Moderator
-- Iron Pyke | Moderator
+</div>
