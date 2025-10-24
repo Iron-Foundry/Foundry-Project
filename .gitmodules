@@ -1,0 +1,18 @@
+[submodule "web-app"]
+	path = web-app
+	url = https://github.com/Iron-Foundry/web-app
+[submodule "api-backend"]
+	path = api-backend
+	url = https://github.com/Iron-Foundry/api-backend
+[submodule "discord-event"]
+	path = discord-event
+	url = https://github.com/Iron-Foundry/discord-event
+[submodule "discord-server"]
+	path = discord-server
+	url = https://github.com/Iron-Foundry/discord-server
+[submodule "discord-utils"]
+	path = discord-utils
+	url = https://github.com/Iron-Foundry/discord-utils
+[submodule "ticket-archive"]
+	path = ticket-archive
+	url = https://github.com/Iron-Foundry/ticket-archive
