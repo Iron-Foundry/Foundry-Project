@@ -11,7 +11,7 @@
 
 | Service | Repository |
 |---|---|
-| **Server Service** — Core server management including ticket system, role management, channel automation, and rank structure | [View Repository](https://github.com/Iron-Foundry/discord-server) |
+| **Main Service** — Core server management including ticket system, role management, channel automation, and rank structure | [View Repository](https://github.com/Iron-Foundry/discord-server) |
 | **Utils Service** | [View Repository](https://github.com/Iron-Foundry/discord-utils) |
 | **Events Service** | [View Repository](https://github.com/Iron-Foundry/discord-event) |
 | **API Service** | [View Repository](https://github.com/Iron-Foundry/api-backend) |
