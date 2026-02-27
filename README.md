@@ -21,7 +21,6 @@
 | Service | Repository |
 |---|---|
 | **Web Application** | [View Repository](https://github.com/Iron-Foundry/web-app) |
-| **Ticket Archive** — Secure storage for user support tickets and moderation records | [View Repository](https://github.com/Iron-Foundry/ticket-archive) |
 
 ---
 
@@ -34,10 +33,10 @@
 | Role | Members |
 |---|---|
 | **Co-Owners** | Salt, Martyrs |
-| **Senior Staff** | aBtw |
-| **Event Lead** | Prayer |
-| **Recruiter** | Fe Gate |
-| **Moderators** | Dunkies, Edgehimville, gfe zanothe, Iron Pyke, Prayer, Fe Gate |
+| **Senior Staff** | aBtw, Ethamiel |
+| **Event Leads** | Edgeherville, Prayer |
+| **Recruiters** | Fe Gate, Edgeherville |
+| **Moderators** | Dunkies, Gfe zanothe, Iron Pyke, PvM Items, Blowie, Major Mahi|
 
 ---
 
