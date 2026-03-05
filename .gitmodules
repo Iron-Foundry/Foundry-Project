@@ -13,6 +13,3 @@
 [submodule "discord-utils"]
 	path = discord-utils
 	url = https://github.com/Iron-Foundry/discord-utils
-[submodule "ticket-archive"]
-	path = ticket-archive
-	url = https://github.com/Iron-Foundry/ticket-archive

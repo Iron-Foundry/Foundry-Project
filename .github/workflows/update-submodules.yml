@@ -1,0 +1,38 @@
+name: Update submodule reference
+
+on:
+  repository_dispatch:
+    types: [submodule-updated]
+  workflow_dispatch:
+    inputs:
+      submodule:
+        description: "Submodule directory name (e.g. discord-server)"
+        required: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SUBMODULE_PAT }}
+          submodules: true
+
+      - name: Advance submodule pointer
+        run: |
+          SUB="${{ github.event.client_payload.submodule || inputs.submodule }}"
+          if [ -n "$SUB" ]; then
+            git submodule update --remote "$SUB"
+          else
+            git submodule update --remote
+          fi
+
+      - name: Commit and push (if changed)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --staged --quiet && echo "No changes" && exit 0
+          SUB="${{ github.event.client_payload.submodule || inputs.submodule || 'submodules' }}"
+          git commit -m "chore: update ${SUB} submodule reference"
+          git push
