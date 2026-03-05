@@ -52,7 +52,7 @@ triggers a GitHub Actions workflow in this repo that advances the recorded commi
 Clone the repo with all submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/Iron-Foundry/The-Foundry-Project
+git clone --recurse-submodules https://github.com/Iron-Foundry/Foundry-Project
 ```
 
 Or if you've already cloned without submodules:
