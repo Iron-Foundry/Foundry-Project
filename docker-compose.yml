@@ -1,0 +1,116 @@
+services:
+
+  # ── Infrastructure ──────────────────────────────────────────────────
+
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - foundry
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    restart: unless-stopped
+    networks:
+      - foundry
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ── Backend ─────────────────────────────────────────────────────────
+
+  api-backend:
+    build: ./api-backend
+    restart: unless-stopped
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB: ${MONGO_DB}
+      VALKEY_URI: ${VALKEY_URI}
+    networks:
+      - foundry
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+
+  # ── Discord bots ─────────────────────────────────────────────────────
+
+  discord-server:
+    build: ./discord-server
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: ${DISCORD_SERVER_TOKEN}
+      GUILD_ID: ${GUILD_ID}
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB: ${MONGO_DB}
+      STAFF_ROLE_ID: ${STAFF_ROLE_ID}
+      SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
+      OWNER_ROLE_ID: ${OWNER_ROLE_ID}
+      MENTOR_ROLE_ID: ${MENTOR_ROLE_ID}
+    networks:
+      - foundry
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  discord-utils:
+    build: ./discord-utils
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: ${DISCORD_UTILS_TOKEN}
+      GUILD_ID: ${GUILD_ID}
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB: ${MONGO_DB}
+      VALKEY_URI: ${VALKEY_URI}
+      STAFF_ROLE_ID: ${STAFF_ROLE_ID}
+      SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
+    networks:
+      - foundry
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+
+  discord-event:
+    build: ./discord-event
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: ${DISCORD_EVENT_TOKEN}
+      GUILD_ID: ${GUILD_ID}
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB: ${MONGO_DB}
+      STAFF_ROLE_ID: ${STAFF_ROLE_ID}
+      SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
+      OWNER_ROLE_ID: ${OWNER_ROLE_ID}
+    networks:
+      - foundry
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  # ── Frontend ─────────────────────────────────────────────────────────
+
+  web-app:
+    build: ./web-app
+    restart: unless-stopped
+    networks:
+      - foundry
+
+volumes:
+  mongodb_data:
+
+networks:
+  foundry:
+    driver: bridge

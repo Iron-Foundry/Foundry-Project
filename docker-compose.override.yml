@@ -1,0 +1,11 @@
+# Automatically loaded by `docker compose up` for local development.
+# Exposes service ports directly to the host.
+
+services:
+  api-backend:
+    ports:
+      - "8000:8000"
+
+  web-app:
+    ports:
+      - "3000:3000"
