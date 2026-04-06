@@ -9,7 +9,7 @@ services:
       traefik.enable: "true"
       traefik.http.routers.api-backend.rule: "Host(`api.${DOMAIN}`)"
       traefik.http.routers.api-backend.entrypoints: websecure
-      traefik.http.routers.api-backend.tls.certresolver: cf
+      traefik.http.routers.api-backend.tls.certresolver: cloudflare
       traefik.http.services.api-backend.loadbalancer.server.port: "8000"
     networks:
       traefik-shared:
@@ -19,7 +19,7 @@ services:
       traefik.enable: "true"
       traefik.http.routers.web-app.rule: "Host(`${DOMAIN}`)"
       traefik.http.routers.web-app.entrypoints: websecure
-      traefik.http.routers.web-app.tls.certresolver: cf
+      traefik.http.routers.web-app.tls.certresolver: cloudflare
       traefik.http.services.web-app.loadbalancer.server.port: "3000"
     networks:
       traefik-shared:
