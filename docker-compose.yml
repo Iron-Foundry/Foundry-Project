@@ -36,6 +36,9 @@ services:
       MONGO_URI: ${MONGO_URI}
       MONGO_DB: ${MONGO_DB}
       VALKEY_URI: ${VALKEY_URI}
+      WOM_GROUP_ID: ${WOM_GROUP_ID:-}
+      WOM_GROUP_KEY: ${WOM_GROUP_KEY:-}
+      WOM_CLAN_NAME: ${WOM_CLAN_NAME:-Iron Foundry}
     networks:
       - foundry
     depends_on:
