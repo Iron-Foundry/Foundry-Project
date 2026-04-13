@@ -39,6 +39,12 @@ services:
       WOM_GROUP_ID: ${WOM_GROUP_ID:-}
       WOM_GROUP_KEY: ${WOM_GROUP_KEY:-}
       WOM_CLAN_NAME: ${WOM_CLAN_NAME:-Iron Foundry}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      DISCORD_REDIRECT_URI: ${DISCORD_REDIRECT_URI}
+      GUILD_ID: ${GUILD_ID}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
     networks:
       - foundry
     depends_on:
@@ -108,6 +114,8 @@ services:
   web-app:
     build: ./web-app
     restart: unless-stopped
+    environment:
+      BUN_PUBLIC_API_URL: ${API_BACKEND_URL}
     networks:
       - foundry
 
