@@ -83,6 +83,7 @@ services:
     environment:
       DISCORD_TOKEN: ${DISCORD_SERVER_TOKEN}
       GUILD_ID: ${GUILD_ID}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-foundry}
       MONGO_URI: ${MONGO_URI}
       MONGO_DB: ${MONGO_DB}
       STAFF_ROLE_ID: ${STAFF_ROLE_ID}
@@ -92,6 +93,8 @@ services:
     networks:
       - foundry
     depends_on:
+      postgres:
+        condition: service_healthy
       mongodb:
         condition: service_healthy
 
