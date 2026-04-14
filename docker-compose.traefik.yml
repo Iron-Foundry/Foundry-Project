@@ -24,6 +24,16 @@ services:
     networks:
       traefik-shared:
 
+  postgres:
+    labels:
+      traefik.enable: "true"
+      traefik.tcp.routers.postgres.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.postgres.entrypoints: postgres
+      traefik.tcp.routers.postgres.service: postgres
+      traefik.tcp.services.postgres.loadbalancer.server.port: "5432"
+    networks:
+      traefik-shared:
+
 networks:
   traefik-shared:
     external: true
