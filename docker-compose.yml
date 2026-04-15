@@ -104,15 +104,14 @@ services:
     environment:
       DISCORD_TOKEN: ${DISCORD_UTILS_TOKEN}
       GUILD_ID: ${GUILD_ID}
-      MONGO_URI: ${MONGO_URI}
-      MONGO_DB: ${MONGO_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-foundry}
       VALKEY_URI: ${VALKEY_URI}
       STAFF_ROLE_ID: ${STAFF_ROLE_ID}
       SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
     networks:
       - foundry
     depends_on:
-      mongodb:
+      postgres:
         condition: service_healthy
       valkey:
         condition: service_healthy
