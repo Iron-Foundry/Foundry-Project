@@ -25,8 +25,8 @@ triggers a GitHub Actions workflow in this repo that advances the recorded commi
 | Service | Stack | Purpose |
 |---|---|---|
 | **discord-server** | Python 3.14+, discord.py | Core bot — ticket system, role management, action logging, server automation |
-| **discord-utils** | Python 3.13+ | Shared Discord utilities (in development) |
-| **discord-event** | Python 3.13+ | Event management (in development) |
+| **discord-utils** | Python 3.14+, discord.py | Utility bot — temporary voice channels, OTW image generation, clan event relay |
+| **discord-event** | Python 3.13+, discord.py | Event bot — bingo events, team coordination, submission review |
 
 ### Backend & Frontend
 
@@ -71,25 +71,9 @@ Refer to the README in each submodule directory for service-specific setup instr
 |---|---|
 | Python services | Python 3.13+/3.14+, `uv` package manager, Ruff, Pyright |
 | Web app | TypeScript, React 19, Bun, TanStack Router, Tailwind CSS, Shadcn/ui |
-| Database | MongoDB (shared across services) |
+| Database | PostgreSQL (primary, shared across discord-server, discord-utils, api-backend), MongoDB (discord-event), Valkey/Redis (caching) |
 | Quality | Ruff, Mypy/Pyright, Bandit, pre-commit hooks |
 | CI/CD | GitHub Actions |
-
----
-
-## Project Leadership
-
-**SaltisRS** — Project Owner & Lead Developer
-
-## Clan Administration
-
-| Role | Members |
-|---|---|
-| **Co-Owners** | Salt, Martyrs |
-| **Senior Staff** | aBtw, Ethamiel |
-| **Event Leads** | Edgeherville, Prayer |
-| **Recruiters** | Fe Gate, Edgeherville |
-| **Moderators** | Dunkies, Gfe zanothe, Iron Pyke, PvM Items, Blowie, Major Mahi |
 
 ---
 
