@@ -65,6 +65,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       FRONTEND_URL: ${FRONTEND_URL}
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-foundry}
+      DISCORD_PARTY_WEBHOOK_URL: ${DISCORD_PARTY_WEBHOOK_URL:-}
     volumes:
       - uploads_data:/app/uploads
     networks:
