@@ -89,6 +89,7 @@ services:
       SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
       OWNER_ROLE_ID: ${OWNER_ROLE_ID}
       MENTOR_ROLE_ID: ${MENTOR_ROLE_ID}
+      FRONTEND_URL: ${FRONTEND_URL}
     networks:
       - foundry
     depends_on:
