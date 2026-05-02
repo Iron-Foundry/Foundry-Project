@@ -55,6 +55,7 @@ services:
     environment:
       VALKEY_URI: ${VALKEY_URI}
       WOM_GROUP_ID: ${WOM_GROUP_ID:-}
+      WOM_API_KEY: ${WOM_API_KEY:-}
       WOM_GROUP_KEY: ${WOM_GROUP_KEY:-}
       WOM_CLAN_NAME: ${WOM_CLAN_NAME:-Iron Foundry}
       DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
