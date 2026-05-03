@@ -13,7 +13,7 @@ This repository is the monorepo root for The Iron Foundry Project. It tracks fiv
 Git submodules. Each service lives in its own repository under the
 [Iron-Foundry](https://github.com/Iron-Foundry) GitHub organisation.
 
-Submodule references are kept up to date automatically — pushing to `main` in any submodule
+Submodule references are kept up to date automatically - pushing to `main` in any submodule
 triggers a GitHub Actions workflow in this repo that advances the recorded commit pointer.
 
 ---
@@ -24,9 +24,9 @@ triggers a GitHub Actions workflow in this repo that advances the recorded commi
 
 | Service | Stack | Purpose |
 |---|---|---|
-| **discord-server** | Python 3.14+, discord.py | Core bot — ticket system, role management, action logging, server automation |
-| **discord-utils** | Python 3.14+, discord.py | Utility bot — temporary voice channels, OTW image generation, clan event relay |
-| **discord-event** | Python 3.13+, discord.py | Event bot — bingo events, team coordination, submission review |
+| **discord-server** | Python 3.14+, discord.py | Core bot - ticket system, role management, action logging, server automation |
+| **discord-utils** | Python 3.14+, discord.py | Utility bot - temporary voice channels, OTW image generation, clan event relay |
+| **discord-event** | Python 3.13+, discord.py | Event bot - bingo events, team coordination, submission review |
 
 ### Backend & Frontend
 

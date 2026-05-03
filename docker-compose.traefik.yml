@@ -1,4 +1,4 @@
-# Traefik routing overlay — use on top of the base compose file:
+# Traefik routing overlay - use on top of the base compose file:
 #   docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d
 #
 # Requires a running Traefik instance attached to the traefik-shared network.
