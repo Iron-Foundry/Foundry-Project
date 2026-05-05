@@ -1,2 +1,5 @@
 *.claude
 CLAUDE.md
+.ruff_cache
+.env
+.env.local

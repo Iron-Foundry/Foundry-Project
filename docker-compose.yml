@@ -92,6 +92,7 @@ services:
       OWNER_ROLE_ID: ${OWNER_ROLE_ID}
       MENTOR_ROLE_ID: ${MENTOR_ROLE_ID}
       FRONTEND_URL: ${FRONTEND_URL}
+      UPLOADTHING_SECRET: ${UPLOADTHING_SECRET:-}
     networks:
       - foundry
     depends_on:
@@ -136,7 +137,10 @@ services:
   # ── Frontend ─────────────────────────────────────────────────────────
 
   web-app:
-    build: ./web-app
+    build:
+      context: ./web-app
+      args:
+        BUN_PUBLIC_API_URL: ${API_BACKEND_URL}
     restart: unless-stopped
     environment:
       BUN_PUBLIC_API_URL: ${API_BACKEND_URL}
