@@ -13,6 +13,12 @@ get_secret() {
   infisical secrets get "$1" --env="$2" --projectId="$PROJECT_ID" --plain
 }
 
+echo "Ensuring postgres is running..."
+docker compose up -d postgres
+until [ "$(docker inspect --format '{{.State.Health.Status}}' "$(docker compose ps -q postgres)")" = "healthy" ]; do
+  sleep 1
+done
+
 echo "Fetching connection details from Infisical..."
 PROD_USER=$(get_secret POSTGRES_USER prod)
 PROD_PASS=$(get_secret POSTGRES_PASSWORD prod | python3 -c "import sys,urllib.parse; print(urllib.parse.unquote(sys.stdin.read().strip()))")
