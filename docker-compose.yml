@@ -144,6 +144,7 @@ services:
     restart: unless-stopped
     environment:
       BUN_PUBLIC_API_URL: ${API_BACKEND_URL}
+      INTERNAL_API_URL: http://api-backend:8000
     networks:
       - foundry
 
