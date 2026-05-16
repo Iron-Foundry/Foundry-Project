@@ -60,5 +60,8 @@ fi
 
 DATABASE_URL="postgresql+asyncpg://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../api-backend"
+echo "--- Populating user_accounts from users.rsn ---"
+DATABASE_URL="$DATABASE_URL" uv run python scripts/populate_user_accounts.py $DRY_RUN
+echo "--- Reparsing events ---"
 DATABASE_URL="$DATABASE_URL" uv run python scripts/reparse_events.py $DRY_RUN

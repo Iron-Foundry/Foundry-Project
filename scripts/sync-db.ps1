@@ -12,14 +12,20 @@ function Get-Secret {
     infisical secrets get $Name --env=$Env --projectId=$ProjectId --plain
 }
 
-function ConvertTo-UrlEncoded {
-    param([string]$Value)
-    [Uri]::EscapeDataString($Value)
-}
-
-function ConvertFrom-UrlEncoded {
-    param([string]$Value)
-    [Uri]::UnescapeDataString($Value)
+function Wait-TunnelReady {
+    param([int]$Port, [int]$TimeoutSeconds = 30)
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $tcp = [System.Net.Sockets.TcpClient]::new()
+            $tcp.Connect("127.0.0.1", $Port)
+            $tcp.Close()
+            return
+        } catch {
+            Start-Sleep -Milliseconds 500
+        }
+    }
+    throw "Tunnel on port $Port not ready after ${TimeoutSeconds}s"
 }
 
 Write-Host "Ensuring postgres is running..."
@@ -32,27 +38,26 @@ do {
 
 Write-Host "Fetching connection details from Infisical..."
 $ProdUser    = Get-Secret POSTGRES_USER prod
-$ProdPassRaw = ConvertFrom-UrlEncoded (Get-Secret POSTGRES_PASSWORD prod)
+$ProdPassRaw = [Uri]::UnescapeDataString((Get-Secret POSTGRES_PASSWORD prod))
 $ProdDb      = Get-Secret POSTGRES_DB prod
 $DevUser     = Get-Secret POSTGRES_USER dev
 $DevPass     = Get-Secret POSTGRES_PASSWORD dev
 $DevDb       = Get-Secret POSTGRES_DB dev
 
-$SshCtrl = [System.IO.Path]::GetTempFileName()
-Remove-Item $SshCtrl  # ssh -M needs a path, not an existing file
-
 Write-Host "Opening SSH tunnel to prod (passphrase required)..."
 $SshProc = Start-Process ssh -ArgumentList @(
     "-i", "$HOME\.ssh\id_rsa",
-    "-MS", $SshCtrl,
-    "-fNL", "${TunnelPort}:127.0.0.1:5432",
+    "-NL", "${TunnelPort}:127.0.0.1:5432",
     "${SshUser}@${SshHost}"
-) -PassThru -Wait
+) -PassThru -NoNewWindow
+
+Write-Host "Waiting for tunnel..."
+Wait-TunnelReady -Port $TunnelPort
 
 try {
-    $Timestamp  = Get-Date -Format "yyyyMMddHHmmss"
-    $Dump       = "$env:TEMP\foundry-dump-$Timestamp.dump"
-    $LocalDump  = "$env:TEMP\foundry-local-$Timestamp.sql"
+    $Timestamp = Get-Date -Format "yyyyMMddHHmmss"
+    $Dump      = "$env:TEMP\foundry-dump-$Timestamp.dump"
+    $LocalDump = "$env:TEMP\foundry-local-$Timestamp.sql"
 
     $ExcludedTables = @("config", "role_panels", "tickets", "transcripts", "survey_active", "survey_responses")
     $TableArgs      = $ExcludedTables | ForEach-Object { "-t", $_ }
@@ -93,5 +98,7 @@ try {
     Write-Host "Done. Local dev DB synced from prod."
 } finally {
     $env:PGPASSWORD = ""
-    ssh -S $SshCtrl -O exit "${SshUser}@${SshHost}" 2>$null
+    if ($SshProc -and -not $SshProc.HasExited) {
+        $SshProc | Stop-Process -Force
+    }
 }
