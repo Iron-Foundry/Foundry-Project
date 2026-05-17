@@ -75,7 +75,7 @@ try {
 
     Write-Host "Dumping prod DB ($ProdDb)..."
     $env:PGPASSWORD = $ProdPassRaw
-    & /usr/lib/postgresql/17/bin/pg_dump `
+    pg_dump `
         -h 127.0.0.1 -p $TunnelPort `
         -U $ProdUser -d $ProdDb `
         -Fc @ExcludeArgs -f $Dump
