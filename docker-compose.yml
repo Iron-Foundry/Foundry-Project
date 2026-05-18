@@ -88,6 +88,7 @@ services:
       DISCORD_TOKEN: ${DISCORD_SERVER_TOKEN}
       GUILD_ID: ${GUILD_ID}
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-foundry}
+      VALKEY_URI: ${VALKEY_URI}
       STAFF_ROLE_ID: ${STAFF_ROLE_ID}
       SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
       OWNER_ROLE_ID: ${OWNER_ROLE_ID}
@@ -98,6 +99,8 @@ services:
       - foundry
     depends_on:
       postgres:
+        condition: service_healthy
+      valkey:
         condition: service_healthy
 
   discord-utils:
