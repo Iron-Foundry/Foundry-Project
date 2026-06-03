@@ -69,6 +69,7 @@ services:
       FRONTEND_URL: ${FRONTEND_URL}
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-foundry}
       DISCORD_PARTY_WEBHOOK_URL: ${DISCORD_PARTY_WEBHOOK_URL:-}
+      METRICS_API_KEY: ${METRICS_API_KEY}
     volumes:
       - uploads_data:/app/uploads
     networks:
@@ -95,6 +96,8 @@ services:
       MENTOR_ROLE_ID: ${MENTOR_ROLE_ID}
       FRONTEND_URL: ${FRONTEND_URL}
       UPLOADTHING_SECRET: ${UPLOADTHING_SECRET:-}
+      API_BACKEND_URL: http://api-backend:8000
+      METRICS_API_KEY: ${METRICS_API_KEY}
     networks:
       - foundry
     depends_on:
