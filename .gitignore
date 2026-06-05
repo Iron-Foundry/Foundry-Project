@@ -5,3 +5,5 @@ CLAUDE.md
 .env.local
 FRENZY_DESIGN.md
 METRIC_REPORTS.md
+skills-lock.json
+.agents
