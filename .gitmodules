@@ -1,15 +1,15 @@
 [submodule "web-app"]
 	path = web-app
-	url = https://github.com/Iron-Foundry/web-app
+	url = https://codeberg.org/IronFoundry/web-app.git
 [submodule "api-backend"]
 	path = api-backend
-	url = https://github.com/Iron-Foundry/api-backend
+	url = https://codeberg.org/IronFoundry/api-backend.git
 [submodule "discord-event"]
 	path = discord-event
-	url = https://github.com/Iron-Foundry/discord-event
+	url = https://codeberg.org/IronFoundry/discord-event.git
 [submodule "discord-server"]
 	path = discord-server
-	url = https://github.com/Iron-Foundry/discord-server
+	url = https://codeberg.org/IronFoundry/discord-server.git
 [submodule "discord-utils"]
 	path = discord-utils
-	url = https://github.com/Iron-Foundry/discord-utils
+	url = https://codeberg.org/IronFoundry/discord-utils.git
