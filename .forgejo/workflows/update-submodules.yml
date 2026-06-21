@@ -29,8 +29,8 @@ jobs:
 
       - name: Commit and push (if changed)
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "forgejo-actions[bot]"
+          git config user.email "forgejo-actions[bot]@noreply.codeberg.org"
           git add .
           git diff --staged --quiet && echo "No changes" && exit 0
           SUB="${{ github.event.client_payload.submodule || inputs.submodule || 'submodules' }}"
