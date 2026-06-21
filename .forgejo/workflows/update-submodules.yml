@@ -19,20 +19,33 @@ jobs:
           submodules: true
 
       - name: Advance submodule pointer
+        env:
+          SUB_RAW: ${{ github.event.client_payload.submodule || inputs.submodule }}
         run: |
-          SUB="${{ github.event.client_payload.submodule || inputs.submodule }}"
-          if [ -n "$SUB" ]; then
-            git submodule update --remote "$SUB"
+          if [ -n "$SUB_RAW" ]; then
+            case "$SUB_RAW" in
+              *[!a-zA-Z0-9_-]*) echo "Invalid submodule name: $SUB_RAW"; exit 1 ;;
+            esac
+            git submodule update --remote -- "$SUB_RAW"
           else
             git submodule update --remote
           fi
 
       - name: Commit and push (if changed)
+        env:
+          SUB_RAW: ${{ github.event.client_payload.submodule || inputs.submodule }}
         run: |
           git config user.name  "forgejo-actions[bot]"
           git config user.email "forgejo-actions[bot]@noreply.codeberg.org"
           git add .
           git diff --staged --quiet && echo "No changes" && exit 0
-          SUB="${{ github.event.client_payload.submodule || inputs.submodule || 'submodules' }}"
-          git commit -m "chore: update ${SUB} submodule reference"
+          if [ -n "$SUB_RAW" ]; then
+            case "$SUB_RAW" in
+              *[!a-zA-Z0-9_-]*) echo "Invalid submodule name: $SUB_RAW"; exit 1 ;;
+            esac
+            LABEL="$SUB_RAW"
+          else
+            LABEL="submodules"
+          fi
+          git commit -m "chore: update ${LABEL} submodule reference"
           git push
