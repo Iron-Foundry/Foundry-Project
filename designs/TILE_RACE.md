@@ -61,11 +61,21 @@ Core types live in `src/types/tilerace.ts`. The recursive requirement and modifi
 - `dice_count, dice_sides: number` - roll = sum of `dice_count` dice each `1..dice_sides` (sides 1-20, count 1-5)
 - `fog_of_war: boolean`
 - `is_finished: boolean` - set when a team reaches the finish pad; blocks all rolls
+- `signups_open: boolean` - admin gate; when false, new signups are blocked. Existing signups can still be changed or rescinded at any time
 - `winner_team_id: string | null` - team that reached the finish
 - `start_pad, end_pad: BoardPad | null`
 - `background_url?: string` - `background_asset_id` is vestigial (no backend field); clearing nulls the url
 
 **`TileRaceEvent`** extends the summary with `cells[]`, `teams[]`, `signups[]`.
+
+**`TileRaceSignup`**
+- `discord_user_id: string`
+- `account_id: number | null` - chosen linked account (`user_accounts.id`); the signup competes as this account
+- `rsn: string; ranking_score: number` - snapshotted from the chosen account at signup / change time
+- `wants_captain: boolean` - opt-in; `scramble` prefers an opted-in player as each team's captain, else the top score
+- `signed_up_at: string`
+
+Signup is a modal form (`components/events/SignupPanel.tsx`, event-agnostic and reusable): a member picks which linked account to compete with, optionally volunteers to captain, and can change the account or rescind at any time. New signups require `signups_open`.
 
 **`TileRaceTeam`**
 - `id, name, slug, icon_url, color: string`
@@ -87,7 +97,7 @@ Base prefix: `/tilerace/`
 |---|---|---|
 | Public | `/tilerace/active` | GET |
 | Public | `/tilerace/events/:id` | GET |
-| Signup | `/tilerace/events/:id/signup` | POST / DELETE |
+| Signup | `/tilerace/events/:id/signup` | POST `{ account_id?, wants_captain? }` (gated by `signups_open`) / PATCH `{ account_id?, wants_captain? }` (change, any time) / DELETE (rescind, any time) |
 | Repository | `/tilerace/repository` | GET / POST |
 | Repository | `/tilerace/repository/:id` | GET / PATCH / DELETE |
 | Events | `/tilerace/events` | GET / POST |
