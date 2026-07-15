@@ -1,5 +1,5 @@
-*.claude
-CLAUDE.md
+.claude/settings.local.json
+.claude/skills/
 .ruff_cache
 .env
 .env.local
