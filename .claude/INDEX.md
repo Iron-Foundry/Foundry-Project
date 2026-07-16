@@ -15,4 +15,12 @@
 - Secrets via Infisical; keep env changes in the example file + the compose files.
 - Python: `uv` only (`uv add`, `uv run ruff/pytest/pyright`). Web: `bun`.
 
+## Reference repos (D:\claude-git-references)
+- `wise-old-man-repo` — WiseOldMan (github.com/wise-old-man/wise-old-man). Used with `add-metric` skill for WOM metric additions.
+- `clansocket-osrs-cache-extractor-repo` — clansocket OSRS cache extractor. Ground-truth for `osrs-cache-service` 2D item-icon rendering (model lighting/camera/HSL, `app/models/`).
+- `discord.py-repo` — discord.py (github.com/Rapptz/discord.py). Library source for the discord-server/discord-utils/discord-event submodules (commands, app_commands, UI, intents).
+- `cache-mediawiki-repo` — osrs-wiki cache-mediawiki. OSRS cache -> MediaWiki scripts; reference for `osrs-cache-service` cache decode/definition extraction.
+- `osrs-wiki-maps-repo` — osrs-wiki maps tooling. Generates OSRS wiki map images; reference for `osrs-cache-service` map render/tiling.
+- `wom.py-repo` — wom.py (github.com/jonxslays/wom.py). Async Python WiseOldMan API client; reference for WOM endpoints/models (pairs with `wise-old-man-repo`, `add-metric` skill).
+
 <!-- append below: <concern> -> <path> as you discover stable locations -->

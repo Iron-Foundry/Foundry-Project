@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSRS Cache Archives - Reference</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel2: #1d212b; --border: #2a2f3a;
+    --text: #e6e8ec; --muted: #9aa2b1; --accent: #e8a13a; --accent2: #5aa9e6;
+    --green: #4caf7d; --red: #d16a6a; --yellow: #d1b34a;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7f9; --panel: #ffffff; --panel2: #f0f2f5; --border: #d9dde4;
+      --text: #1c2128; --muted: #5a6474; --accent: #b9781a; --accent2: #2f74b5;
+      --green: #2f855a; --red: #b4453f; --yellow: #9a7d1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--border:#2a2f3a;--text:#e6e8ec;
+    --muted:#9aa2b1;--accent:#e8a13a;--accent2:#5aa9e6;--green:#4caf7d;--red:#d16a6a;--yellow:#d1b34a;
+  }
+  :root[data-theme="light"] {
+    --bg:#f6f7f9;--panel:#fff;--panel2:#f0f2f5;--border:#d9dde4;--text:#1c2128;
+    --muted:#5a6474;--accent:#b9781a;--accent2:#2f74b5;--green:#2f855a;--red:#b4453f;--yellow:#9a7d1a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.6 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 80px; }
+  header h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: -0.02em; }
+  header p { color: var(--muted); margin: 0 0 4px; }
+  .verified { display:inline-block; font-size:12px; color:var(--green);
+    border:1px solid var(--border); border-radius:999px; padding:2px 10px; margin-top:8px; }
+  h2 { font-size:19px; margin:38px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  h3 { font-size:15px; margin:22px 0 8px; color:var(--accent); text-transform:uppercase; letter-spacing:.04em; }
+  .scroll { overflow-x:auto; border:1px solid var(--border); border-radius:10px; }
+  table { border-collapse:collapse; width:100%; min-width:640px; background:var(--panel); }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { background:var(--panel2); font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  tr:last-child td { border-bottom:none; }
+  td.id { font-variant-numeric:tabular-nums; color:var(--muted); font-weight:600; }
+  code { background:var(--panel2); border:1px solid var(--border); border-radius:5px;
+    padding:1px 5px; font:13px/1.4 "SF Mono", ui-monospace, Consolas, monospace; }
+  .pill { font-size:11px; font-weight:600; border-radius:999px; padding:2px 8px; white-space:nowrap; }
+  .yes { color:var(--green); border:1px solid var(--green); }
+  .partial { color:var(--yellow); border:1px solid var(--yellow); }
+  .no { color:var(--muted); border:1px solid var(--border); }
+  .v-high { color:var(--accent); font-weight:700; }
+  .v-med { color:var(--accent2); }
+  .v-low { color:var(--muted); }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px 18px; margin:12px 0; }
+  .card.hi { border-left:3px solid var(--accent); }
+  .card h4 { margin:0 0 6px; font-size:15px; }
+  .card h4 code { font-size:13px; }
+  .card p { margin:0; color:var(--muted); font-size:14px; }
+  .note { background:var(--panel2); border:1px solid var(--border); border-radius:8px;
+    padding:12px 14px; color:var(--muted); font-size:13.5px; margin:12px 0; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+  footer { margin-top:48px; color:var(--muted); font-size:13px; border-top:1px solid var(--border); padding-top:16px; }
+  a { color:var(--accent2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>OSRS Cache Archives</h1>
+  <p>Undecoded surface of <code>osrs-cache-service</code> - what each archive holds and whether it is worth decoding.</p>
+  <p><strong>Everything is stored raw in <code>raw_groups</code></strong>; "decoded" means a typed decoder turns bytes into queryable rows.</p>
+  <span class="verified">Verified against RuneLite IndexType + ConfigType</span>
+</header>
+
+<h2>Already typed-decoded</h2>
+<div class="scroll">
+<table>
+  <tr><th>Archive / group</th><th>What</th><th>Coverage</th></tr>
+  <tr><td>2 configs (1,4,6,9,10,14,35)</td><td>underlay, overlay, object, npc, item, varbit, area</td><td><span class="pill partial">partial</span> 7 of 21 groups</td></tr>
+  <tr><td>5 maps</td><td>terrain + object locations</td><td><span class="pill yes">full</span></td></tr>
+  <tr><td>7 models</td><td>3D geometry &rarr; item icons</td><td><span class="pill yes">full</span></td></tr>
+  <tr><td>8 sprites</td><td>UI sprite/icon sheets</td><td><span class="pill yes">full</span></td></tr>
+  <tr><td>9 textures</td><td>group 0, <code>missing_color</code> (avg HSL) only</td><td><span class="pill partial">no image decode</span></td></tr>
+  <tr><td>19 worldmap</td><td>compositemap section defs + placed name labels</td><td><span class="pill partial">labels only</span></td></tr>
+</table>
+</div>
+
+<h2>Top-level archives</h2>
+<p style="color:var(--muted)">RuneLite <code>IndexType</code>, verified against source.</p>
+<div class="scroll">
+<table>
+  <tr><th>ID</th><th>Name</th><th>Decoded</th><th>Contents</th></tr>
+  <tr><td class="id">0</td><td>ANIMATIONS</td><td><span class="pill no">no</span></td><td>per-frame vertex transforms for animated models</td></tr>
+  <tr><td class="id">1</td><td>SKELETONS</td><td><span class="pill no">no</span></td><td>bone/base rigs that frames reference</td></tr>
+  <tr><td class="id">2</td><td>CONFIGS</td><td><span class="pill partial">partial</span></td><td>container of config groups (table below)</td></tr>
+  <tr><td class="id">3</td><td>INTERFACES</td><td><span class="pill no">no</span></td><td>widget / UI panel layout trees</td></tr>
+  <tr><td class="id">4</td><td>SOUNDEFFECTS</td><td><span class="pill no">no</span></td><td>synth sound-effect params</td></tr>
+  <tr><td class="id">5</td><td>MAPS</td><td><span class="pill yes">yes</span></td><td>terrain + object locations per region</td></tr>
+  <tr><td class="id">6</td><td>MUSIC_TRACKS</td><td><span class="pill no">no</span></td><td>full music sequences (MIDI-like)</td></tr>
+  <tr><td class="id">7</td><td>MODELS</td><td><span class="pill yes">yes</span></td><td>3D model geometry</td></tr>
+  <tr><td class="id">8</td><td>SPRITES</td><td><span class="pill yes">yes</span></td><td>2D sprite / icon sheets</td></tr>
+  <tr><td class="id">9</td><td>TEXTURES</td><td><span class="pill partial">partial</span></td><td>texture defs (only avg colour read)</td></tr>
+  <tr><td class="id">10</td><td>BINARY</td><td><span class="pill no">no</span></td><td>loose misc files (huffman table, title assets)</td></tr>
+  <tr><td class="id">11</td><td>MUSIC_JINGLES</td><td><span class="pill no">no</span></td><td>short music stingers</td></tr>
+  <tr><td class="id">12</td><td>CLIENTSCRIPT</td><td><span class="pill no">no</span></td><td>compiled CS2 bytecode</td></tr>
+  <tr><td class="id">13</td><td>FONTS</td><td><span class="pill no">no</span></td><td>bitmap game fonts (glyphs + metrics)</td></tr>
+  <tr><td class="id">14</td><td>MUSIC_SAMPLES</td><td><span class="pill no">no</span></td><td>instrument sample data</td></tr>
+  <tr><td class="id">15</td><td>MUSIC_PATCHES</td><td><span class="pill no">no</span></td><td>instrument patch / soundbank mappings</td></tr>
+  <tr><td class="id">18</td><td>WORLDMAP_GEOGRAPHY</td><td><span class="pill no v-high">no</span></td><td>worldmap area geography (polygon / region data)</td></tr>
+  <tr><td class="id">19</td><td>WORLDMAP</td><td><span class="pill partial">partial</span></td><td>compositemap - sections + placed elements</td></tr>
+  <tr><td class="id">20</td><td>WORLDMAP_GROUND</td><td><span class="pill no">no</span></td><td>worldmap base imagery layer</td></tr>
+  <tr><td class="id">21</td><td>DBTABLEINDEX</td><td><span class="pill no">no</span></td><td>index for DBTABLE / DBROW config data</td></tr>
+  <tr><td class="id">22</td><td>ANIMAYAS</td><td><span class="pill no">no</span></td><td>newer skeletal ("aya") animation system</td></tr>
+  <tr><td class="id">24</td><td>GAMEVALS</td><td><span class="pill no">no</span></td><td>developer gameval symbol names (id &rarr; internal name)</td></tr>
+</table>
+</div>
+<div class="note">Correction to the first pass: the label-placement blocker is <strong>WORLDMAP_GEOGRAPHY (18)</strong>. The compositemap already partly decoded is <strong>WORLDMAP (19)</strong>; <strong>WORLDMAP_GROUND (20)</strong> is a third worldmap archive.</div>
+
+<h2>Config groups inside archive 2</h2>
+<p style="color:var(--muted)">RuneLite <code>ConfigType</code>, verified against source.</p>
+<div class="scroll">
+<table>
+  <tr><th>Group</th><th>Type</th><th>Decoded</th><th>Contents</th><th>Value</th></tr>
+  <tr><td class="id">1</td><td>UNDERLAY</td><td><span class="pill yes">yes</span></td><td>ground base colours</td><td>-</td></tr>
+  <tr><td class="id">3</td><td>IDENTKIT</td><td><span class="pill no">no</span></td><td>player appearance kit parts</td><td class="v-low">low</td></tr>
+  <tr><td class="id">4</td><td>OVERLAY</td><td><span class="pill yes">yes</span></td><td>ground detail colours</td><td>-</td></tr>
+  <tr><td class="id">5</td><td>INV</td><td><span class="pill no">no</span></td><td>inventory / container defs (sizes)</td><td class="v-low">low</td></tr>
+  <tr><td class="id">6</td><td>OBJECT</td><td><span class="pill yes">yes</span></td><td>scenery / loc defs</td><td>-</td></tr>
+  <tr><td class="id">8</td><td>ENUM</td><td><span class="pill no v-high">no</span></td><td>key &rarr; value lookup tables</td><td class="v-high">high</td></tr>
+  <tr><td class="id">9</td><td>NPC</td><td><span class="pill yes">yes</span></td><td>npc defs</td><td>-</td></tr>
+  <tr><td class="id">10</td><td>ITEM</td><td><span class="pill yes">yes</span></td><td>item defs</td><td>-</td></tr>
+  <tr><td class="id">11</td><td>PARAMS</td><td><span class="pill no">no</span></td><td>parameter-type defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">12</td><td>SEQUENCE</td><td><span class="pill no">no</span></td><td>animation sequence defs (frame lists)</td><td class="v-med">med</td></tr>
+  <tr><td class="id">13</td><td>SPOTANIM</td><td><span class="pill no">no</span></td><td>graphic / spell / hit visual defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">14</td><td>VARBIT</td><td><span class="pill yes">yes</span></td><td>packed var bit-field defs</td><td>-</td></tr>
+  <tr><td class="id">15</td><td>VARCLIENTSTRING</td><td><span class="pill no">no</span></td><td>client string var defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">16</td><td>VARPLAYER</td><td><span class="pill no v-high">no</span></td><td>player var (varp) defs</td><td class="v-high">high</td></tr>
+  <tr><td class="id">19</td><td>VARCLIENT</td><td><span class="pill no">no</span></td><td>client var defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">32</td><td>HITSPLAT</td><td><span class="pill no">no</span></td><td>hitsplat visual defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">33</td><td>HEALTHBAR</td><td><span class="pill no">no</span></td><td>health bar visual defs</td><td class="v-low">low</td></tr>
+  <tr><td class="id">34</td><td>STRUCT</td><td><span class="pill no v-high">no</span></td><td>generic param-bag records</td><td class="v-high">high</td></tr>
+  <tr><td class="id">35</td><td>AREA</td><td><span class="pill yes">yes</span></td><td>map area / icon / label defs</td><td>-</td></tr>
+  <tr><td class="id">38</td><td>DBROW</td><td><span class="pill no v-high">no</span></td><td>database row records</td><td class="v-high">high</td></tr>
+  <tr><td class="id">39</td><td>DBTABLE</td><td><span class="pill no v-high">no</span></td><td>database table defs (schema for DBROW)</td><td class="v-high">high</td></tr>
+</table>
+</div>
+
+<h2>Verdict &amp; relevance</h2>
+
+<h3>High value - worth decoding</h3>
+<div class="card hi">
+  <h4>18 &middot; WORLDMAP_GEOGRAPHY <span style="color:var(--accent)">&mdash; #1 priority</span></h4>
+  <p>Geography giving worldmap areas their real extent/anchor. Finishes the in-flight map-label feature: 877 named areas are decoded but not placed, because AREA carries no polygon. Unblocks a feature already half-built.</p>
+</div>
+<div class="grid">
+  <div class="card hi"><h4>2 / 34 &middot; STRUCT</h4><p>Param-bag records; most modern content metadata (item variants, minigame, diary/collection-log config) lives here. Cheap - rides <code>ingest_definitions</code>.</p></div>
+  <div class="card hi"><h4>2 / 8 &middot; ENUM</h4><p>id &rarr; id / id &rarr; value tables the client dereferences everywhere. Resolves many "what does this id map to" joins. Cheap, additive.</p></div>
+  <div class="card hi"><h4>2 / 16,19,15 &middot; VAR*</h4><p>VARPLAYER + VARCLIENT + VARCLIENTSTRING complete the var system started with VARBIT(14). Needed to interpret player state references end to end.</p></div>
+  <div class="card hi"><h4>2 / 38,39 + 21 &middot; DB tables</h4><p>DBROW + DBTABLE + DBTABLEINDEX - Jagex's newer relational data tables (a lot of post-2021 content). Decode all three together.</p></div>
+</div>
+
+<h3>Medium</h3>
+<div class="grid">
+  <div class="card"><h4>2 / 12 &middot; SEQUENCE</h4><p>Animation metadata (frame ids, durations). Useful only if animation ever matters; no current 2D use.</p></div>
+  <div class="card"><h4>24 &middot; GAMEVALS</h4><p>Internal symbolic names for ids. Could enrich admin/debug tooling (human-readable ids); not user-facing.</p></div>
+</div>
+
+<h3>Low / skip unless a feature demands it</h3>
+<div class="card">
+  <p><strong>0 ANIMATIONS, 1 SKELETONS, 22 ANIMAYAS</strong> - only for animated 3D previews; icon render is static-pose.<br>
+  <strong>3 INTERFACES</strong> - widget layouts; large, complex; no current use.<br>
+  <strong>4, 6, 11, 14, 15</strong> - all audio; novelty only for a clan web platform.<br>
+  <strong>10 BINARY</strong> - misc; huffman only relevant to chat decoding (out of scope).<br>
+  <strong>12 CLIENTSCRIPT</strong> - CS2 bytecode; high-effort RE; overkill.<br>
+  <strong>13 FONTS</strong> - authentic RS glyphs; web-app already uses <code>font-rs-*</code> webfonts.<br>
+  <strong>20 WORLDMAP_GROUND</strong> - base imagery; service renders its own tiles from archive 5, so redundant.<br>
+  <strong>2 / 3,5,11,13,32,33</strong> - narrow support/visual defs; no clear project use.</p>
+</div>
+
+<h2>How a decoder would be added</h2>
+<div class="card">
+  <p><strong>Config groups (8/16/34/38/39):</strong> additive, no <code>ingest.py</code> change - new <code>app/definitions/&lt;type&gt;.py</code>, DB model + migration, one <code>registry.py</code> entry.<br><br>
+  <strong>Whole archives (18/20/21):</strong> new <code>ingest_&lt;archive&gt;.py</code> + models + wiring in <code>app/services/ingest.py</code> <code>_ingest_build</code>, following <code>ingest_worldmap.py</code>.<br><br>
+  <strong>Validation:</strong> captured real-group fixture under <code>tests/fixtures/</code> + a full-build pass (0 failures, ids matching the OSRS Wiki).</p>
+</div>
+
+<footer>
+  Reference only - no decoder work planned yet. Source enums: RuneLite
+  <code>net.runelite.cache.IndexType</code> and <code>ConfigType</code>.
+</footer>
+</div>
+</body>
+</html>

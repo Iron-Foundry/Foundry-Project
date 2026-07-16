@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>OSRS Cache Browser</title>
+<style>
+  :root { color-scheme: dark light; }
+  body { font-family: system-ui, sans-serif; margin: 0; background: #14161a; color: #e6e6e6; }
+  header { padding: 12px 20px; background: #1c1f24; border-bottom: 1px solid #2a2e35; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; margin-right: 12px; }
+  nav button { background: none; border: 1px solid #3a3f47; color: #e6e6e6; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  nav button.active { background: #3a5ba0; border-color: #3a5ba0; }
+  input[type=text], select { padding: 6px 10px; border-radius: 6px; border: 1px solid #3a3f47; background: #14161a; color: #e6e6e6; min-width: 220px; }
+  main { padding: 16px 20px; }
+  #meta { color: #9aa0a8; font-size: 13px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #232730; }
+  th { color: #9aa0a8; font-weight: 600; }
+  tr:hover { background: #1c1f24; cursor: pointer; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+  .sprite-cell { text-align: center; background: #1c1f24; border-radius: 6px; padding: 8px; }
+  .sprite-cell img { max-width: 64px; max-height: 64px; image-rendering: pixelated; }
+  .sprite-cell div { font-size: 11px; color: #9aa0a8; margin-top: 4px; }
+  .pager { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+  .pager button { padding: 4px 10px; }
+  #detail { position: fixed; top: 0; right: 0; width: 340px; height: 100%; background: #1c1f24; border-left: 1px solid #2a2e35; padding: 16px; overflow: auto; transform: translateX(100%); transition: transform .15s; }
+  #detail.open { transform: translateX(0); }
+  #detail h2 { margin-top: 0; font-size: 15px; }
+  #detail dl { font-size: 13px; }
+  #detail dt { color: #9aa0a8; margin-top: 6px; }
+  #detail dd { margin: 0; }
+  #detailClose { float: right; cursor: pointer; color: #9aa0a8; }
+</style>
+</head>
+<body>
+<header>
+  <h1>OSRS Cache Browser</h1>
+  <nav>
+    <button data-tab="items" class="active">Items</button>
+    <button data-tab="npcs">NPCs</button>
+    <button data-tab="objects">Objects</button>
+    <button data-tab="sprites">Sprites</button>
+  </nav>
+  <input type="text" id="search" placeholder="Search by name..." />
+  <select id="spriteCategory" style="display:none"><option value="">All categories</option></select>
+</header>
+<main>
+  <div id="meta"></div>
+  <div id="content"></div>
+  <div class="pager">
+    <button id="prev">Prev</button>
+    <span id="pageInfo"></span>
+    <button id="next">Next</button>
+  </div>
+</main>
+<div id="detail"><span id="detailClose">close</span><div id="detailBody"></div></div>
+
+<script>
+const state = { tab: "items", search: "", offset: 0, limit: 50 };
+
+async function api(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function loadMeta() {
+  try {
+    const m = await api("/meta");
+    document.getElementById("meta").textContent =
+      `Cache build ${m.openrs2_cache_id} (game ${m.game_build_major}.${m.game_build_minor ?? 0}) - ` +
+      `${m.item_count} items, ${m.npc_count} npcs, ${m.object_count} objects, ${m.sprite_count} sprites`;
+  } catch (e) {
+    document.getElementById("meta").textContent = "No cache build ingested yet.";
+  }
+}
+
+function iconUrl(spriteId) {
+  return `/sprites/${spriteId}/0?format=png`;
+}
+
+async function loadList() {
+  const content = document.getElementById("content");
+  content.innerHTML = "Loading...";
+  const params = new URLSearchParams({ limit: state.limit, offset: state.offset });
+  if (state.search) params.set("search", state.search);
+
+  if (state.tab === "sprites") {
+    const spriteParams = new URLSearchParams({ limit: state.limit, offset: state.offset });
+    if (state.search) spriteParams.set("search", state.search);
+    const category = document.getElementById("spriteCategory").value;
+    if (category) spriteParams.set("category", category);
+    const rows = await api(`/sprites?${spriteParams}`);
+    content.innerHTML = "";
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    rows.forEach(r => {
+      const cell = document.createElement("div");
+      cell.className = "sprite-cell";
+      cell.innerHTML = `<img src="${r.png_url}" loading="lazy" /><div>${r.name ?? ("#" + r.sprite_id)}</div>`;
+      grid.appendChild(cell);
+    });
+    content.appendChild(grid);
+    document.getElementById("pageInfo").textContent = `offset ${state.offset}`;
+    return;
+  }
+
+  const rows = await api(`/${state.tab}?${params}`);
+  if (rows.length === 0) {
+    content.innerHTML = "<p>No results.</p>";
+    document.getElementById("pageInfo").textContent = `offset ${state.offset}`;
+    return;
+  }
+
+  const idKey = state.tab === "items" ? "item_id" : state.tab === "npcs" ? "npc_id" : "object_id";
+  const table = document.createElement("table");
+  table.innerHTML = `<thead><tr><th>ID</th><th>Name</th></tr></thead>`;
+  const tbody = document.createElement("tbody");
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${r[idKey]}</td><td>${r.name}</td>`;
+    tr.onclick = () => showDetail(r, idKey);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  content.innerHTML = "";
+  content.appendChild(table);
+  document.getElementById("pageInfo").textContent = `offset ${state.offset}`;
+}
+
+function showDetail(row, idKey) {
+  const detail = document.getElementById("detail");
+  const body = document.getElementById("detailBody");
+  let html = `<h2>${row.name} (#${row[idKey]})</h2><dl>`;
+  for (const [k, v] of Object.entries(row)) {
+    if (k === "name" || k === idKey) continue;
+    html += `<dt>${k}</dt><dd>${v === null ? "-" : v}</dd>`;
+  }
+  html += "</dl>";
+  body.innerHTML = html;
+  detail.classList.add("open");
+}
+document.getElementById("detailClose").onclick = () => document.getElementById("detail").classList.remove("open");
+
+async function loadSpriteCategories() {
+  const select = document.getElementById("spriteCategory");
+  try {
+    const cats = await api("/sprites/categories");
+    cats.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.category;
+      opt.textContent = `${c.category} (${c.count})`;
+      select.appendChild(opt);
+    });
+  } catch (e) { /* no build ingested yet */ }
+}
+loadSpriteCategories();
+document.getElementById("spriteCategory").addEventListener("change", () => {
+  state.offset = 0;
+  loadList();
+});
+
+document.querySelectorAll("nav button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.tab = btn.dataset.tab;
+    state.offset = 0;
+    document.getElementById("spriteCategory").style.display = state.tab === "sprites" ? "inline-block" : "none";
+    loadList();
+  };
+});
+
+let searchTimer;
+document.getElementById("search").addEventListener("input", e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.search = e.target.value;
+    state.offset = 0;
+    loadList();
+  }, 250);
+});
+
+document.getElementById("prev").onclick = () => {
+  state.offset = Math.max(0, state.offset - state.limit);
+  loadList();
+};
+document.getElementById("next").onclick = () => {
+  state.offset += state.limit;
+  loadList();
+};
+
+loadMeta();
+loadList();
+</script>
+</body>
+</html>

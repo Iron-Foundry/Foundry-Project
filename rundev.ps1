@@ -12,7 +12,7 @@ param(
 $ErrorActionPreference = "Stop"
 $ScriptDir = $PSScriptRoot
 
-$services = @("mongodb","postgres","valkey","api-backend","discord-server","discord-utils","discord-event") + $ExtraServices
+$services = @("mongodb","postgres","valkey","cache-postgres","api-backend","osrs-cache-service","cache-tiles","discord-server","discord-utils","discord-event") + $ExtraServices
 
 # Start infrastructure + backend services detached
 Write-Host "Starting backend services..." -ForegroundColor Cyan

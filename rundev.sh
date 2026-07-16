@@ -9,7 +9,7 @@ infisical run \
   --projectId=9047f633-a675-497c-8ca2-1e75ffd95db9 \
   --env=dev \
   -- docker compose up -d --build \
-  mongodb postgres valkey api-backend discord-server discord-utils discord-event "$@"
+  mongodb postgres valkey cache-postgres api-backend osrs-cache-service cache-tiles discord-server discord-utils discord-event "$@"
 
 cd "$SCRIPT_DIR/web-app"
 exec infisical run \

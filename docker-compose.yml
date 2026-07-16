@@ -47,6 +47,24 @@ services:
       timeout: 3s
       retries: 5
 
+  cache-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${CACHE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${CACHE_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${CACHE_POSTGRES_DB:-osrs_cache}
+    volumes:
+      - cache_postgres_data:/var/lib/postgresql/data
+    networks:
+      - foundry
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CACHE_POSTGRES_USER} -d ${CACHE_POSTGRES_DB:-osrs_cache}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   # ── Backend ─────────────────────────────────────────────────────────
 
   api-backend:
@@ -71,10 +89,9 @@ services:
       DISCORD_PARTY_WEBHOOK_URL: ${DISCORD_PARTY_WEBHOOK_URL:-}
       IRONCLAD_WEBHOOK_URL: ${IRONCLAD_WEBHOOK_URL:-}
       METRICS_API_KEY: ${METRICS_API_KEY}
-      TILE_SYNC_ON_STARTUP: ${TILE_SYNC_ON_STARTUP:-false}
-      TILE_SYNC_MAX_ZOOM: ${TILE_SYNC_MAX_ZOOM:-9}
-      TILE_SYNC_CONCURRENCY: ${TILE_SYNC_CONCURRENCY:-8}
-      TILE_SYNC_DELAY_MS: ${TILE_SYNC_DELAY_MS:-100}
+      OSRS_CACHE_SERVICE_URL: http://osrs-cache-service:8100
+      API_BACKEND_URL: ${API_BACKEND_URL}
+      MAP_TILES_BASE_URL: ${MAP_TILES_BASE_URL:-}
     volumes:
       - uploads_data:/app/uploads
     networks:
@@ -84,6 +101,42 @@ services:
         condition: service_healthy
       valkey:
         condition: service_healthy
+
+  osrs-cache-service:
+    build: ./osrs-cache-service
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${CACHE_POSTGRES_USER}:${CACHE_POSTGRES_PASSWORD}@cache-postgres:5432/${CACHE_POSTGRES_DB:-osrs_cache}
+      OPENRS2_BASE_URL: ${OPENRS2_BASE_URL:-https://archive.openrs2.org}
+      CACHE_SYNC_INTERVAL_HOURS: ${CACHE_SYNC_INTERVAL_HOURS:-24}
+      SPRITES_DIR: /data/sprites
+      ICONS_DIR: /data/icons
+      RENDERS_DIR: /data/renders
+      MAPS_DIR: /data/maps
+      RENDER_CACHE_TTL_DAYS: ${RENDER_CACHE_TTL_DAYS:-3}
+    volumes:
+      - cache_sprites_data:/data/sprites
+      - cache_icons_data:/data/icons
+      - cache_renders_data:/data/renders
+      - cache_maps_data:/data/maps
+    networks:
+      - foundry
+    depends_on:
+      cache-postgres:
+        condition: service_healthy
+
+  # Static server for baked map tiles - keeps the high-volume tile traffic off the
+  # single-worker cache-service app. Tiles are immutable public files.
+  cache-tiles:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - cache_maps_data:/usr/share/nginx/html/map:ro
+      - ./osrs-cache-service/deploy/tiles.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - foundry
+    depends_on:
+      - osrs-cache-service
 
   # ── Discord bots ─────────────────────────────────────────────────────
 
@@ -164,6 +217,11 @@ volumes:
   mongodb_data:
   postgres_data:
   uploads_data:
+  cache_postgres_data:
+  cache_sprites_data:
+  cache_icons_data:
+  cache_renders_data:
+  cache_maps_data:
 
 networks:
   foundry:

@@ -39,6 +39,7 @@ Correctness
 Memory and process
 
 - `memory_at_start`: read `.claude/memory/MEMORY.md` at session start; it is your durable cross-session memory. Digest: `.claude/rules/memory.md`.
+- `memory_location`: write project memory ONLY to the repo's `.claude/memory/` (index `MEMORY.md`, one fact per `<slug>.md`); never the harness auto-memory path, which is read-only background. Digest: [[memory-location]].
 - `process_adherence`: follow the agreed plan/process exactly; add no steps, no scope, no "while I'm here" work.
 - `auto_update`: when you learn a durable fact or the user corrects you, update the memory file plus its index line (and this section if it is a rule) in the SAME turn, never deferred.
 
@@ -134,3 +135,10 @@ Pulls OSRS game cache builds from the OpenRS2 Archive, decodes the JS5 binary ca
 ### discord-server
 
 Entry `main.py` runs `asyncio.run(main())`. Core: `CommandHandler` (singleton managing the `app_commands.CommandTree`), `discord_client.py` (client setup with all guild intents), and `service_loader.py` / `service_handler.py` (feature loading pattern). Features are self-contained modules under `features/`: account, action_log, broadcast, member, parties, tickets, user_keys.
+
+
+# Research
+
+Commonly accessed repositories for reference or research should be `git clone`'d into `D:\claude-git-references`, consistent naming is key (`<githubrepo>-<repo/gist/etc..>`). Before accessing attempt `git fetch / git pull` to have the most recent data available. You must `AskUserQuestion` before adding a new repository to this reference table. Also update INDEX.md if you see any discrepancies/make changes.
+
+web requests using git cli or curl should be done AFTER the repo references are checked.

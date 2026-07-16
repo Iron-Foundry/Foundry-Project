@@ -5,7 +5,19 @@ services:
   api-backend:
     ports:
       - "8000:8000"
+    environment:
+      # Dev: the browser reaches map tiles via the cache-tiles nginx sidecar on
+      # its host-exposed port, mirroring prod (Python off the tile hot path).
+      MAP_TILES_BASE_URL: http://localhost:8101
 
   web-app:
     ports:
       - "3000:3000"
+
+  osrs-cache-service:
+    ports:
+      - "8100:8100"
+
+  cache-tiles:
+    ports:
+      - "8101:80"

@@ -1,0 +1,33 @@
+[project]
+name = "osrs-cache-service"
+version = "0.0.1"
+description = "OSRS game cache ingestion service for The Foundry Project"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "fastapi[standard]>=0.138.0",
+    "gunicorn>=26.0.0",
+    "httpx>=0.28.1",
+    "loguru>=0.7.3",
+    "numba>=0.66.0",
+    "numpy>=2.4,<2.5",
+    "pillow>=12.3.0",
+    "pydantic>=2.13.4",
+    "sqlalchemy[asyncio]>=2.0.51",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "pyright>=1.1.410",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15",
+]
