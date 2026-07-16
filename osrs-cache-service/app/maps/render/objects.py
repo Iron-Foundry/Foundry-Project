@@ -7,6 +7,11 @@ little tree / rock / stair sprites from objects that carry a map-scene id.
 Coordinates match the terrain flip exactly: a location at (local_x, local_y) draws at
 column ``local_x * scale`` and row ``(REGION_SIZE - size_y - local_y) * scale`` - north
 is up, and multi-tile objects anchor at their northern edge, as in the original.
+
+Objects paint in (local_x, local_y) scan order, matching the original's ``localX``
+outer / ``localY`` inner loop. The locations stream arrives object-id-major, so drawing
+it as-is would occlude overlapping decorations (dense tree canopies) by id instead of
+position; the sort restores the painter order the game uses.
 """
 
 from __future__ import annotations
@@ -50,7 +55,7 @@ def draw_objects(
     scenes: list[np.ndarray],
 ) -> None:
     size = REGION_SIZE * scale
-    for obj in placed:
+    for obj in sorted(placed, key=lambda o: (o.local_x, o.local_y)):
         info = meta.get(obj.object_id)
         if info is None:
             continue
