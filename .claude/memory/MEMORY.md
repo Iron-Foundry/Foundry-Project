@@ -8,3 +8,4 @@
 - [Cache image CORS](cache-image-cors.md) — proxied cache image endpoints must send Access-Control-Allow-Origin:* or cross-origin fetch/canvas loads break
 - [Check refs before asking](check-refs-before-asking.md) — ls D:\claude-git-references before asking to clone a reference repo; runelite-repo etc already present
 - [Icon render debugging](icon-render-debugging.md) — inspect actual rendered pixels via the fast in-container loop before rebuilding; render camera is clansocket auto-fit, NOT zoom2d
+- [OSRS map blank / dead pan-zoom](osrs-map-embed-sizing.md) — dev-only blank + dead pan/zoom was OsrsMap's rAF `rafRef` not nulled on unmount, wedging the loop after StrictMode remount; instrument the loop (drawCanvas never logged) before size/coverage theories
