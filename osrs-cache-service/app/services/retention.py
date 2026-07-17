@@ -133,6 +133,25 @@ def purge_superseded_dirs(current_build_id: int) -> int:
     return removed
 
 
+def remove_build_dirs(build_id: int) -> int:
+    """Deletes exactly one build's directories across every volume.
+
+    For cleaning up after an ingest that raised partway: the transaction rolls
+    back its rows, but the icon/tile/sprite files it already wrote to
+    `{volume}/{build_id}` stay on disk with nothing that will ever reclaim them
+    (retention only runs at startup and after a successful ingest, and no-ops
+    when no build is current). Returns the number of directories removed.
+    """
+    removed = 0
+    for base in _build_dirs():
+        target = Path(base) / str(build_id)
+        if target.is_dir():
+            shutil.rmtree(target, ignore_errors=True)
+            removed += 1
+            logger.info("Removed orphaned build directory {}", target)
+    return removed
+
+
 async def enforce_retention(
     session_factory: async_sessionmaker[AsyncSession],
 ) -> None:

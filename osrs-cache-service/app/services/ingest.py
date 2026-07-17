@@ -32,6 +32,7 @@ from app.services.retention import (
     get_current_build,
     purge_superseded_dirs,
     purge_superseded_rows,
+    remove_build_dirs,
 )
 
 
@@ -58,6 +59,7 @@ async def sync_once(session_factory: async_sessionmaker[AsyncSession]) -> bool:
         disk_zip = tmp_path / "disk.zip"
         await client.download_disk_zip(latest, disk_zip)
         cache_dir = _extract(disk_zip, tmp_path)
+        disk_zip.unlink(missing_ok=True)
         await _ingest_build(session_factory, latest, cache_dir)
     return True
 
@@ -89,51 +91,58 @@ async def _ingest_build(
         await session.flush()
         build_id = build.id
 
-        dat2 = cache_dir / "main_file_cache.dat2"
-        idx_paths = {
-            int(p.suffix[4:]): p
-            for p in cache_dir.glob("main_file_cache.idx*")
-            if p.suffix[4:].isdigit()
-        }
-        with Js5Store(dat2, idx_paths) as store:
-            count = 0
-            for archive in store.archives():
-                for entry in store.groups(archive):
-                    raw = store.read(archive, entry.group)
-                    session.add(
-                        RawGroup(
-                            cache_build_id=build_id,
-                            archive=archive,
-                            group_id=entry.group,
-                            size=entry.size,
-                            sha256=hashlib.sha256(raw).hexdigest(),
-                            data=raw,
+        try:
+            dat2 = cache_dir / "main_file_cache.dat2"
+            idx_paths = {
+                int(p.suffix[4:]): p
+                for p in cache_dir.glob("main_file_cache.idx*")
+                if p.suffix[4:].isdigit()
+            }
+            with Js5Store(dat2, idx_paths) as store:
+                count = 0
+                for archive in store.archives():
+                    for entry in store.groups(archive):
+                        raw = store.read(archive, entry.group)
+                        session.add(
+                            RawGroup(
+                                cache_build_id=build_id,
+                                archive=archive,
+                                group_id=entry.group,
+                                size=entry.size,
+                                sha256=hashlib.sha256(raw).hexdigest(),
+                                data=raw,
+                            )
                         )
-                    )
-                    if archive == SPRITE_ARCHIVE:
-                        ingest_sprite_group(session, build_id, entry.group, raw)
-                    count += 1
-                    if count % 5000 == 0:
-                        await session.flush()
-            logger.info("Ingested {} raw groups for cache build {}", count, cache.id)
-            await session.flush()
+                        if archive == SPRITE_ARCHIVE:
+                            ingest_sprite_group(session, build_id, entry.group, raw)
+                        count += 1
+                        if count % 5000 == 0:
+                            await session.flush()
+                logger.info(
+                    "Ingested {} raw groups for cache build {}", count, cache.id
+                )
+                await session.flush()
 
-            await ingest_definitions(session, build_id, store)
-            await session.flush()
-            await ingest_gamevals(session, build_id, store)
-            await ingest_dbtable_index(session, build_id, store)
-            await session.flush()
-            await ingest_icons(session, build_id, store)
-            await ingest_maps(session, build_id, store)
-            await session.flush()
-            await ingest_worldmap(session, build_id, store)
-            await session.flush()
-            await ingest_map_tiles(session, build_id, store)
+                await ingest_definitions(session, build_id, store)
+                await session.flush()
+                await ingest_gamevals(session, build_id, store)
+                await ingest_dbtable_index(session, build_id, store)
+                await session.flush()
+                await ingest_icons(session, build_id, store)
+                await ingest_maps(session, build_id, store)
+                await session.flush()
+                await ingest_worldmap(session, build_id, store)
+                await session.flush()
+                await ingest_map_tiles(session, build_id, store)
 
-        build.status = "complete"
-        build.is_current = True
-        await purge_superseded_rows(session, build_id)
-        await session.commit()
+            build.status = "complete"
+            build.is_current = True
+            await purge_superseded_rows(session, build_id)
+            await session.commit()
+        except BaseException:
+            await session.rollback()
+            await asyncio.to_thread(remove_build_dirs, build_id)
+            raise
 
         await asyncio.to_thread(purge_superseded_dirs, build_id)
         logger.info("Cache build {} is now current", cache.id)
