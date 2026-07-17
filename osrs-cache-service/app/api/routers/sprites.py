@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import io
 from pathlib import Path as FsPath
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, HTTPException, Path, Query
+from fastapi import APIRouter, HTTPException, Path, Query, Response
 from fastapi.responses import FileResponse
+from PIL import Image
 from sqlalchemy import func, select
 
 from app.api.dependencies import CurrentBuildDep, SessionDep
@@ -13,6 +15,8 @@ from app.config import SPRITES_DIR
 from app.db.models import Sprite
 
 router = APIRouter(prefix="/sprites", tags=["sprites"])
+
+MAX_SPRITE_SCALE = 32
 
 
 def _to_out(sprite: Sprite) -> SpriteOut:
@@ -91,7 +95,8 @@ async def get_sprite_image(
     session: SessionDep,
     build_id: CurrentBuildDep,
     format: Annotated[Literal["png", "webp"], Query()] = "png",
-) -> FileResponse:
+    scale: Annotated[int | None, Query(ge=1, le=MAX_SPRITE_SCALE)] = None,
+) -> Response:
     result = await session.execute(
         select(Sprite).where(
             Sprite.cache_build_id == build_id,
@@ -108,4 +113,20 @@ async def get_sprite_image(
     if not file_path.is_file():
         raise HTTPException(status_code=404, detail="Sprite file missing on disk")
     media_type = "image/png" if format == "png" else "image/webp"
-    return FileResponse(file_path, media_type=media_type)
+    if scale is None or scale == 1:
+        return FileResponse(file_path, media_type=media_type)
+
+    return Response(
+        content=_scale_nearest(file_path, format, scale), media_type=media_type
+    )
+
+
+def _scale_nearest(file_path: FsPath, format: str, scale: int) -> bytes:
+    image = Image.open(file_path)
+    image = image.resize(
+        (image.width * scale, image.height * scale), Image.Resampling.NEAREST
+    )
+    buf = io.BytesIO()
+    save_kwargs = {"lossless": True} if format == "webp" else {}
+    image.save(buf, format=format.upper(), **save_kwargs)
+    return buf.getvalue()
