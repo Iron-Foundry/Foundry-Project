@@ -6,7 +6,7 @@ import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 OPENRS2_BASE_URL = os.getenv("OPENRS2_BASE_URL", "https://archive.openrs2.org")
-CACHE_SYNC_INTERVAL_HOURS = float(os.getenv("CACHE_SYNC_INTERVAL_HOURS", "24"))
+CACHE_SYNC_INTERVAL_HOURS = float(os.getenv("CACHE_SYNC_INTERVAL_HOURS", "0.5"))
 CACHE_SCOPE = os.getenv("OPENRS2_CACHE_SCOPE", "runescape")
 SPRITES_DIR = os.getenv("SPRITES_DIR", "/data/sprites")
 SPRITE_ARCHIVE = int(os.getenv("OSRS_SPRITE_ARCHIVE", "8"))

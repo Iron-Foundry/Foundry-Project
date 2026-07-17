@@ -184,9 +184,13 @@ is load-bearing: the kernel discards texels with alpha < 128 (the client's
 is holes, the magic-log texture is a ~94%-transparent sparkle overlay - and drawing
 those texels opaque paints them solid black. Two knobs are calibrated by
 unit test but only visually confirmable against a live render: the U/V axis orientation
-(P->M vs P->N) and the 64-vs-128 texture resolution. The on-demand `/item-icons/{id}/render`
-path is still untextured (it has no cache store at request time); only the baked
-`item_icons` are textured. `ingest_icons.py` renders every item with a
+(P->M vs P->N) and the 64-vs-128 texture resolution. The on-demand
+`/item-icons/{id}/render` path (`render_cache.py`) renders through the same textured
+`render_icon`/`render_from_geometry` as the baked path, just sourced differently -
+`texture_loader.load_textures_from_db` rebuilds the texture table from `raw_groups`
+over the DB session instead of a live `Js5Store` (this request path has no cache file
+access), and `texture_cache.py` memoizes it per build so it isn't rebuilt per request.
+`ingest_icons.py` renders every item with a
 non-null `inventory_model` (19,419/33,743 in cache build 2620 - the rest are
 noted/placeholder/currency items with no visual model at all) into the `ICONS_DIR`
 volume (`/data/icons` in Docker), indexed in the `item_icons` table, same

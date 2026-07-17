@@ -7,6 +7,13 @@ constraint - see osrs-cache-service/CLAUDE.md) rather than run inline, keeping
 the request non-blocking for the rest of the gunicorn worker. Successful
 renders are cached as a DB row + WebP file with a short expiry so repeat
 requests for the same (item, size) are a pure file read.
+
+Uses the same textured rasterizer as the baked `item_icons` bulk ingest (see
+icon_worker.py) rather than a cut-down untextured path - texture images are
+loaded from `raw_groups` (the DB is all this request path has; there's no live
+Js5Store) via `texture_cache.get_cached_textures`, memoized per build so
+rebuilding the table (a couple hundred sprite decodes) doesn't happen on every
+request.
 """
 
 from __future__ import annotations
@@ -23,6 +30,7 @@ from app.config import MODEL_ARCHIVE, RENDER_CACHE_TTL_DAYS, RENDERS_DIR
 from app.db.models import Item, ItemIconRender, RawGroup
 from app.models.render_export import export_render
 from app.services.render_worker import render_item_at_size
+from app.services.texture_cache import get_cached_textures
 
 
 class RenderNotAvailableError(RuntimeError):
@@ -63,6 +71,8 @@ async def get_or_render_item_icon(
             f"model {item.inventory_model} not found in cache build"
         )
 
+    textures = await get_cached_textures(session, build_id)
+
     loop = asyncio.get_running_loop()
     canvas = await loop.run_in_executor(
         pool,
@@ -83,6 +93,7 @@ async def get_or_render_item_icon(
         item.color_find,
         item.color_replace,
         size,
+        textures,
     )
 
     relative_path = export_render(item_id, size, canvas, build_id)

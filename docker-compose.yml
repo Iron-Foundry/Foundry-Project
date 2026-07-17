@@ -123,7 +123,7 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://${CACHE_POSTGRES_USER}:${CACHE_POSTGRES_PASSWORD}@cache-postgres:5432/${CACHE_POSTGRES_DB:-osrs_cache}
       OPENRS2_BASE_URL: ${OPENRS2_BASE_URL:-https://archive.openrs2.org}
-      CACHE_SYNC_INTERVAL_HOURS: ${CACHE_SYNC_INTERVAL_HOURS:-24}
+      CACHE_SYNC_INTERVAL_HOURS: ${CACHE_SYNC_INTERVAL_HOURS:-0.5}
       SPRITES_DIR: /data/sprites
       ICONS_DIR: /data/icons
       RENDERS_DIR: /data/renders

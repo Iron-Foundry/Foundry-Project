@@ -10,6 +10,8 @@ no open file handles, nothing tied to the parent process's event loop.
 
 from __future__ import annotations
 
+import numpy as np
+
 from app.js5.container import decompress
 from app.models.loader import decode_model
 from app.models.rasterizer import render_icon
@@ -32,6 +34,7 @@ def render_item_at_size(
     color_find: list[int] | None,
     color_replace: list[int] | None,
     canvas_size: int,
+    textures: dict[int, np.ndarray] | None,
 ) -> bytes:
     model_data = decompress(raw_model_bytes).data
     model = decode_model(model_id, model_data)
@@ -51,4 +54,5 @@ def render_item_at_size(
         color_find=color_find,
         color_replace=color_replace,
         canvas_size=canvas_size,
+        textures=textures,
     )
