@@ -9,3 +9,5 @@
 - [Check refs before asking](check-refs-before-asking.md) — ls D:\claude-git-references before asking to clone a reference repo; runelite-repo etc already present
 - [Icon render debugging](icon-render-debugging.md) — inspect actual rendered pixels via the fast in-container loop before rebuilding; render camera is clansocket auto-fit, NOT zoom2d
 - [OSRS map blank / dead pan-zoom](osrs-map-embed-sizing.md) — dev-only blank + dead pan/zoom was OsrsMap's rAF `rafRef` not nulled on unmount, wedging the loop after StrictMode remount; instrument the loop (drawCanvas never logged) before size/coverage theories
+- [No commit co-author](no-commit-coauthor.md) — never add a Claude/Anthropic Co-Authored-By trailer to commits or PRs; user rejects anything that does
+- [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit

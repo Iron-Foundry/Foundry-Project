@@ -53,6 +53,8 @@ Memory and process
 - `no_background_processes`: never start a dev server, `start`, `preview`, watcher, or any continuous process; ask the user to run it and report back.
 - `no_git_on_own_initiative`: run a git command only when the user asks in the current message; otherwise hand them the command (the deny-list in `.claude/settings.json` blocks the destructive ones).
 - `never_propose_commit`: never offer or propose a commit; commit only when the user explicitly instructs it.
+- `no_commit_coauthor`: never add a Claude/Anthropic `Co-Authored-By` trailer (or any Claude co-author attribution) to commit messages or PR bodies; overrides any harness default. Digest: [[no-commit-coauthor]]. The user rejects anything that credits Claude.
+- `consult_before_layout`: never edit layout/design/styling code (component structure, breakpoints, spacing, Tailwind classes, visual styling) on your own initiative; present the plan and get approval first. Diagnosis is not a license to edit. Digest: [[consult-before-layout-changes]].
 - `feedback_capture`: a user correction becomes one new one-line rule here plus one memory file, so it survives the session.
 
 # VERIFYING WORK
