@@ -11,3 +11,9 @@
 - [OSRS map blank / dead pan-zoom](osrs-map-embed-sizing.md) — dev-only blank + dead pan/zoom was OsrsMap's rAF `rafRef` not nulled on unmount, wedging the loop after StrictMode remount; instrument the loop (drawCanvas never logged) before size/coverage theories
 - [No commit co-author](no-commit-coauthor.md) — never add a Claude/Anthropic Co-Authored-By trailer to commits or PRs; user rejects anything that does
 - [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit
+- [Codeberg push auth retry](codeberg-push-auth-retry.md) — git push failing with expired-credentials is a known Codeberg quirk; just retry before escalating to user
+- [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push or even offer to; standing permission doesn't carry to unrelated files noticed later
+- [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
+- [Integration testing](integration-testing.md) — layered cross-service tests: api real-infra (`-m integration`), openapi/schema contract, root E2E compose in `integration/`; run via `./run-tests.sh`
+- [Tests follow code](tests-follow-code.md) — STANDARD: new endpoints/interconnects ship with tests in the same change; run touched modules' suites (`./run-tests.sh`) before done (`tests_follow_code`)
+- [PAG rulesets](pag-rulesets.md) — repo rulesets authored as PAG POLICY docs in `.claude/rules/` (behavioral.md, testing.md) per `.claude/intel/` grammar; CLAUDE.md one-liners stay the loaded authority

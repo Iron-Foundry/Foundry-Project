@@ -1,0 +1,11 @@
+{
+  "service_name": "discord-server",
+  "module_name": "tickets",
+  "uptime_seconds": 3600,
+  "is_healthy": true,
+  "metrics": {
+    "open_count": 5,
+    "closed_today": 2,
+    "avg_resolution_seconds_30d": 1800
+  }
+}

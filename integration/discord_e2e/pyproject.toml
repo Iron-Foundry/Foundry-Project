@@ -1,0 +1,18 @@
+[project]
+name = "foundry-discord-e2e"
+version = "0.0.0"
+description = "End-to-end tests for the discord -> api and api -> runelite seams"
+requires-python = ">=3.13"
+dependencies = [
+    "anyio>=4.11.0",
+    "asyncpg>=0.31.0",
+    "httpx>=0.28.1",
+    "pyjwt>=2.10.0",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.4.0",
+    "websockets>=15.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

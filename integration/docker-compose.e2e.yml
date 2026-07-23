@@ -1,0 +1,77 @@
+# Self-contained end-to-end stack for cross-service integration tests.
+# Brings up Postgres + Valkey + api-backend + web-app with throwaway test
+# credentials, exposing api (8000), web (3000) and postgres (5432) to the host
+# so the Playwright (web -> api -> DB) and discord_e2e (discord -> api,
+# api -> runelite) suites can drive the running stack.
+#
+#   docker compose -f integration/docker-compose.e2e.yml up --build -d
+#
+# The api-backend image applies Alembic migrations on boot (see its Dockerfile),
+# so the schema is ready without a separate migrate step.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: foundry
+      POSTGRES_PASSWORD: foundry
+      POSTGRES_DB: foundry
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks: [e2e]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foundry -d foundry"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    networks: [e2e]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api-backend:
+    build: ../api-backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://foundry:foundry@postgres:5432/foundry
+      VALKEY_URI: redis://valkey:6379
+      FRONTEND_URL: http://localhost:3000
+      JWT_SECRET: e2e-test-secret-e2e-test-secret-01
+      METRICS_API_KEY: e2e-metrics-key
+      DISCORD_CLIENT_ID: e2e
+      DISCORD_CLIENT_SECRET: e2e
+      DISCORD_REDIRECT_URI: http://localhost:3000/auth/callback
+      GUILD_ID: "1"
+      DISCORD_SERVER_TOKEN: e2e
+      API_BACKEND_URL: http://localhost:8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks: [e2e]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+
+  web-app:
+    build:
+      context: ../web-app
+      args:
+        BUN_PUBLIC_API_URL: http://localhost:8000
+    environment:
+      BUN_PUBLIC_API_URL: http://localhost:8000
+      INTERNAL_API_URL: http://api-backend:8000
+      SITE_URL: http://localhost:3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks: [e2e]
+    depends_on:
+      - api-backend
+
+networks:
+  e2e:
+    driver: bridge

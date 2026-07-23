@@ -1,0 +1,12 @@
+{
+  "name": "foundry-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "browser": "playwright install chromium",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}

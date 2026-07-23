@@ -1,0 +1,66 @@
+name: End-to-end integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: codeberg-small
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Bring up the stack
+        run: docker compose -f integration/docker-compose.e2e.yml up --build -d
+
+      - name: Wait for api and web to be ready
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8000/health >/dev/null \
+               && curl -sf http://localhost:3000/ >/dev/null; then
+              echo "stack ready"; exit 0
+            fi
+            sleep 3
+          done
+          echo "stack did not become ready in time"
+          docker compose -f integration/docker-compose.e2e.yml logs --tail=100
+          exit 1
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Playwright (web -> api -> DB)
+        working-directory: integration/e2e
+        env:
+          E2E_BASE_URL: http://localhost:3000
+          E2E_API_URL: http://localhost:8000
+        run: |
+          bun install
+          bunx playwright install --with-deps chromium
+          bun run test
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: discord_e2e (discord -> api, api -> runelite)
+        working-directory: integration/discord_e2e
+        env:
+          E2E_API_URL: http://localhost:8000
+          E2E_DB_DSN: postgresql://foundry:foundry@localhost:5432/foundry
+          E2E_METRICS_API_KEY: e2e-metrics-key
+        run: |
+          uv sync
+          uv run pytest
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f integration/docker-compose.e2e.yml down -v

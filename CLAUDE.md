@@ -17,7 +17,7 @@ Read when a session or task begins its domain:
 
 # BEHAVIORAL RULES
 
-Each rule is one line, `` `slug`: directive ``; the slug is its stable name.
+Each rule is one line, `` `slug`: directive ``; the slug is its stable name. These one-liners are the loaded, highest-precedence authority; their canonical PAG `POLICY` expression (same slugs) is `.claude/rules/behavioral.md`, kept out of this file to preserve load-time frugality (`# AXIOM`).
 
 ## Always (every turn)
 
@@ -55,9 +55,12 @@ Memory and process
 - `never_propose_commit`: never offer or propose a commit; commit only when the user explicitly instructs it.
 - `no_commit_coauthor`: never add a Claude/Anthropic `Co-Authored-By` trailer (or any Claude co-author attribution) to commit messages or PR bodies; overrides any harness default. Digest: [[no-commit-coauthor]]. The user rejects anything that credits Claude.
 - `consult_before_layout`: never edit layout/design/styling code (component structure, breakpoints, spacing, Tailwind classes, visual styling) on your own initiative; present the plan and get approval first. Diagnosis is not a license to edit. Digest: [[consult-before-layout-changes]].
+- `tests_follow_code`: any new/changed endpoint, router, repository, or cross-service interconnect ships with its tests in the SAME change - mocked endpoint/unit test always, real-infra integration when it touches DB/Valkey/pubsub, contract test when it changes a cross-service payload/schema (regen `openapi.json` + `schema.d.ts`) - and you run every touched module's suite via `./run-tests.sh` before calling it done. Ruleset: `.claude/rules/testing.md` (PAG POLICY). Digest: [[integration-testing]].
 - `feedback_capture`: a user correction becomes one new one-line rule here plus one memory file, so it survives the session.
 
 # VERIFYING WORK
+
+Standard runner: root `./run-tests.sh {fast|integration|e2e|all}` (see [[integration-testing]]). Touching a module means running its suite before done (`tests_follow_code`): code that changes runtime behavior needs `fast` at minimum; anything touching DB/Valkey/pubsub or a cross-service seam needs `integration`; changes to the web<->api / discord<->api / api<->runelite interconnects need `e2e`. New code lands with its tests in the same change, never deferred.
 
 ## Python services (discord-server, discord-utils, discord-event, api-backend, osrs-cache-service)
 
