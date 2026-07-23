@@ -17,3 +17,4 @@
 - [Integration testing](integration-testing.md) — layered cross-service tests: api real-infra (`-m integration`), openapi/schema contract, root E2E compose in `integration/`; run via `./run-tests.sh`
 - [Tests follow code](tests-follow-code.md) — STANDARD: new endpoints/interconnects ship with tests in the same change; run touched modules' suites (`./run-tests.sh`) before done (`tests_follow_code`)
 - [PAG rulesets](pag-rulesets.md) — repo rulesets authored as PAG POLICY docs in `.claude/rules/` (behavioral.md, testing.md) per `.claude/intel/` grammar; CLAUDE.md one-liners stay the loaded authority
+- [API test app instance](api-test-app-instance.md) — importing `conftest._app` in an api-backend test gives a DIFFERENT app than the client fixture, so dependency_overrides silently no-op; use the shared `mock_session` fixture or a header instead
