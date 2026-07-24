@@ -7,7 +7,7 @@
 - `discord-utils` — Python 3.14+ discord.py, PostgreSQL + Valkey.
 - `discord-event` — Python 3.13+ discord.py, MongoDB.
 - `api-backend` — Python 3.14+ FastAPI + Gunicorn, PostgreSQL + Valkey. Routers: assets, auth, badges, clan, config, content, events, members, parties, ranking, staff, surveys, ccdispatch. Migrations `alembic/versions/`. Tests `app/tests/` (anyio, dry-run/integration; every endpoint has one).
-- `web-app` — TypeScript, React 19, Bun. Entry `src/index.tsx`; routes `src/routes/` (TanStack Router); prod `src/prod-server.ts`; UI Shadcn/ui. Design baseline: `/about`, `/rules`, `/home`.
+- `web-app` — TypeScript, React 19, Bun. Two separate Bun servers: dev/HMR `src/index.tsx` (`bun dev`/`start`) and prod `src/prod-server.ts` (Docker CMD, OG-meta SPA injection). Shared `/embed/*` OG-image + fixtures + `_preview` handling in `src/embed/routes.ts` (`handleEmbedRoutes`); cards in `src/embed/*.tsx` (satori). Routes `src/routes/` (TanStack Router); UI Shadcn/ui. Design baseline: `/about`, `/rules`, `/home`.
 - `osrs-cache-service` — Python 3.14+ FastAPI, dedicated `cache-postgres`. JS5 decoder registry — see `osrs-cache-service/CLAUDE.md`.
 
 ## Config / infra / tooling

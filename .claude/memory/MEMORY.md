@@ -13,6 +13,7 @@
 - [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit
 - [Codeberg push auth retry](codeberg-push-auth-retry.md) — git push failing with expired-credentials is a known Codeberg quirk; just retry before escalating to user
 - [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push or even offer to; standing permission doesn't carry to unrelated files noticed later
+- [Commit scope means all uncommitted](commit-scope-means-all-uncommitted.md) — "commit ... including prior ones" means every dirty file in root + submodules, not just this session's edits
 - [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
 - [Integration testing](integration-testing.md) — layered cross-service tests: api real-infra (`-m integration`), openapi/schema contract, root E2E compose in `integration/`; run via `./run-tests.sh`
 - [Tests follow code](tests-follow-code.md) — STANDARD: new endpoints/interconnects ship with tests in the same change; run touched modules' suites (`./run-tests.sh`) before done (`tests_follow_code`)
@@ -20,3 +21,4 @@
 - [API test app instance](api-test-app-instance.md) — importing `conftest._app` in an api-backend test gives a DIFFERENT app than the client fixture, so dependency_overrides silently no-op; use the shared `mock_session` fixture or a header instead
 - [Recursive setTimeout over setInterval](recursive-settimeout-over-setinterval.md) — never poll/animate with setInterval; self-scheduling recursive setTimeout avoids tick pileup and drift when work outlasts the interval
 - [web-app strict CSP](web-app-strict-csp.md) — prod-server serves enforcing nonce-based CSP; Rocket Loader must stay off, esm.sh + style-src unsafe-inline + youtube/teamup frame-src are required or the site breaks
+- [web-app two servers / embed routes](web-app-two-servers-embed-routes.md) — dev (src/index.tsx) and prod (src/prod-server.ts) are separate Bun servers; put all `/embed/*` routes in shared src/embed/routes.ts or they only exist in one
