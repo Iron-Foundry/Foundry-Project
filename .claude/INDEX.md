@@ -24,3 +24,4 @@
 - `wom.py-repo` — wom.py (github.com/jonxslays/wom.py). Async Python WiseOldMan API client; reference for WOM endpoints/models (pairs with `wise-old-man-repo`, `add-metric` skill).
 
 <!-- append below: <concern> -> <path> as you discover stable locations -->
+- web-app SEO / per-route meta: injected server-side in `web-app/src/prod-server.ts` (`buildOgTags` = title/description/canonical/OG/Twitter/article meta; `buildStructuredData` = JSON-LD). JSON-LD builders (Organization/WebSite/BreadcrumbList/Article) in `web-app/src/lib/structured-data.ts`; ld+json scripts carry the CSP nonce. Sitemap `web-app/src/lib/sitemap.ts` (emits `<lastmod>` from each content entry's `updated_at`, sourced from the api-backend `GET /content/{page_type}/categories` tree — that endpoint returns an untyped `list[dict]`, so no openapi/schema.d.ts contract for those fields); robots `web-app/public/robots.txt`.
