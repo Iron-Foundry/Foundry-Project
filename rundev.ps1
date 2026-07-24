@@ -28,9 +28,8 @@ if ($LASTEXITCODE -ne 0) {
 
 # Run web-app natively so Windows file watchers work for HMR
 Write-Host "Starting web-app dev server..." -ForegroundColor Cyan
-Set-Location "$ScriptDir\web-app"
 
 & infisical run `
     --projectId=9047f633-a675-497c-8ca2-1e75ffd95db9 `
     --env=dev `
-    -- bun dev
+    -- bun --cwd "$ScriptDir\web-app" dev
