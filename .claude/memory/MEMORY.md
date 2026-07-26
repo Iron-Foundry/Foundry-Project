@@ -12,7 +12,7 @@
 - [No artifacts](no-artifacts.md) — Artifact tool is banned; deliver HTML mockups as a standalone file in the scratchpad and give the path
 - [No commit co-author](no-commit-coauthor.md) — never add a Claude/Anthropic Co-Authored-By trailer to commits or PRs; user rejects anything that does
 - [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit
-- [Codeberg push auth retry](codeberg-push-auth-retry.md) — git push failing with expired-credentials is a known Codeberg quirk; just retry before escalating to user
+- [Codeberg push auth retry](codeberg-push-auth-retry.md) — expired-credentials on push is a retryable Codeberg quirk; "could not read Username / prompts disabled" is not, that needs the user to push interactively
 - [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push or even offer to; standing permission doesn't carry to unrelated files noticed later
 - [Commit scope means all uncommitted](commit-scope-means-all-uncommitted.md) — "commit ... including prior ones" means every dirty file in root + submodules, not just this session's edits
 - [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
