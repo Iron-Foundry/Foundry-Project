@@ -16,6 +16,13 @@ prod-server, so they 404'd under `bun dev`.
 **Why:** prod does SPA OG injection that dev (HMR index.html) does not, so the two servers
 diverged and drifted.
 
+**Prod image packaging trap:** the Dockerfile final stage runs `bun src/prod-server.ts`
+directly (no bundle) and copies only `prod-server.ts`, `src/embed`, `src/lib/security.ts`,
+`src/assets/fonts`. Any NEW runtime import prod-server or an embed file reaches outside those
+copied paths must be added as a `COPY` line, or the container crashes on boot with
+`Cannot find module` and Traefik 404s the WHOLE site. Only runtime imports matter -
+`import type` is erased. This bit us once (`./lib/security` added for CSP/HSTS, never copied).
+
 **How to apply:** shared embed request handling lives in `src/embed/routes.ts`
 (`handleEmbedRoutes(req, apiUrl) => Response | null`); both servers call it first. When adding
 or changing any `/embed/*` route, edit `routes.ts` - never a single server. Dev passes

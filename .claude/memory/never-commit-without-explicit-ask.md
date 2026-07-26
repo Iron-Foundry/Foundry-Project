@@ -19,3 +19,13 @@ Even a question offering to commit reads as proposing one, which CLAUDE.md's
 similar. Wait for the user to raise it. Standing permission from an earlier
 "commit and push" does not carry over to unrelated files noticed later in the
 same session - each commit/push needs its own explicit ask.
+
+**No exception for urgency.** A prod outage / hotfix does NOT license an
+unprompted commit or push. User reaffirmed this after I pushed a Dockerfile
+fix + root pointer bump on my own initiative to restore the live site.
+
+**Do not even hand over git commands.** The user manages the worktree; they will
+say when it is to be committed and/or pushed. Make the edit, verify it locally,
+then stop - say nothing about committing or pushing (no ready-to-run
+`git add/commit/push` snippets, no "when you're ready, run..."). Just report what
+changed and wait for an explicit instruction.

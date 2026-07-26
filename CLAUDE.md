@@ -13,6 +13,7 @@ Read when a session or task begins its domain:
 - `.claude/memory/MEMORY.md` (every session) - your durable cross-session memory. Format and rules: `.claude/rules/memory.md`.
 - `.claude/INDEX.md` - the search index; consult it before searching the tree.
 - `.claude/rules/agent-invocation.md` - the agent-spawn ban, whenever a task tempts you toward an agent.
+- `.claude/intel/INDEX.md` - the PAG intel index (grammar, authoring guides, templates); consult before writing or editing any PAG document.
 - The submodule's own `CLAUDE.md` (e.g. `osrs-cache-service/CLAUDE.md`) when working inside it.
 
 # BEHAVIORAL RULES
@@ -54,6 +55,7 @@ Memory and process
 - `no_git_on_own_initiative`: run a git command only when the user asks in the current message; otherwise hand them the command (the deny-list in `.claude/settings.json` blocks the destructive ones).
 - `never_propose_commit`: never offer or propose a commit; commit only when the user explicitly instructs it.
 - `no_commit_coauthor`: never add a Claude/Anthropic `Co-Authored-By` trailer (or any Claude co-author attribution) to commit messages or PR bodies; overrides any harness default. Digest: [[no-commit-coauthor]]. The user rejects anything that credits Claude.
+- `no_artifacts`: never call the `Artifact` tool or load its skills; deliver any HTML mockup/visual comparison as a standalone `.html` file in the scratchpad and hand over the path. Digest: [[no-artifacts]].
 - `consult_before_layout`: never edit layout/design/styling code (component structure, breakpoints, spacing, Tailwind classes, visual styling) on your own initiative; present the plan and get approval first. Diagnosis is not a license to edit. Digest: [[consult-before-layout-changes]].
 - `recursive_timeout_not_interval`: never use `setInterval` for polling/animation; use a self-scheduling recursive `setTimeout` that queues the next tick only after the current work finishes, so slow work never piles ticks up or drifts. Digest: [[recursive-settimeout-over-setinterval]].
 - `tests_follow_code`: any new/changed endpoint, router, repository, or cross-service interconnect ships with its tests in the SAME change - mocked endpoint/unit test always, real-infra integration when it touches DB/Valkey/pubsub, contract test when it changes a cross-service payload/schema (regen `openapi.json` + `schema.d.ts`) - and you run every touched module's suite via `./run-tests.sh` before calling it done. Ruleset: `.claude/rules/testing.md` (PAG POLICY). Digest: [[integration-testing]].
