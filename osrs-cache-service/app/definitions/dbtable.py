@@ -35,8 +35,9 @@ def decode_column_fields(r: DefinitionReader, types: list[int]) -> list[int | st
     field_count = r.ushort_smart()
     values: list[int | str] = []
     for _ in range(field_count):
-        for type_id in types:
-            values.append(r.jstring() if type_id == _STRING_TYPE else r.s4())
+        values.extend(
+            r.jstring() if type_id == _STRING_TYPE else r.s4() for type_id in types
+        )
     return values
 
 
@@ -48,7 +49,7 @@ def decode_dbtable(dbtable_id: int, data: bytes) -> DBTableDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 1:
+        if opcode == 1:
             _decode_columns(r, d)
         else:
             raise DBTableDecodeError(

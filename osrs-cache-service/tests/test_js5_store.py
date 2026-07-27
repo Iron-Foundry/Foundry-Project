@@ -86,6 +86,8 @@ def test_store_detects_corrupt_chain(tmp_path: Path) -> None:
     idx_path = tmp_path / "main_file_cache.idx1"
     idx_path.write_bytes(_make_index_entry(10, 0))
 
-    with Js5Store(dat2_path, {archive: idx_path}) as store:
-        with pytest.raises(CorruptSectorError):
-            store.read(archive, group)
+    with (
+        Js5Store(dat2_path, {archive: idx_path}) as store,
+        pytest.raises(CorruptSectorError),
+    ):
+        store.read(archive, group)

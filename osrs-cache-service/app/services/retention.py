@@ -47,10 +47,10 @@ from app.db.models import (
     Sprite,
     Struct,
     Underlay,
+    Varbit,
     VarClient,
     VarClientString,
     VarPlayer,
-    Varbit,
 )
 
 _BUILD_SCOPED_MODELS = (

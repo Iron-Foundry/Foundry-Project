@@ -17,6 +17,8 @@
 - [Commit scope means all uncommitted](commit-scope-means-all-uncommitted.md) — "commit ... including prior ones" means every dirty file in root + submodules, not just this session's edits
 - [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
 - [Integration testing](integration-testing.md) — layered cross-service tests: api real-infra (`-m integration`), openapi/schema contract, root E2E compose in `integration/`; run via `./run-tests.sh`
+- [Lint/typecheck baseline](lint-typecheck-baseline.md) — shared ruff select + pyrightconfig (incl. `reportMissingTypeArgument`) across all 5 Python modules, gated by `./run-tests.sh lint`; ruff `TC*` and `reportPrivateUsage` deliberately excluded
+- [No root __init__.py](no-root-init-py.md) — discord-server/discord-event must have NO root `__init__.py`; it makes the root a package with a hyphenated name and trips ruff N999 everywhere
 - [Tests follow code](tests-follow-code.md) — STANDARD: new endpoints/interconnects ship with tests in the same change; run touched modules' suites (`./run-tests.sh`) before done (`tests_follow_code`)
 - [PAG rulesets](pag-rulesets.md) — repo rulesets authored as PAG POLICY docs in `.claude/rules/` (behavioral.md, testing.md) per `.claude/intel/` grammar; CLAUDE.md one-liners stay the loaded authority
 - [API test app instance](api-test-app-instance.md) — importing `conftest._app` in an api-backend test gives a DIFFERENT app than the client fixture, so dependency_overrides silently no-op; use the shared `mock_session` fixture or a header instead

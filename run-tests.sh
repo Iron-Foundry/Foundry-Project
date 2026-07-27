@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # One-command test runner for the monorepo.
 #
-#   ./run-tests.sh fast          fast suites only (no Docker): api + discord + web
+#   ./run-tests.sh lint          ruff + pyright per Python module, tsc for web-app
+#   ./run-tests.sh fast          fast suites only (no Docker): api + discord + cache + web
 #   ./run-tests.sh integration   real-infra suites (Docker): api + discord testcontainers
 #   ./run-tests.sh e2e           full stack E2E (Docker compose): playwright + discord_e2e
 #   ./run-tests.sh all           everything (default)
@@ -71,9 +72,27 @@ require_docker() {
 # ----- fast suites -------------------------------------------------------------
 
 run_fast() {
-  step "api-backend (fast)"    bash -c 'cd "$ROOT/api-backend" && "$UV" run pytest -q -p no:cacheprovider'
-  step "discord-server (fast)" bash -c 'cd "$ROOT/discord-server" && "$UV" run pytest -q -p no:cacheprovider'
-  step "web-app (unit)"        bash -c 'cd "$ROOT/web-app" && "$BUN" test tests/'
+  step "api-backend (fast)"        bash -c 'cd "$ROOT/api-backend" && "$UV" run pytest -q -p no:cacheprovider'
+  step "discord-server (fast)"     bash -c 'cd "$ROOT/discord-server" && "$UV" run pytest -q -p no:cacheprovider'
+  step "osrs-cache-service (fast)" bash -c 'cd "$ROOT/osrs-cache-service" && "$UV" run pytest -q -p no:cacheprovider'
+  step "web-app (unit)"            bash -c 'cd "$ROOT/web-app" && "$BUN" test tests/'
+}
+
+# ----- lint + typecheck --------------------------------------------------------
+
+# discord-utils and discord-event have no pytest suite yet, so they appear here
+# (lint + types) but not in run_fast.
+_PY_MODULES="api-backend discord-server discord-utils discord-event osrs-cache-service"
+
+run_lint() {
+  for module in $_PY_MODULES; do
+    [ -d "$ROOT/$module" ] || continue
+    step "$module (ruff)" bash -c \
+      'cd "$ROOT/'"$module"'" && "$UV" run ruff check . && "$UV" run ruff format --check .'
+    step "$module (pyright)" bash -c \
+      'cd "$ROOT/'"$module"'" && "$UV" run pyright'
+  done
+  step "web-app (tsc)" bash -c 'cd "$ROOT/web-app" && "$BUN" run typecheck'
 }
 
 # ----- integration (testcontainers, no compose) --------------------------------
@@ -168,11 +187,12 @@ EOF
 # ----- dispatch ----------------------------------------------------------------
 
 case "${1:-all}" in
+  lint)        run_lint ;;
   fast)        run_fast ;;
   integration) run_integration ;;
   e2e)         run_e2e ;;
-  all)         run_fast; run_integration; run_e2e ;;
-  *) echo "usage: $0 {fast|integration|e2e|all}" >&2; exit 2 ;;
+  all)         run_lint; run_fast; run_integration; run_e2e ;;
+  *) echo "usage: $0 {lint|fast|integration|e2e|all}" >&2; exit 2 ;;
 esac
 
 header "Summary"

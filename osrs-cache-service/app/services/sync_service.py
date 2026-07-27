@@ -5,6 +5,7 @@ it when found. Mirrors api-backend's WomNameChangeService start()/stop() lifecyc
 from __future__ import annotations
 
 import asyncio
+import contextlib
 
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -16,7 +17,7 @@ from app.services.ingest import sync_once
 class CacheSyncService:
     def __init__(self, session_factory: async_sessionmaker[AsyncSession]) -> None:
         self._session_factory = session_factory
-        self._task: asyncio.Task | None = None
+        self._task: asyncio.Task[None] | None = None
 
     @property
     def is_running(self) -> bool:
@@ -31,10 +32,8 @@ class CacheSyncService:
     async def stop(self) -> None:
         if self._task:
             self._task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self._task
-            except asyncio.CancelledError:
-                pass
         logger.info("CacheSyncService stopped")
 
     async def _poll_loop(self) -> None:

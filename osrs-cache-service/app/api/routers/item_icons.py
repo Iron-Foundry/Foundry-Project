@@ -6,7 +6,6 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, Path, Query
 from fastapi.responses import FileResponse
 from sqlalchemy import select
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentBuildDep, RenderPoolDep, SessionDep

@@ -9,6 +9,7 @@ interval instead.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 from datetime import UTC, datetime
 
 from loguru import logger
@@ -24,7 +25,7 @@ _SWEEP_INTERVAL_HOURS = 6.0
 class RenderCleanupService:
     def __init__(self, session_factory: async_sessionmaker[AsyncSession]) -> None:
         self._session_factory = session_factory
-        self._task: asyncio.Task | None = None
+        self._task: asyncio.Task[None] | None = None
 
     @property
     def is_running(self) -> bool:
@@ -41,10 +42,8 @@ class RenderCleanupService:
     async def stop(self) -> None:
         if self._task:
             self._task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self._task
-            except asyncio.CancelledError:
-                pass
         logger.info("RenderCleanupService stopped")
 
     async def _sweep_loop(self) -> None:

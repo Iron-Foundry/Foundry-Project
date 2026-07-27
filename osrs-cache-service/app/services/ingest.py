@@ -26,8 +26,8 @@ from app.services.ingest_gamevals import ingest_gamevals
 from app.services.ingest_icons import ingest_icons
 from app.services.ingest_map_tiles import ingest_map_tiles
 from app.services.ingest_maps import ingest_maps
-from app.services.ingest_worldmap import ingest_worldmap
 from app.services.ingest_sprites import ingest_sprite_group
+from app.services.ingest_worldmap import ingest_worldmap
 from app.services.retention import (
     get_current_build,
     purge_superseded_dirs,
@@ -93,10 +93,11 @@ async def _ingest_build(
 
         try:
             dat2 = cache_dir / "main_file_cache.dat2"
+            idx_files = await asyncio.to_thread(
+                lambda: list(cache_dir.glob("main_file_cache.idx*"))
+            )
             idx_paths = {
-                int(p.suffix[4:]): p
-                for p in cache_dir.glob("main_file_cache.idx*")
-                if p.suffix[4:].isdigit()
+                int(p.suffix[4:]): p for p in idx_files if p.suffix[4:].isdigit()
             }
             with Js5Store(dat2, idx_paths) as store:
                 count = 0

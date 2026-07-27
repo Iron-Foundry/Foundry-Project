@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from sqlalchemy import Integer, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -19,4 +21,4 @@ class DBTableIndex(Base):
     cache_build_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
     table_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
     column_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    tuples: Mapped[list] = mapped_column(JSONB, nullable=False)
+    tuples: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, nullable=False)

@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import CacheBuildRecord
 
 
-async def get_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
+async def get_session(request: Request) -> AsyncGenerator[AsyncSession]:
     async with request.app.state.session_factory() as session:
         yield session
 

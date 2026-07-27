@@ -62,7 +62,8 @@ def load_textures(store: Js5Store) -> dict[int, np.ndarray]:
             image = _sprite_to_texture_image(store.read(SPRITE_ARCHIVE, sprite_id))
             if image is not None:
                 textures[texture_id] = image
-        except Exception:
+        except Exception as exc:
+            logger.debug("Skipping undecodable texture {}: {}", texture_id, exc)
             continue
     return textures
 
@@ -108,7 +109,8 @@ async def load_textures_from_db(
             sprite_ids[texture_id] = decode_texture(
                 texture_id, definition_bytes
             ).sprite_id
-        except Exception:
+        except Exception as exc:
+            logger.debug("Skipping undecodable texture {}: {}", texture_id, exc)
             continue
     if not sprite_ids:
         return {}
@@ -120,7 +122,7 @@ async def load_textures_from_db(
             RawGroup.group_id.in_(set(sprite_ids.values())),
         )
     )
-    sprite_bytes = {group_id: data for group_id, data in result.all()}
+    sprite_bytes = dict(result.tuples().all())
 
     textures: dict[int, np.ndarray] = {}
     for texture_id, sprite_id in sprite_ids.items():
@@ -131,6 +133,7 @@ async def load_textures_from_db(
             image = _sprite_to_texture_image(raw)
             if image is not None:
                 textures[texture_id] = image
-        except Exception:
+        except Exception as exc:
+            logger.debug("Skipping unrenderable texture {}: {}", texture_id, exc)
             continue
     return textures

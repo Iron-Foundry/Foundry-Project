@@ -8,7 +8,7 @@ endpoints - the manifest, region metadata, object locations, and map icons.
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Path, Query
 from fastapi.responses import FileResponse
@@ -33,7 +33,7 @@ _IMMUTABLE = {"Cache-Control": "public, max-age=31536000, immutable"}
 
 
 @router.get("/meta")
-async def get_meta(session: SessionDep, build_id: CurrentBuildDep) -> dict:
+async def get_meta(session: SessionDep, build_id: CurrentBuildDep) -> dict[str, Any]:
     return await build_manifest(session, build_id)
 
 
@@ -56,7 +56,7 @@ async def get_region(
     region_id: Annotated[int, Path(ge=0)],
     session: SessionDep,
     build_id: CurrentBuildDep,
-) -> dict:
+) -> dict[str, Any]:
     region = await fetch_region(session, build_id, region_id)
     if region is None:
         raise HTTPException(status_code=404, detail="Region not found")
@@ -74,7 +74,7 @@ async def get_locations(
     max_x: Annotated[int | None, Query(ge=0)] = None,
     max_y: Annotated[int | None, Query(ge=0)] = None,
     limit: Annotated[int, Query(ge=1, le=10000)] = 1000,
-) -> dict:
+) -> dict[str, Any]:
     if object_id is None and (
         min_x is None or min_y is None or max_x is None or max_y is None
     ):
@@ -98,7 +98,7 @@ async def get_icons(
     session: SessionDep,
     build_id: CurrentBuildDep,
     plane: Annotated[int | None, Query(ge=0, le=MAP_OVERVIEW_PLANE)] = None,
-) -> dict:
+) -> dict[str, Any]:
     if plane == MAP_OVERVIEW_PLANE:
         return await fetch_overview_icons(session, build_id)
     return await fetch_icons(session, build_id, plane)
@@ -109,10 +109,12 @@ async def get_labels(
     session: SessionDep,
     build_id: CurrentBuildDep,
     plane: Annotated[int | None, Query(ge=0, le=3)] = None,
-) -> dict:
+) -> dict[str, Any]:
     return await fetch_labels(session, build_id, plane)
 
 
 @router.get("/sections")
-async def get_sections(session: SessionDep, build_id: CurrentBuildDep) -> dict:
+async def get_sections(
+    session: SessionDep, build_id: CurrentBuildDep
+) -> dict[str, Any]:
     return await fetch_sections(session, build_id)

@@ -15,8 +15,8 @@ is the order the fill loop in `region_render.py` reads it back.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Callable
 
 import numpy as np
 

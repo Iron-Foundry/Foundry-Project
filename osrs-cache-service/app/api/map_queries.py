@@ -7,8 +7,10 @@ the object's area link, and that area's sprite and name.
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
-from sqlalchemy import select
+from sqlalchemy import Row, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import (
@@ -26,7 +28,7 @@ from app.maps.packing import unpack_terrain
 
 async def fetch_region(
     session: AsyncSession, build_id: int, region_id: int
-) -> dict | None:
+) -> dict[str, Any] | None:
     square = (
         await session.execute(
             select(MapSquare).where(
@@ -55,7 +57,7 @@ async def fetch_locations(
     plane: int | None,
     bbox: tuple[int, int, int, int] | None,
     limit: int,
-) -> dict:
+) -> dict[str, Any]:
     query = select(
         MapLocation.object_id,
         MapLocation.plane,
@@ -120,7 +122,7 @@ def _icon_query(build_id: int):
     )
 
 
-def _icon_dict(row) -> dict:
+def _icon_dict(row: Row[tuple[int, int, int, int, str | None]]) -> dict[str, Any]:
     return {
         "x": row.world_x,
         "y": row.world_y,
@@ -130,7 +132,9 @@ def _icon_dict(row) -> dict:
     }
 
 
-async def fetch_icons(session: AsyncSession, build_id: int, plane: int | None) -> dict:
+async def fetch_icons(
+    session: AsyncSession, build_id: int, plane: int | None
+) -> dict[str, Any]:
     query = _icon_query(build_id)
     if plane is not None:
         query = query.where(MapLocation.plane == plane)
@@ -156,7 +160,7 @@ async def _region_settings(
     return {(r.region_id, r.plane): unpack_terrain(r.data)["settings"] for r in rows}
 
 
-async def fetch_sections(session: AsyncSession, build_id: int) -> dict:
+async def fetch_sections(session: AsyncSession, build_id: int) -> dict[str, Any]:
     rows = (
         await session.execute(
             select(MapSection)
@@ -181,7 +185,9 @@ async def fetch_sections(session: AsyncSession, build_id: int) -> dict:
     }
 
 
-async def fetch_labels(session: AsyncSession, build_id: int, plane: int | None) -> dict:
+async def fetch_labels(
+    session: AsyncSession, build_id: int, plane: int | None
+) -> dict[str, Any]:
     query = select(
         MapLabel.world_x,
         MapLabel.world_y,
@@ -209,7 +215,7 @@ async def fetch_labels(session: AsyncSession, build_id: int, plane: int | None) 
     }
 
 
-async def fetch_overview_icons(session: AsyncSession, build_id: int) -> dict:
+async def fetch_overview_icons(session: AsyncSession, build_id: int) -> dict[str, Any]:
     """Icons visible on the composited ground map.
 
     Mirrors the terrain composite (see app/maps/render/composite.py) per icon: an
@@ -229,8 +235,8 @@ async def fetch_overview_icons(session: AsyncSession, build_id: int) -> dict:
         s0v = int(s0[lx, ly]) if s0 is not None else 0
         s1v = int(s1[lx, ly]) if s1 is not None else 0
         tile_z = 1 if (s1v & 2) else 0
-        if r.plane == tile_z and (s0v & 24) == 0:
-            icons.append(_icon_dict(r))
-        elif r.plane == tile_z + 1 and (s1v & 8):
+        if (r.plane == tile_z and (s0v & 24) == 0) or (
+            r.plane == tile_z + 1 and (s1v & 8)
+        ):
             icons.append(_icon_dict(r))
     return {"count": len(icons), "icons": icons}

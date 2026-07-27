@@ -10,6 +10,7 @@ a real live OSRS cache build.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 _FLAG_NAMES = 0x01
@@ -98,7 +99,7 @@ def parse_reference_index(data: bytes) -> list[GroupRef]:
     return groups
 
 
-def _delta_decode(r: _Reader, count: int, read) -> list[int]:  # noqa: ANN001
+def _delta_decode(r: _Reader, count: int, read: Callable[[], int]) -> list[int]:
     value = 0
     ids: list[int] = []
     for _ in range(count):

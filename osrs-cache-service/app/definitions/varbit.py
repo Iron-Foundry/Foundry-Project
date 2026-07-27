@@ -31,7 +31,7 @@ def decode_varbit(varbit_id: int, data: bytes) -> VarbitDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 1:
+        if opcode == 1:
             d.varp_index = r.u2()
             d.least_significant_bit = r.u1()
             d.most_significant_bit = r.u1()

@@ -19,11 +19,11 @@ import asyncio
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.definitions.registry import CONFIG_ARCHIVE, REGISTRY
 from app.js5.container import decompress
 from app.js5.multifile import split_files
 from app.js5.refindex import parse_reference_index
 from app.js5.store import Js5Store
-from app.definitions.registry import CONFIG_ARCHIVE, REGISTRY
 
 _YIELD_EVERY = 500
 

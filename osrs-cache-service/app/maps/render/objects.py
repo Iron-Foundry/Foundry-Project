@@ -137,7 +137,7 @@ def _blit_scene(
     if scene_id < 0 or scene_id >= len(scenes):
         return
     frame = scenes[scene_id]
-    if frame is None or frame.size == 0:
+    if frame.size == 0:
         return
     size = REGION_SIZE * scale
     y0, x0 = draw_y + scale, draw_x

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from sqlalchemy import Integer, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -15,4 +17,4 @@ class DBRow(Base):
     cache_build_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
     dbrow_id: Mapped[int] = mapped_column(Integer, nullable=False)
     table_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
-    columns: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    columns: Mapped[dict[str, dict[str, Any]]] = mapped_column(JSONB, nullable=False)

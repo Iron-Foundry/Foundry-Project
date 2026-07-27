@@ -11,7 +11,13 @@ dominated over actual pixel-fill work, which a compiled scalar double loop
 avoids entirely. `cache=True` persists the compiled function to disk so only
 the first call per Python version/numba version pays JIT compile time, not
 every worker process.
+
+RUF046 is ignored file-wide: under numba `math.floor`/`math.ceil` return float64
+rather than CPython's int, so the surrounding `int()` casts are load-bearing for
+the loop bounds and must not be stripped as redundant.
 """
+
+# ruff: noqa: RUF046
 
 from __future__ import annotations
 

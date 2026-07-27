@@ -37,7 +37,7 @@ def decode_varplayer(varp_id: int, data: bytes) -> VarPlayerDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 5:
+        if opcode == 5:
             d.type = r.u2()
         else:
             raise VariableDecodeError(
@@ -55,7 +55,7 @@ def _decode_varc(kind: str, varc_id: int, data: bytes) -> VarClientDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 2:
+        if opcode == 2:
             d.persist = True
         else:
             raise VariableDecodeError(

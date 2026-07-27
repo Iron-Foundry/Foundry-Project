@@ -16,8 +16,10 @@ from app.definitions.variables import (
 
 def test_decode_enum() -> None:
     data = bytes(
-        [0x01, ord("i"), 0x02, ord("i"), 0x04, 0, 0, 0, 7, 0x06, 0, 2]
-        + [0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 20, 0x00]
+        [
+            *[0x01, ord("i"), 0x02, ord("i"), 0x04, 0, 0, 0, 7, 0x06, 0, 2],
+            *[0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 20, 0x00],
+        ]
     )
     d = decode_enum(3, data)
     assert d.key_type == "i"
@@ -28,8 +30,10 @@ def test_decode_enum() -> None:
 
 def test_decode_struct() -> None:
     data = bytes(
-        [0xF9, 2, 0, 0, 0, 0x64, 0, 0, 0, 5, 1, 0, 0, 0xC8]
-        + [ord("h"), ord("i"), 0x00, 0x00]
+        [
+            *[0xF9, 2, 0, 0, 0, 0x64, 0, 0, 0, 5, 1, 0, 0, 0xC8],
+            *[ord("h"), ord("i"), 0x00, 0x00],
+        ]
     )
     d = decode_struct(1, data)
     assert d.params == {100: 5, 200: "hi"}

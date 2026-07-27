@@ -18,4 +18,4 @@ class EnumDef(Base):
     value_type: Mapped[str | None] = mapped_column(String(1), nullable=True)
     default_int: Mapped[int | None] = mapped_column(Integer, nullable=True)
     default_string: Mapped[str | None] = mapped_column(String, nullable=True)
-    entries: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    entries: Mapped[dict[str, int | str]] = mapped_column(JSONB, nullable=False)

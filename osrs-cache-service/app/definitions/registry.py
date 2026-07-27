@@ -6,8 +6,9 @@ a migration, and one entry here - no changes needed to ingest.py itself.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from app.db.models import (
     Area,
@@ -20,10 +21,10 @@ from app.db.models import (
     Overlay,
     Struct,
     Underlay,
+    Varbit,
     VarClient,
     VarClientString,
     VarPlayer,
-    Varbit,
 )
 from app.definitions.area import decode_area
 from app.definitions.dbrow import decode_dbrow
@@ -50,10 +51,10 @@ class DefinitionType:
     group_id: int
     decode: Callable[[int, bytes], Any]
     model: type
-    to_row: Callable[[int, Any], dict]
+    to_row: Callable[[int, Any], dict[str, Any]]
 
 
-def _item_row(cache_build_id: int, d: Any) -> dict:
+def _item_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "item_id": d.id,
@@ -88,7 +89,7 @@ def _item_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _npc_row(cache_build_id: int, d: Any) -> dict:
+def _npc_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "npc_id": d.id,
@@ -101,7 +102,7 @@ def _npc_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _object_row(cache_build_id: int, d: Any) -> dict:
+def _object_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "object_id": d.id,
@@ -118,7 +119,7 @@ def _object_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _varbit_row(cache_build_id: int, d: Any) -> dict:
+def _varbit_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "varbit_id": d.id,
@@ -128,7 +129,7 @@ def _varbit_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _underlay_row(cache_build_id: int, d: Any) -> dict:
+def _underlay_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "underlay_id": d.id,
@@ -136,7 +137,7 @@ def _underlay_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _overlay_row(cache_build_id: int, d: Any) -> dict:
+def _overlay_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "overlay_id": d.id,
@@ -147,7 +148,7 @@ def _overlay_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _area_row(cache_build_id: int, d: Any) -> dict:
+def _area_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "area_id": d.id,
@@ -158,7 +159,7 @@ def _area_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _enum_row(cache_build_id: int, d: Any) -> dict:
+def _enum_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "enum_id": d.id,
@@ -170,7 +171,7 @@ def _enum_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _struct_row(cache_build_id: int, d: Any) -> dict:
+def _struct_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "struct_id": d.id,
@@ -178,15 +179,15 @@ def _struct_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _varplayer_row(cache_build_id: int, d: Any) -> dict:
+def _varplayer_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {"cache_build_id": cache_build_id, "varp_id": d.id, "type": d.type}
 
 
-def _varclient_row(cache_build_id: int, d: Any) -> dict:
+def _varclient_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {"cache_build_id": cache_build_id, "varc_id": d.id, "persist": d.persist}
 
 
-def _dbtable_row(cache_build_id: int, d: Any) -> dict:
+def _dbtable_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "dbtable_id": d.id,
@@ -197,7 +198,7 @@ def _dbtable_row(cache_build_id: int, d: Any) -> dict:
     }
 
 
-def _dbrow_row(cache_build_id: int, d: Any) -> dict:
+def _dbrow_row(cache_build_id: int, d: Any) -> dict[str, Any]:
     return {
         "cache_build_id": cache_build_id,
         "dbrow_id": d.id,

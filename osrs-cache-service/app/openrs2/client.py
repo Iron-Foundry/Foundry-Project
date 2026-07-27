@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
@@ -10,6 +10,8 @@ from loguru import logger
 
 from app.config import CACHE_SCOPE, OPENRS2_BASE_URL
 from app.openrs2.models import CacheEntry, XteaKey
+
+_DOWNLOAD_TIMEOUT = httpx.Timeout(60.0, connect=30.0, read=300.0)
 
 
 class OpenRS2Client:
@@ -37,18 +39,21 @@ class OpenRS2Client:
         ]
         if not candidates:
             return None
-        return max(candidates, key=lambda cache: cache.timestamp or datetime.min)
+        epoch = datetime.min.replace(tzinfo=UTC)
+        return max(candidates, key=lambda cache: cache.timestamp or epoch)
 
     async def download_disk_zip(self, cache: CacheEntry, dest_path: Path) -> Path:
         url = f"{self._base_url}/caches/{self._scope}/{cache.id}/disk.zip"
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         logger.info("Downloading cache build {} from {}", cache.id, url)
-        async with httpx.AsyncClient(timeout=None) as client:
-            async with client.stream("GET", url) as response:
-                response.raise_for_status()
-                with dest_path.open("wb") as fh:
-                    async for chunk in response.aiter_bytes(chunk_size=1024 * 1024):
-                        fh.write(chunk)
+        async with (
+            httpx.AsyncClient(timeout=_DOWNLOAD_TIMEOUT) as client,
+            client.stream("GET", url) as response,
+        ):
+            response.raise_for_status()
+            with dest_path.open("wb") as fh:
+                async for chunk in response.aiter_bytes(chunk_size=1024 * 1024):
+                    fh.write(chunk)
         logger.info("Downloaded cache build {} to {}", cache.id, dest_path)
         return dest_path
 

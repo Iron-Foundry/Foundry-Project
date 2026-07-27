@@ -10,6 +10,7 @@ and taking a 404 - most of the map's bounding box is empty.
 from __future__ import annotations
 
 import base64
+from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,7 +27,7 @@ from app.maps.constants import MAP_OVERVIEW_PLANE, PLANES, REGION_SIZE
 from app.maps.tiles import WORLD_TILES
 
 
-async def build_manifest(session: AsyncSession, build_id: int) -> dict:
+async def build_manifest(session: AsyncSession, build_id: int) -> dict[str, Any]:
     rows = (
         await session.execute(
             select(MapSquare.region_x, MapSquare.region_y, MapSquare.plane_mask).where(
@@ -36,7 +37,7 @@ async def build_manifest(session: AsyncSession, build_id: int) -> dict:
     ).all()
 
     zooms = list(range(MAP_MIN_ZOOM, MAP_MAX_ZOOM + 1))
-    manifest: dict = {
+    manifest: dict[str, Any] = {
         "build": build_id,
         "tileSize": MAP_TILE_SIZE,
         "minZoom": MAP_MIN_ZOOM,

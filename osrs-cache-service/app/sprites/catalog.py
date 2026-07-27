@@ -18,7 +18,7 @@ _DATA_PATH = Path(__file__).parent / "data" / "sprite_names.json"
 
 
 @lru_cache(maxsize=1)
-def _catalog() -> dict[int, tuple[str, str | None]]:
+def _catalog() -> dict[int, tuple[str | None, str | None]]:
     raw: dict[str, list[str | None]] = json.loads(
         _DATA_PATH.read_text(encoding="utf-8")
     )

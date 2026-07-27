@@ -16,4 +16,4 @@ class Struct(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     cache_build_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
     struct_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    params: Mapped[dict[str, int | str]] = mapped_column(JSONB, nullable=False)

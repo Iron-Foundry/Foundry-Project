@@ -30,7 +30,7 @@ def decode_struct(struct_id: int, data: bytes) -> StructDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 249:
+        if opcode == 249:
             d.params = r.params()
         else:
             raise StructDecodeError(

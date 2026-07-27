@@ -63,7 +63,7 @@ Memory and process
 
 # VERIFYING WORK
 
-Standard runner: root `./run-tests.sh {fast|integration|e2e|all}` (see [[integration-testing]]). Touching a module means running its suite before done (`tests_follow_code`): code that changes runtime behavior needs `fast` at minimum; anything touching DB/Valkey/pubsub or a cross-service seam needs `integration`; changes to the web<->api / discord<->api / api<->runelite interconnects need `e2e`. New code lands with its tests in the same change, never deferred.
+Standard runner: root `./run-tests.sh {lint|fast|integration|e2e|all}` (see [[integration-testing]]). Touching a module means running its suite before done (`tests_follow_code`): every change needs `lint` (ruff check + ruff format --check + pyright per Python module, `tsc --noEmit` for web-app); code that changes runtime behavior needs `fast` as well; anything touching DB/Valkey/pubsub or a cross-service seam needs `integration`; changes to the web<->api / discord<->api / api<->runelite interconnects need `e2e`. New code lands with its tests in the same change, never deferred.
 
 ## Python services (discord-server, discord-utils, discord-event, api-backend, osrs-cache-service)
 
@@ -83,8 +83,9 @@ Every api-backend endpoint has a corresponding test in `app/tests/`.
 ## web-app
 
 ```bash
-bun run build.ts # production build to dist/
-bun start        # production server
+bun run build.ts   # production build to dist/
+bun start          # production server
+bun run typecheck  # tsc --noEmit (strict)
 ```
 
 `bun dev` runs the HMR dev server; do not start it yourself (`no_background_processes`) - ask the user to run it and report back. Install Shadcn components with `bunx shadcn@latest add <component>` only; never copy component source manually.

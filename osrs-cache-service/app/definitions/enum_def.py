@@ -34,7 +34,7 @@ def decode_enum(enum_id: int, data: bytes) -> EnumDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 1:
+        if opcode == 1:
             d.key_type = chr(r.u1())
         elif opcode == 2:
             d.value_type = chr(r.u1())

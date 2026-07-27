@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import time
 from collections import defaultdict
+from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
@@ -23,12 +24,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import MAP_BASE_ZOOM, MAPS_DIR
 from app.db.models import MapTerrain
+from app.definitions.object import decode_object
+from app.definitions.registry import CONFIG_ARCHIVE
 from app.js5.container import decompress
 from app.js5.multifile import split_files
 from app.js5.refindex import parse_reference_index
 from app.js5.store import Js5Store
-from app.definitions.object import decode_object
-from app.definitions.registry import CONFIG_ARCHIVE
 from app.maps.constants import (
     LOCATIONS_FILE,
     MAP_ARCHIVE,
@@ -42,6 +43,13 @@ from app.maps.render.blend import BLEND, PADDED_SIZE
 from app.maps.render.mapscene import load_map_scenes
 from app.maps.render.objects import ObjectMeta, PlacedObject
 from app.maps.render.palette import FloorPalette
+from app.maps.tiles import (
+    build_parent_tile,
+    encode_tile,
+    parent_tiles,
+    write_tile,
+    zoom_levels,
+)
 from app.services.map_palette import build_render_palette
 from app.services.map_worker import (
     CompositeJob,
@@ -50,13 +58,6 @@ from app.services.map_worker import (
     init_worker,
     render_region_composite,
     render_region_tiles,
-)
-from app.maps.tiles import (
-    build_parent_tile,
-    encode_tile,
-    parent_tiles,
-    write_tile,
-    zoom_levels,
 )
 
 _OBJECT_GROUP = 6
@@ -173,7 +174,8 @@ def _object_metadata(store: Js5Store) -> dict[int, ObjectMeta]:
     for object_id, data in files.items():
         try:
             decoded = decode_object(object_id, data)
-        except Exception:
+        except Exception as exc:
+            logger.debug("Skipping undecodable object {}: {}", object_id, exc)
             continue
         meta[object_id] = ObjectMeta(
             size_y=decoded.size_y,
@@ -198,7 +200,8 @@ def _placements(store: Js5Store) -> dict[tuple[int, int], list[PlacedObject]]:
             if LOCATIONS_FILE not in files:
                 continue
             locations = decode_locations(files[LOCATIONS_FILE])
-        except Exception:
+        except Exception as exc:
+            logger.debug("Skipping undecodable region {}: {}", region, exc)
             continue
         for loc in locations:
             out[(region, loc.plane)].append(
@@ -213,13 +216,13 @@ def _placements(store: Js5Store) -> dict[tuple[int, int], list[PlacedObject]]:
     return out
 
 
-async def _render_pass(
+async def _render_pass[JobT](
     cache_build_id: int,
     palette: FloorPalette,
     object_meta: dict[int, ObjectMeta],
-    scenes: list,
-    jobs: list,
-    render_fn,
+    scenes: list[np.ndarray],
+    jobs: list[JobT],
+    render_fn: Callable[[JobT], TileResult],
 ) -> dict[int, set[tuple[int, int]]]:
     coverage: dict[int, set[tuple[int, int]]] = defaultdict(set)
     base_zoom = next(iter(zoom_levels()))

@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import Area, MapLabel, MapSection
 from app.js5.container import decompress
 from app.js5.multifile import split_files
-from app.js5.refindex import parse_reference_index
+from app.js5.refindex import GroupRef, parse_reference_index
 from app.js5.store import Js5Store
 from app.maps.worldmap import (
     COMPOSITEMAP_GROUP,
@@ -26,7 +26,9 @@ from app.maps.worldmap import (
 )
 
 
-def _group_files(store: Js5Store, ref: dict, group: int) -> dict[int, bytes]:
+def _group_files(
+    store: Js5Store, ref: dict[int, GroupRef], group: int
+) -> dict[int, bytes]:
     return split_files(
         decompress(store.read(WORLDMAP_ARCHIVE, group)).data, ref[group].file_ids
     )

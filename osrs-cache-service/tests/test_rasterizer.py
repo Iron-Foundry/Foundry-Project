@@ -4,14 +4,27 @@ import numpy as np
 
 from app.models.definition import ModelDefinition
 from app.models.rasterizer import (
+    PreparedGeometry,
     prepare_geometry,
     render_from_geometry,
 )
 from app.models.texture_image import TEXTURE_RES
 
-_FLAT_ROTATION = {"xan2d": 0, "yan2d": 0, "zan2d": 0}
-_CAMERA = {"zoom2d": 1000, "x_offset2d": 0, "y_offset2d": 0}
-_NO_RESIZE = {"resize_x": None, "resize_y": None, "resize_z": None}
+
+def _prepare_flat(model: ModelDefinition) -> PreparedGeometry:
+    """Geometry with no rotation and no resize - the plain baseline every test uses."""
+    return prepare_geometry(
+        model,
+        xan2d=0,
+        yan2d=0,
+        zan2d=0,
+        zoom2d=1000,
+        x_offset2d=0,
+        y_offset2d=0,
+        resize_x=None,
+        resize_y=None,
+        resize_z=None,
+    )
 
 
 def _tetrahedron() -> ModelDefinition:
@@ -42,7 +55,7 @@ def _camera_quad(color: int, depth: int) -> ModelDefinition:
 
 
 def _render_center(model: ModelDefinition) -> np.ndarray:
-    geometry = prepare_geometry(model, **_FLAT_ROTATION, **_CAMERA, **_NO_RESIZE)
+    geometry = _prepare_flat(model)
     raw = render_from_geometry(
         geometry, ambient=0, contrast=0, color_find=None, color_replace=None
     )
@@ -54,7 +67,7 @@ def _render_center(model: ModelDefinition) -> np.ndarray:
 
 def test_back_faces_are_culled() -> None:
     model = _tetrahedron()
-    geometry = prepare_geometry(model, **_FLAT_ROTATION, **_CAMERA, **_NO_RESIZE)
+    geometry = _prepare_flat(model)
 
     # A closed solid shows only its front faces; the rest are culled.
     assert 0 < len(geometry.face_order) < model.face_count
@@ -100,23 +113,19 @@ def _textured_quad() -> ModelDefinition:
 
 
 def test_texture_uv_maps_face_vertices_to_texel_corners() -> None:
-    geometry = prepare_geometry(
-        _textured_quad(), **_FLAT_ROTATION, **_CAMERA, **_NO_RESIZE
-    )
+    geometry = _prepare_flat(_textured_quad())
 
     # Both coplanar triangles face the camera; each face's P/M/N are its own
     # vertices, so P->(0,0), M->(res,0), N->(0,res) exactly.
     assert len(geometry.face_uv) == 2
     expected = (0.0, 0.0, float(TEXTURE_RES), 0.0, 0.0, float(TEXTURE_RES))
     for uv in geometry.face_uv.values():
-        for got, want in zip(uv, expected):
+        for got, want in zip(uv, expected, strict=False):
             assert abs(got - want) < 1e-6
 
 
 def test_textured_face_samples_texture_and_keeps_light_ratio() -> None:
-    geometry = prepare_geometry(
-        _textured_quad(), **_FLAT_ROTATION, **_CAMERA, **_NO_RESIZE
-    )
+    geometry = _prepare_flat(_textured_quad())
     texture = np.empty((TEXTURE_RES, TEXTURE_RES, 4), dtype=np.uint8)
     texture[..., 0] = 200
     texture[..., 1] = 100
@@ -145,7 +154,7 @@ def test_textured_face_samples_texture_and_keeps_light_ratio() -> None:
 def test_transparency_sentinel_faces_are_not_drawn() -> None:
     model = _textured_quad()
     model.face_transparencies = [-1, -1]  # -1 = fully invisible (alpha 0)
-    geometry = prepare_geometry(model, **_FLAT_ROTATION, **_CAMERA, **_NO_RESIZE)
+    geometry = _prepare_flat(model)
     texture = np.full((TEXTURE_RES, TEXTURE_RES, 4), 200, dtype=np.uint8)
     texture[..., 3] = 255
 

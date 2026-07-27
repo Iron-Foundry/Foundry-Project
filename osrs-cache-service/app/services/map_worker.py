@@ -71,7 +71,7 @@ def render_region_tiles(job: TileJob) -> TileResult:
         cut = cut_base_canvas(canvas, job.region_x, job.region_y)
         tiles = [(tx, ty, encode_tile(block)) for tx, ty, block in cut]
         return TileResult(plane=job.plane, tiles=tiles)
-    except Exception as exc:  # noqa: BLE001 - a bad region must not kill the pool
+    except Exception as exc:
         return TileResult(plane=job.plane, tiles=[], error=repr(exc))
 
 
@@ -107,5 +107,5 @@ def render_region_composite(job: CompositeJob) -> TileResult:
         cut = cut_base_canvas(composite, job.region_x, job.region_y)
         tiles = [(tx, ty, encode_tile(block)) for tx, ty, block in cut]
         return TileResult(plane=MAP_OVERVIEW_PLANE, tiles=tiles)
-    except Exception as exc:  # noqa: BLE001 - a bad region must not kill the pool
+    except Exception as exc:
         return TileResult(plane=MAP_OVERVIEW_PLANE, tiles=[], error=repr(exc))

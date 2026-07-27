@@ -18,6 +18,31 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.0.51",
 ]
 
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E4", "E7", "E9", "F", "W", "I", "N", "UP", "B", "SIM", "RUF", "PLE",
+    "ASYNC", "DTZ", "LOG", "G", "C4", "RET", "PERF", "PTH", "S",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# assert is the point of a test.
+"tests/**" = ["S101"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    "fastapi.Body",
+    "fastapi.Depends",
+    "fastapi.File",
+    "fastapi.Form",
+    "fastapi.Header",
+    "fastapi.Path",
+    "fastapi.Query",
+    "fastapi.Security",
+]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
@@ -29,5 +54,5 @@ dev = [
     "pyright>=1.1.410",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "ruff>=0.15",
+    "ruff>=0.16",
 ]

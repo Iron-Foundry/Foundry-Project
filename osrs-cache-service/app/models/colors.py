@@ -93,7 +93,7 @@ def apply_recolor(
 ) -> list[int]:
     if not color_find or not color_replace:
         return face_colors
-    mapping = dict(zip(color_find, color_replace))
+    mapping = dict(zip(color_find, color_replace, strict=False))
     return [mapping.get(c, c) for c in face_colors]
 
 

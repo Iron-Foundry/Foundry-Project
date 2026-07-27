@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import func, select
 
@@ -42,5 +44,5 @@ async def get_meta(session: SessionDep) -> MetaOut:
 
 
 @router.get("/health")
-async def health() -> dict:
+async def health() -> dict[str, Any]:
     return {"status": "ok"}

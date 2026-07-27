@@ -8,12 +8,17 @@ group's bytes regardless.
 from __future__ import annotations
 
 import asyncio
+from typing import Any
 
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import DBTableIndex
-from app.definitions.dbtable_index import DBTABLE_INDEX_ARCHIVE, decode_dbtable_index
+from app.definitions.dbtable_index import (
+    DBTABLE_INDEX_ARCHIVE,
+    DBIndexTuple,
+    decode_dbtable_index,
+)
 from app.js5.container import decompress
 from app.js5.multifile import split_files
 from app.js5.refindex import parse_reference_index
@@ -22,7 +27,7 @@ from app.js5.store import Js5Store
 _YIELD_EVERY = 500
 
 
-def _to_json(tuples: list) -> list:
+def _to_json(tuples: list[DBIndexTuple]) -> list[dict[str, Any]]:
     return [
         {"base_type": t.base_type, "values": {str(k): v for k, v in t.values.items()}}
         for t in tuples

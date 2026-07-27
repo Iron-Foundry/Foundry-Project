@@ -42,7 +42,7 @@ async def list_item_names(
             Item.cache_build_id == build_id, Item.name != ""
         )
     )
-    return {item_id: name for item_id, name in result.all()}
+    return dict(result.tuples().all())
 
 
 @router.get("/catalog")

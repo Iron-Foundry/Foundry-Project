@@ -38,7 +38,7 @@ def decode_dbrow(dbrow_id: int, data: bytes) -> DBRowDefinition:
         opcode = r.u1()
         if opcode == 0:
             break
-        elif opcode == 3:
+        if opcode == 3:
             _decode_columns(r, d)
         elif opcode == 4:
             d.table_id = r.var_int2()

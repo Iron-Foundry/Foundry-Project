@@ -33,7 +33,7 @@ class Js5Store:
     def close(self) -> None:
         self._dat2.close()
 
-    def __enter__(self) -> "Js5Store":
+    def __enter__(self) -> Js5Store:
         return self
 
     def __exit__(self, *_exc: object) -> None:

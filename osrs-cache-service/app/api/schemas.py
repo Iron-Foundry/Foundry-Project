@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -120,7 +122,7 @@ class DBTableOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     dbtable_id: int
-    columns: dict[str, dict]
+    columns: dict[str, dict[str, Any]]
 
 
 class DBRowOut(BaseModel):
@@ -128,7 +130,7 @@ class DBRowOut(BaseModel):
 
     dbrow_id: int
     table_id: int | None
-    columns: dict[str, dict]
+    columns: dict[str, dict[str, Any]]
 
 
 class DBTableIndexOut(BaseModel):
@@ -136,7 +138,7 @@ class DBTableIndexOut(BaseModel):
 
     table_id: int
     column_id: int
-    tuples: list[dict]
+    tuples: list[dict[str, Any]]
 
 
 class GameValOut(BaseModel):
