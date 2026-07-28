@@ -27,3 +27,7 @@
 - [web-app two servers / embed routes](web-app-two-servers-embed-routes.md) — dev (src/index.tsx) and prod (src/prod-server.ts) are separate Bun servers; put all `/embed/*` routes in shared src/embed/routes.ts or they only exist in one
 - [web-app prod Dockerfile src allowlist](web-app-prod-dockerfile-src-allowlist.md) — prod image copies a named allowlist of src files, not all of src; a new prod-server value import needs a matching Dockerfile COPY or the container crash-loops "Cannot find module"
 - [Reference-data external shapes](reference-data-external-shapes.md) — verified live shapes of the OSRS Wiki drop-table (MediaWiki wikitext + {{DropsLine}}) and WOM /efficiency/rates?type=ironman sources feeding api-backend reference data
+- [Semver & /version endpoints](semver-and-version-endpoints.md) — per-maturity module versions single-sourced from the manifest, `GET /version` build provenance, CHANGELOGs, CI bump gate
+- [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
+- [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only
+- [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims

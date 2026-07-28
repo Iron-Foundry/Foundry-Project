@@ -81,7 +81,11 @@ services:
   # ── Backend ─────────────────────────────────────────────────────────
 
   api-backend:
-    build: ./api-backend
+    build:
+      context: ./api-backend
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+        BUILD_TIME: ${BUILD_TIME:-}
     restart: unless-stopped
     logging: *default-logging
     environment:
@@ -117,7 +121,11 @@ services:
         condition: service_healthy
 
   osrs-cache-service:
-    build: ./osrs-cache-service
+    build:
+      context: ./osrs-cache-service
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+        BUILD_TIME: ${BUILD_TIME:-}
     restart: unless-stopped
     logging: *default-logging
     environment:

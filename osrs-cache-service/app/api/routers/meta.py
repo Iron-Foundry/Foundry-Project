@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import func, select
 
 from app.api.dependencies import SessionDep
-from app.api.schemas import MetaOut
+from app.api.schemas import MetaOut, VersionOut
 from app.db.models import CacheBuildRecord, Item, Npc, Object, Sprite
+from app.version import VERSION
 
 router = APIRouter(tags=["meta"])
 
@@ -40,6 +42,22 @@ async def get_meta(session: SessionDep) -> MetaOut:
         npc_count=await count(Npc),
         object_count=await count(Object),
         sprite_count=await count(Sprite),
+    )
+
+
+@router.get("/version")
+async def get_version() -> VersionOut:
+    """Identify the deployed build.
+
+    `version` comes from the package manifest. `git_sha` and `build_time` are
+    injected as container build arguments and are `null` for a local run
+    outside Docker.
+    """
+    return VersionOut(
+        service="osrs-cache-service",
+        version=VERSION,
+        git_sha=os.getenv("GIT_SHA") or None,
+        build_time=os.getenv("BUILD_TIME") or None,
     )
 
 

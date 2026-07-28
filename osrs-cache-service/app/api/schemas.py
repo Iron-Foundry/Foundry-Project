@@ -86,6 +86,13 @@ class MetaOut(BaseModel):
     sprite_count: int
 
 
+class VersionOut(BaseModel):
+    service: str
+    version: str
+    git_sha: str | None
+    build_time: str | None
+
+
 class EnumOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

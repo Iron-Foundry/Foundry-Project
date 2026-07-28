@@ -25,6 +25,13 @@ ENV OMP_NUM_THREADS=1 \
 # reaches `docker compose logs` in real time. This forces unbuffered streams.
 ENV PYTHONUNBUFFERED=1
 
+# Build provenance for GET /version. Declared after the dependency layers so a
+# new commit sha only invalidates this final layer, not the uv sync cache.
+ARG GIT_SHA=""
+ARG BUILD_TIME=""
+ENV GIT_SHA=${GIT_SHA} \
+    BUILD_TIME=${BUILD_TIME}
+
 EXPOSE 8100
 
 # Apply pending Alembic migrations before booting so the schema always matches
