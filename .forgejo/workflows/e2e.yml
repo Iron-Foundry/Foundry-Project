@@ -1,5 +1,11 @@
 name: End-to-end integration
 
+# Codeberg runners give the job container no Docker socket, so the compose stack
+# in integration/docker-compose.e2e.yml cannot be used here. Postgres and Valkey
+# come from `services:` (created by the runner), and api-backend and web-app run
+# as plain processes inside the job. The compose file stays the local path
+# (`./run-tests.sh e2e`).
+
 on:
   workflow_dispatch:
   push:
@@ -9,13 +15,81 @@ jobs:
   e2e:
     runs-on: codeberg-small
 
+    env:
+      DATABASE_URL: postgresql+asyncpg://foundry:foundry@postgres:5432/foundry
+      E2E_BASE_URL: http://localhost:3000
+      E2E_API_URL: http://localhost:8000
+      E2E_DB_DSN: postgresql://foundry:foundry@postgres:5432/foundry
+      E2E_METRICS_API_KEY: e2e-metrics-key
+      E2E_JWT_SECRET: e2e-test-secret-e2e-test-secret-01
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: foundry
+          POSTGRES_PASSWORD: foundry
+          POSTGRES_DB: foundry
+      valkey:
+        image: valkey/valkey:8-alpine
+
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Bring up the stack
-        run: docker compose -f integration/docker-compose.e2e.yml up --build -d
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Wait for postgres and valkey
+        run: |
+          for host_port in postgres:5432 valkey:6379; do
+            host=${host_port%%:*}; port=${host_port##*:}
+            for i in $(seq 1 60); do
+              if (exec 3<>/dev/tcp/"$host"/"$port") 2>/dev/null; then
+                echo "$host_port ready"; break
+              fi
+              if [ "$i" = 60 ]; then echo "$host_port never came up"; exit 1; fi
+              sleep 2
+            done
+          done
+
+      - name: Start api-backend
+        working-directory: api-backend
+        env:
+          VALKEY_URI: redis://valkey:6379
+          FRONTEND_URL: http://localhost:3000
+          JWT_SECRET: e2e-test-secret-e2e-test-secret-01
+          METRICS_API_KEY: e2e-metrics-key
+          DISCORD_CLIENT_ID: e2e
+          DISCORD_CLIENT_SECRET: e2e
+          DISCORD_REDIRECT_URI: http://localhost:3000/auth/callback
+          GUILD_ID: "1"
+          DISCORD_SERVER_TOKEN: e2e
+          API_BACKEND_URL: http://localhost:8000
+        run: |
+          uv sync --frozen
+          uv run alembic upgrade head
+          nohup uv run gunicorn app.main:app \
+            --workers 3 \
+            --worker-class uvicorn.workers.UvicornWorker \
+            --bind 0.0.0.0:8000 \
+            >"$GITHUB_WORKSPACE/api.log" 2>&1 &
+
+      - name: Build and start web-app
+        working-directory: web-app
+        env:
+          BUN_PUBLIC_API_URL: http://localhost:8000
+          INTERNAL_API_URL: http://localhost:8000
+          SITE_URL: http://localhost:3000
+          NODE_ENV: production
+        run: |
+          bun install --frozen-lockfile
+          bun run build.ts
+          nohup bun src/prod-server.ts >"$GITHUB_WORKSPACE/web.log" 2>&1 &
 
       - name: Wait for api and web to be ready
         run: |
@@ -27,37 +101,22 @@ jobs:
             sleep 3
           done
           echo "stack did not become ready in time"
-          docker compose -f integration/docker-compose.e2e.yml logs --tail=100
+          tail -n 100 "$GITHUB_WORKSPACE/api.log" "$GITHUB_WORKSPACE/web.log"
           exit 1
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Playwright (web -> api -> DB)
         working-directory: integration/e2e
-        env:
-          E2E_BASE_URL: http://localhost:3000
-          E2E_API_URL: http://localhost:8000
         run: |
           bun install
           bunx playwright install --with-deps chromium
           bun run test
 
-      - uses: astral-sh/setup-uv@v5
-        with:
-          python-version: "3.13"
-
       - name: discord_e2e (discord -> api, api -> runelite)
         working-directory: integration/discord_e2e
-        env:
-          E2E_API_URL: http://localhost:8000
-          E2E_DB_DSN: postgresql://foundry:foundry@localhost:5432/foundry
-          E2E_METRICS_API_KEY: e2e-metrics-key
         run: |
           uv sync
           uv run pytest
 
-      - name: Tear down
-        if: always()
-        run: docker compose -f integration/docker-compose.e2e.yml down -v
+      - name: Service logs
+        if: failure()
+        run: tail -n 200 "$GITHUB_WORKSPACE/api.log" "$GITHUB_WORKSPACE/web.log"
