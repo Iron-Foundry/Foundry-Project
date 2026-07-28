@@ -30,4 +30,5 @@
 - [Semver & /version endpoints](semver-and-version-endpoints.md) — per-maturity module versions single-sourced from the manifest, `GET /version` build provenance, CHANGELOGs, CI bump gate
 - [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
 - [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only
+- [Forgejo ignores `permissions:`](forgejo-no-permissions-key.md) — the GitHub Actions `permissions:` key is unsupported in Forgejo workflows and only emits warnings; token scope comes from Codeberg Authorized Integrations
 - [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims
