@@ -30,5 +30,11 @@
 - [Semver & /version endpoints](semver-and-version-endpoints.md) — per-maturity module versions single-sourced from the manifest, `GET /version` build provenance, CHANGELOGs, CI bump gate
 - [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
 - [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only
+- [Bump at push only](bump-at-push-only.md) — bump once when work is about to be pushed, never per component; entries accumulate under `## [Unreleased]`
 - [Forgejo ignores `permissions:`](forgejo-no-permissions-key.md) — the GitHub Actions `permissions:` key is unsupported in Forgejo workflows and only emits warnings; token scope comes from Codeberg Authorized Integrations
 - [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims
+- [Music bots plan](music-bots-plan.md) — spec + stage tracker live in `designs/MUSIC_BOTS.md`; stage 0 gates all work, never build on an unpromoted U-row assumption
+- [Evidence over assumption](evidence-over-assumption.md) — never claim library/protocol behaviour from recall; cite reference-repo `file:line` or official docs, else log it as a tracked unverified assumption
+- [Valkey blocking reads need their own connection](valkey-blocking-reads-own-connection.md) — a blocking XREADGROUP/BLPOP/pubsub consumer must build its own client with `socket_timeout=None`; the shared request client's timeout kills it silently and no test catches it
+- [Clone after three fetches](clone-after-three-fetches.md) — >3 fetches against one project means clone it into `D:\claude-git-references` and read locally; docs sites usually ship inside the source repo
+- [Resolve Discord ids](resolve-discord-ids.md) — never show a bare snowflake to a user; stamp the display name where it is known (discord-utils holds the guild) and fall back to the id only on a miss

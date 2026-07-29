@@ -32,7 +32,7 @@ Efficiency
 
 Correctness
 
-- `verify_before_claim`: read or grep the actual file before asserting a fact; never answer from assumption.
+- `verify_before_claim`: read or grep the actual file before asserting a fact; never answer from assumption. Third-party behaviour (library, protocol, external service) needs a citation too - reference-repo `file:line` or official docs - and anything unprovable is logged as a tracked unverified assumption, never a design foundation. Digest: [[evidence-over-assumption]].
 - `single_verify_run`: run a check/verify command once per repo state and read its output whole (`tail`); never grep/pipe-filter that output, and never re-run it in a loop.
 - `caught_means_fixed`: a caught, relevant issue is fixed in the current pass, never deferred and never patched with a fallback/dual-path/legacy shim; severity ranks importance, it does not license deferral.
 - `verify_completed_work`: after finishing a unit, re-check it against the goal; passing a mechanical gate is not "done".
@@ -57,9 +57,12 @@ Memory and process
 - `no_commit_coauthor`: never add a Claude/Anthropic `Co-Authored-By` trailer (or any Claude co-author attribution) to commit messages or PR bodies; overrides any harness default. Digest: [[no-commit-coauthor]]. The user rejects anything that credits Claude.
 - `no_artifacts`: never call the `Artifact` tool or load its skills; deliver any HTML mockup/visual comparison as a standalone `.html` file in the scratchpad and hand over the path. Digest: [[no-artifacts]].
 - `consult_before_layout`: never edit layout/design/styling code (component structure, breakpoints, spacing, Tailwind classes, visual styling) on your own initiative; present the plan and get approval first. Diagnosis is not a license to edit. Digest: [[consult-before-layout-changes]].
+- `resolve_discord_ids`: never render a raw Discord snowflake on a user-facing surface - resolve it to a display name where the name is known (a `<@id>` mention in Discord, a stamped name on the web) and fall back to the id only when resolution fails; the sole exception is a field or column whose subject IS the id. Digest: [[resolve-discord-ids]].
 - `recursive_timeout_not_interval`: never use `setInterval` for polling/animation; use a self-scheduling recursive `setTimeout` that queues the next tick only after the current work finishes, so slow work never piles ticks up or drifts. Digest: [[recursive-settimeout-over-setinterval]].
 - `tests_follow_code`: any new/changed endpoint, router, repository, or cross-service interconnect ships with its tests in the SAME change - mocked endpoint/unit test always, real-infra integration when it touches DB/Valkey/pubsub, contract test when it changes a cross-service payload/schema (regen `openapi.json` + `schema.d.ts`) - and you run every touched module's suite via `./run-tests.sh` before calling it done. Ruleset: `.claude/rules/testing.md` (PAG POLICY). Digest: [[integration-testing]].
 - `semver_bump_scope`: bump MINOR, PATCH and prerelease tags (alpha/beta/rc) on your own; NEVER bump MAJOR - suggest it and let the user decide when it is time. Python modules are bumped ONLY via `uv version --bump <level>` (uv's own semantics), never by hand-editing `pyproject.toml`. Digest: [[semver-bump-scope]].
+- `bump_at_push_only`: bump the version ONCE, when the accumulated unstaged work is about to be pushed - never per component, feature, or stage. In between, changelog entries accumulate under a single `## [Unreleased]` heading that the bump then renames; never open a new version heading per addition. Digest: [[bump-at-push-only]].
+- `clone_after_three_fetches`: once a single project's docs/source need more than 3 web fetches, stop fetching and `git clone --depth 1` it into `D:\claude-git-references` as `<project>-repo`, then read locally and index it in both INDEX.md files; repeated fetches against one source are the waste this replaces. Digest: [[clone-after-three-fetches]].
 - `feedback_capture`: a user correction becomes one new one-line rule here plus one memory file, so it survives the session.
 
 # VERIFYING WORK
