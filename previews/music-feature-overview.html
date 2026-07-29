@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Music Feature - Implementation Overview</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #faf9f7;
+    --panel: #ffffff;
+    --ink: #1c1a17;
+    --muted: #6b6559;
+    --line: #e3ded4;
+    --accent: #8a6d3b;
+    --accent-soft: #f2ead9;
+    --code-bg: #f4f1ea;
+    --green: #3f7d47;
+    --red: #a8443a;
+    --blue: #3a6ea8;
+    --purple: #6b4fa8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f;
+      --panel: #1c1a16;
+      --ink: #ece7dd;
+      --muted: #9a9285;
+      --line: #2e2b24;
+      --accent: #d1a75f;
+      --accent-soft: #2a2419;
+      --code-bg: #201d17;
+      --green: #7fb587;
+      --red: #d98b81;
+      --blue: #7fa8d9;
+      --purple: #a98fd9;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 3rem 1.25rem 6rem; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 1.5rem; margin-bottom: 2.5rem; }
+  h1 { font-size: 2rem; margin: 0 0 .4rem; letter-spacing: -.02em; }
+  h2 {
+    font-size: 1.3rem; margin: 3rem 0 1rem; padding-bottom: .4rem;
+    border-bottom: 1px solid var(--line); letter-spacing: -.01em;
+  }
+  h3 { font-size: 1.02rem; margin: 1.8rem 0 .6rem; color: var(--accent); }
+  h4 { font-size: .92rem; margin: 1.2rem 0 .4rem; }
+  p, li { color: var(--ink); }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0; }
+  .meta { color: var(--muted); font-size: .85rem; margin-top: .75rem; }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 3px; font-size: .88em; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px;
+    padding: 1rem; overflow-x: auto; font-size: .82rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 1.1rem 1.3rem; margin: 1rem 0;
+  }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .tag {
+    display: inline-block; font-size: .72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .05em; padding: .15em .5em; border-radius: 3px;
+    background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line);
+  }
+  .why {
+    border-left: 3px solid var(--accent); background: var(--accent-soft);
+    padding: .7rem 1rem; margin: .8rem 0; border-radius: 0 5px 5px 0; font-size: .93rem;
+  }
+  .why strong { color: var(--accent); }
+  .bug { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 8%, transparent); }
+  .bug strong { color: var(--red); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; min-width: 520px; }
+  th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+  ul, ol { padding-left: 1.3rem; }
+  li { margin: .3rem 0; }
+  .flow { font-size: .78rem; line-height: 1.7; white-space: pre; }
+  .pill { display:inline-block; padding:.1em .45em; border-radius:3px; font-size:.78rem; border:1px solid var(--line); }
+  .p-web { color: var(--blue); }
+  .p-api { color: var(--purple); }
+  .p-bot { color: var(--green); }
+  .p-store { color: var(--accent); }
+  .legend { display:flex; flex-wrap:wrap; gap:1rem; font-size:.82rem; color:var(--muted); margin:.6rem 0 1rem; }
+  .legend span::before { content:"\25A0"; margin-right:.35em; }
+  footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+  .toc { columns: 2; column-gap: 2rem; font-size: .9rem; }
+  .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .toc a:hover { color: var(--accent); }
+  @media (max-width: 640px) { .toc { columns: 1; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">The Iron Foundry Project</span>
+  <h1>Music feature - implementation overview</h1>
+  <p class="lede">Five player bots, one web panel, one Discord panel, and the Valkey seam that keeps them describing the same session.</p>
+  <p class="meta">Scope: <code>discord-utils</code> &middot; <code>api-backend</code> &middot; <code>web-app</code> &middot; root infra and contracts. 8 commits.</p>
+</header>
+
+<nav class="toc">
+  <a href="#shape">1. Shape of the system</a><br>
+  <a href="#storage">2. Storage and contracts</a><br>
+  <a href="#flow-queue">3. Flow: queueing a track</a><br>
+  <a href="#flow-command">4. Flow: a web command</a><br>
+  <a href="#flow-state">5. Flow: state back to the browser</a><br>
+  <a href="#flow-stats">6. Flow: playback into stats</a><br>
+  <a href="#modules">7. Module by module</a><br>
+  <a href="#decisions">8. Decisions worth remembering</a><br>
+  <a href="#bugs">9. Bugs found and fixed</a><br>
+  <a href="#tests">10. Test coverage</a><br>
+  <a href="#commits">11. Commits</a>
+</nav>
+
+<h2 id="shape">1. Shape of the system</h2>
+
+<p>Three processes and one datastore. No process calls another directly; everything meets in Valkey.</p>
+
+<div class="legend">
+  <span class="p-web">web-app (browser + Bun server)</span>
+  <span class="p-api">api-backend (FastAPI)</span>
+  <span class="p-bot">discord-utils (bots + Lavalink)</span>
+  <span class="p-store">Valkey / Postgres</span>
+</div>
+
+<div class="card scroll">
+<pre class="flow"><span class="p-web">┌─────────────────────┐</span>                         <span class="p-bot">┌──────────────────────┐</span>
+<span class="p-web">│  Browser            │</span>                         <span class="p-bot">│  discord-utils       │</span>
+<span class="p-web">│  panel + miniplayer │</span>                         <span class="p-bot">│  main bot + 5 player │</span>
+<span class="p-web">└──────┬───────┬──────┘</span>                         <span class="p-bot">└───┬──────────────┬───┘</span>
+       │ REST  │ WS                                    │              │
+       ▼       ▼                                       │              ▼
+<span class="p-api">┌─────────────────────┐</span>                                 │        <span class="p-bot">┌───────────┐</span>
+<span class="p-api">│  api-backend        │</span>                                 │        <span class="p-bot">│ Lavalink  │</span>
+<span class="p-api">│  reads state,       │</span>                                 │        <span class="p-bot">│ audio     │</span>
+<span class="p-api">│  publishes intent   │</span>                                 │        <span class="p-bot">└───────────┘</span>
+<span class="p-api">└──────┬──────────────┘</span>                                 │
+       │                                                │
+       │        <span class="p-store">┌──────────────────────────────┐</span>      │
+       └───────▶<span class="p-store">│  Valkey                      │</span>◀─────┘
+                <span class="p-store">│  session hash / queue list   │</span>
+                <span class="p-store">│  activity / history          │</span>
+                <span class="p-store">│  music:commands  (pubsub) ──▶│</span> to bot
+                <span class="p-store">│  music:state     (pubsub) ◀──│</span> from bot
+                <span class="p-store">│  music:events    (stream) ◀──│</span> from bot
+                <span class="p-store">└──────────────┬───────────────┘</span>
+                               │ consumer group
+                               ▼
+                <span class="p-store">┌──────────────────────────────┐</span>
+                <span class="p-store">│  Postgres                    │</span>
+                <span class="p-store">│  playlists, playlist_tracks  │</span>
+                <span class="p-store">│  music_counters, track_plays │</span>
+                <span class="p-store">└──────────────────────────────┘</span></pre>
+</div>
+
+<div class="why">
+  <strong>Why nothing calls anything directly.</strong> api-backend never holds a Lavalink player and discord-utils never holds a web request. The only thing crossing between them is an <em>intent</em> on a pubsub channel, and authority is re-checked on the receiving side. That is what makes "you must be in the voice channel" hold identically on both surfaces - neither can be talked into driving a channel nobody is sitting in.
+</div>
+
+<h3>Who owns what</h3>
+<div class="scroll">
+<table>
+  <thead><tr><th>Concern</th><th>Owner</th><th>Why there and nowhere else</th></tr></thead>
+  <tbody>
+    <tr><td>Audio, voice connection</td><td>discord-utils</td><td>Only process with a gateway session and a Lavalink node.</td></tr>
+    <tr><td>Queue, transport, session state</td><td>discord-utils writes, both read</td><td>One object, so Discord and the web never disagree about what is next.</td></tr>
+    <tr><td>Discord names</td><td>discord-utils</td><td>Only process holding the guild, so the only one that can see a per-server nickname.</td></tr>
+    <tr><td>Cover art</td><td>Carried with the track</td><td>Re-resolution lands on a mirror whose art is a different image.</td></tr>
+    <tr><td>Playlists (durable)</td><td>api-backend / Postgres</td><td>Outlives every session; written only behind a real login.</td></tr>
+    <tr><td>Stats (durable)</td><td>api-backend consumer</td><td>Playback must never block on a database write.</td></tr>
+    <tr><td>Web payload shape</td><td>api-backend</td><td>One place the browser's view is built, so ids are stringified exactly once.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="storage">2. Storage and contracts</h2>
+
+<h3>Valkey keys</h3>
+<div class="scroll">
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Holds</th></tr></thead>
+  <tbody>
+    <tr><td><code>music:lease:{index}</code></td><td>string</td><td>Which channel holds player bot N.</td></tr>
+    <tr><td><code>music:session:{channel}</code></td><td>hash</td><td>Current track, paused, position, updated_at, volume, loop, shuffle, bot, channel name.</td></tr>
+    <tr><td><code>music:queue:{channel}</code></td><td>list</td><td>Queued tracks as JSON, in play order.</td></tr>
+    <tr><td><code>music:activity:{channel}</code></td><td>list (cap 25)</td><td>Who did what, newest first.</td></tr>
+    <tr><td><code>music:history:{channel}</code></td><td>list (cap 100)</td><td>What already played, newest first, audio stripped.</td></tr>
+    <tr><td><code>music:voice:{channel}</code></td><td>set</td><td>Who is in the channel - the "may control" answer.</td></tr>
+    <tr><td><code>music:commands</code></td><td>pubsub</td><td>Web intent to the bot.</td></tr>
+    <tr><td><code>music:state</code></td><td>pubsub</td><td>"This channel moved" notice to the API.</td></tr>
+    <tr><td><code>music:events</code></td><td>stream</td><td>Playback events awaiting durable counting.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The five session keys share a 300s TTL, refreshed by the pool heartbeat. A killed bot publishes no closing notice, so silence is the only signal a session has gone - the TTL <em>is</em> the cleanup.</p>
+
+<h3>Pinned contracts</h3>
+<p>Two fixtures at the repo root are asserted from both sides, so a field renamed in one service fails a test rather than silently reading back as a default:</p>
+<ul>
+  <li><code>fixtures/music_bridge.json</code> - the session hash, a stored track, a published command, a history entry, and the channel names.</li>
+  <li><code>fixtures/music_playlist.json</code> - the playlist payload discord-utils parses with its own models.</li>
+</ul>
+<p>Plus the generated pair: <code>api-backend/openapi.json</code> &rarr; <code>web-app/src/api/schema.d.ts</code>, regenerated whenever a schema moves.</p>
+
+<h2 id="flow-queue">3. Flow: queueing a track</h2>
+
+<p>Six entry points, one destination. Everything funnels through <code>MusicSession.enqueue</code>, which is what makes a single stamping point possible.</p>
+
+<div class="card scroll">
+<pre class="flow">  /play          picker        panel button     web "add"     playlist load    history requeue
+     │              │                │               │               │                │
+     └──────────────┴────────────────┴───────┬───────┴───────────────┴────────────────┘
+                                             ▼
+                              ┌──────────────────────────────┐
+                              │  MusicSession.enqueue()      │
+                              │  1. stamp_requesters(tracks) │ ◀── guild member cache
+                              │  2. queue.add(tracks)        │
+                              │  3. activity.push(actor)     │ ◀── name stamped here too
+                              └───────────────┬──────────────┘
+                                              │ idle?
+                              ┌───────────────┴───────────────┐
+                              ▼ yes                        no ▼
+                     ┌────────────────┐            ┌────────────────────┐
+                     │  play_next()   │            │  changed() - only  │
+                     │  pop + _play() │            │  up-next moved     │
+                     └───────┬────────┘            └────────────────────┘
+                             ▼
+              ┌──────────────────────────────────┐
+              │  _play(track)                    │
+              │  resolve_playback() ─▶ Lavalink  │
+              │  track.played_source = actual    │
+              │  track.artwork ||= playable.art  │ ◀── cover recovered here
+              │  state.set_current(track)        │
+              │  changed() ─▶ publish music:state│
+              └──────────────────────────────────┘</pre>
+</div>
+
+<h3>Resolution: two distinct steps</h3>
+<p><strong>Search</strong> runs when a user queues something. A bare query defaults to Spotify because Spotify results carry an ISRC, the only stable identity a song has across sources.</p>
+<p><strong>Playback resolution</strong> runs at play time, for every track holding metadata rather than audio - a Spotify track (its audio cannot be streamed by a bot) or anything restored from a saved playlist. Order tried:</p>
+<ol>
+  <li>The track's own URL, when it has one and is not a mirrored source.</li>
+  <li>The ISRC, quoted, hyphens stripped - LavaSrc strips them before the same query, and a hyphenated ISRC matches nothing.</li>
+  <li>Title + author on YouTube, then SoundCloud.</li>
+</ol>
+
+<div class="why">
+  <strong>Why resolve late.</strong> A 200-track playlist loads in one request instead of 200 searches, and a track nobody ever hears costs nothing. It also makes <code>played_source</code> a real observed value rather than a guess - LavaSrc normally mirrors Spotify server-side inside its own call and reports nothing back.
+</div>
+
+<h2 id="flow-command">4. Flow: a web command</h2>
+
+<div class="card scroll">
+<pre class="flow"><span class="p-web">Browser</span>                <span class="p-api">api-backend</span>                 <span class="p-store">Valkey</span>            <span class="p-bot">discord-utils</span>
+   │                        │                          │                    │
+   │ POST /commands         │                          │                    │
+   │ {action, ...}          │                          │                    │
+   ├───────────────────────▶│                          │                    │
+   │                        │ validate CommandRequest  │                    │
+   │                        │ (schema is the guard)    │                    │
+   │                        │ PUBLISH music:commands   │                    │
+   │                        ├─────────────────────────▶│                    │
+   │  200 {accepted, N}     │                          ├───────────────────▶│
+   │◀───────────────────────┤                          │                    │
+   │                        │                          │      re-check: is actor
+   │                        │                          │      in the voice channel?
+   │                        │                          │                    │
+   │                        │                          │      apply() ─▶ session
+   │                        │                          │◀───────────────────┤
+   │                        │                          │  PUBLISH music:state
+   │   WS frame: session    │◀─────────────────────────┤                    │
+   │◀───────────────────────┤  (API reads hash, shapes payload)              │</pre>
+</div>
+
+<p><em>200 means published, not performed.</em> Whether anything changed arrives over the socket - which is also why the response carries <code>delivered_to</code>, the subscriber count.</p>
+
+<div class="why">
+  <strong>Authority is re-checked, never trusted.</strong> The publisher could be any process. The bridge asks the voice roster itself before applying, so the rule holds whichever surface the command came from.
+</div>
+
+<h2 id="flow-state">5. Flow: state back to the browser</h2>
+
+<p>One WebSocket serves the whole page - the panel and the mini player share it. The progress bar is <em>extrapolated</em>, not polled.</p>
+
+<div class="card scroll">
+<pre class="flow">  session hash stores:   position_ms = 42000
+                         updated_at  = 1774000000.5   (float epoch)
+                         paused      = false
+
+  browser, each 1s tick:  shown = position_ms + (now - updated_at * 1000)
+                          capped at length_ms, rounded to a whole ms
+                          CSS transition (1s linear) fills the gap between ticks
+
+  a state notice arrives ─▶ refetch ─▶ position and updated_at replaced</pre>
+</div>
+
+<ul>
+  <li><strong>No server-side timer, no polling.</strong> A moving bar costs zero requests.</li>
+  <li><strong>Rounded on purpose.</strong> <code>updated_at</code> is a float, so the extrapolation is fractional; a seek built from it was refused by the API, which takes an integer.</li>
+  <li><strong>Queue and activity re-read on <code>updated_at</code>.</strong> A track queued from Discord moved the count on screen while the rows still showed whatever they held when the page opened.</li>
+  <li><strong>2.5 minutes of silence drops a session.</strong> A killed bot publishes no closing notice.</li>
+</ul>
+
+<h2 id="flow-stats">6. Flow: playback into stats</h2>
+
+<div class="card scroll">
+<pre class="flow">  <span class="p-bot">history.record(track, PLAYED|SKIPPED, listened_ms)</span>
+        │
+        ├──▶ LPUSH music:history:{channel}   (ephemeral, capped, audio stripped)
+        │
+        └──▶ XADD music:events               (durable intent)
+                    │
+                    ▼
+  <span class="p-api">MusicStatsService.consume_once()</span>  - own Valkey client, socket_timeout=None
+        │
+        │  XREADGROUP: pending "0" first, then new ">"
+        ▼
+    for each message:
+        SET NX seen:{id}  ──▶ already claimed? skip, ack
+        │ claimed
+        ▼
+        ON CONFLICT DO UPDATE  music_counters      (+= , JSONB source split merged)
+        ON CONFLICT DO UPDATE  music_track_plays   (+= )
+        │ failure ─▶ release claim, leave unacked
+        ▼
+        XACK</pre>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Stream, not pubsub</h4>
+    <p>Playback never blocks on a database write, and a restart loses nothing that happened while it was down.</p>
+  </div>
+  <div class="card">
+    <h4>Claimed, not just grouped</h4>
+    <p>A consumer group guarantees redelivery, not exactly-once. An inflated total is worse than a missing one because nothing can audit it back down.</p>
+  </div>
+  <div class="card">
+    <h4>Postgres does the arithmetic</h4>
+    <p>Read-add-write in the consumer loses increments between two workers, and the whole point of a stream is that more than one may consume it.</p>
+  </div>
+  <div class="card">
+    <h4>Keyed on the recording</h4>
+    <p>ISRC where a source gives one, else a digest of normalised title/author/duration. Keying on the source id lists one song once per source.</p>
+  </div>
+</div>
+
+<p>Counters carry a guild and a track and <em>never</em> a user id - so there is no per-member filter to forget on the way out. That is asserted against the response schema, not against a query.</p>
+
+<h2 id="modules">7. Module by module</h2>
+
+<h3 class="p-bot">discord-utils/music/</h3>
+<div class="scroll">
+<table>
+  <thead><tr><th>File</th><th>Does</th></tr></thead>
+  <tbody>
+    <tr><td><code>pool.py</code> / <code>client.py</code></td><td>Leases one of five player bots per channel. Player bots run guilds + voice states only; no command tree, no member cache.</td></tr>
+    <tr><td><code>manager.py</code></td><td>Opens and closes sessions. Re-resolves the channel through the player bot's own cache before connecting, and builds the player against that bot's node.</td></tr>
+    <tr><td><code>session.py</code></td><td>Queue, transport, state, activity, history for one channel. Owns <code>enqueue</code>, <code>play_next</code>, <code>advance</code>, <code>_play</code>.</td></tr>
+    <tr><td><code>resolve.py</code></td><td>Search, and playback resolution with LavaSrc's own provider order.</td></tr>
+    <tr><td><code>naming.py</code></td><td>Discord id &rarr; server display name, cache-only, plus the stamping helper.</td></tr>
+    <tr><td><code>history.py</code></td><td>The capped play list, and the durable counter emitted with it.</td></tr>
+    <tr><td><code>bridge.py</code></td><td>Subscribes <code>music:commands</code>, re-checks authority, applies.</td></tr>
+    <tr><td><code>dispatch.py</code></td><td>Turns one web intent into a real transport call. The only place that happens.</td></tr>
+    <tr><td><code>notify.py</code></td><td>Publishes the state notice - channel id and nothing else.</td></tr>
+    <tr><td><code>views/</code></td><td>Components V2 panel: now playing, queue, history, activity, playlists, pickers, modals.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="p-api">api-backend/app/routers/music/</h3>
+<div class="scroll">
+<table>
+  <thead><tr><th>File</th><th>Does</th></tr></thead>
+  <tbody>
+    <tr><td><code>sessions.py</code></td><td>Session, queue, activity, history reads. May-control check.</td></tr>
+    <tr><td><code>control.py</code></td><td>Validates a command and publishes it.</td></tr>
+    <tr><td><code>live.py</code></td><td>The WebSocket: authenticates on the first frame, then pushes snapshots.</td></tr>
+    <tr><td><code>playlists.py</code></td><td>Create, rename, share, delete, append, replace. Visibility split: public means readable, never editable.</td></tr>
+    <tr><td><code>importing.py</code></td><td>YouTube / YT Music playlist links. Spotify cannot be imported - it serves those pages only to a signed-in account.</td></tr>
+    <tr><td><code>search.py</code></td><td>Lavalink-backed search. Needs no session.</td></tr>
+    <tr><td><code>stats.py</code></td><td>Clan totals and top tracks.</td></tr>
+    <tr><td><code>bot.py</code></td><td>Service-key surface discord-utils reads playlists through. Read-only by design.</td></tr>
+    <tr><td><code>_live.py</code> / <code>_live_schemas.py</code></td><td>Valkey reads and the shapes the browser sees. Ids stringified here.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="p-web">web-app/src/components/music/</h3>
+<div class="scroll">
+<table>
+  <thead><tr><th>File</th><th>Does</th></tr></thead>
+  <tbody>
+    <tr><td><code>MusicPanel.tsx</code></td><td>One dialog, grouped nav, one page at a time - built like the Control Panel.</td></tr>
+    <tr><td><code>NowPlayingPage.tsx</code></td><td>Cover, transport, seek bar with scrub readout, up next.</td></tr>
+    <tr><td><code>QueuePage.tsx</code></td><td>Drag-reorder, jump, remove, search-to-add, save-as-playlist.</td></tr>
+    <tr><td><code>PlaylistsPage.tsx</code> + <code>PlaylistRow/Tracks</code></td><td>Full library editing; per-track queue; delete confirmations.</td></tr>
+    <tr><td><code>HistoryPage.tsx</code></td><td>Everything played, requeue, save-to-playlist dialog.</td></tr>
+    <tr><td><code>StatsPage.tsx</code></td><td>Minutes, tracks, skips, sessions, source split, top tracks.</td></tr>
+    <tr><td><code>MiniPlayer.tsx</code></td><td>Pinned bar: track, gliding progress, pause, skip.</td></tr>
+    <tr><td><code>TrackArt.tsx</code></td><td>Cover or same-size placeholder, so rows keep alignment.</td></tr>
+    <tr><td><code>useMusicSocket.ts</code></td><td>The single socket, first-frame auth, growing backoff.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="decisions">8. Decisions worth remembering</h2>
+
+<div class="why"><strong>The queue lives in Valkey, not in wavelink.</strong> wavelink's own queue is untouched and autoplay stays disabled, so the only thing deciding what plays next is <code>advance</code>. That keeps the queue the web reads and the queue Discord plays from as one object.</div>
+
+<div class="why"><strong>A carried cover beats a re-resolved one.</strong> Playback resolution finds a mirror of the recording on another source, and the mirror's art is not what the user picked from. The cover travels with the track through every write; the resolved one is only a fallback for a track that has none.</div>
+
+<div class="why"><strong>Names are stamped where the guild is in reach.</strong> api-backend cannot produce them - its <code>users</code> table only holds people who have logged into the website, and it stores a global username, never a server nickname. The browser certainly cannot. So discord-utils attaches the name on the way into the queue, once, and it travels with the record. The Discord panel keeps <code>&lt;@id&gt;</code> mentions, because there that <em>is</em> the resolved form.</div>
+
+<div class="why"><strong><code>enqueue</code> is the single stamping point.</strong> Six surfaces reach it. Threading a name parameter through <code>search_tracks</code>, <code>to_track</code> and <code>to_tracks</code> instead would have touched every caller and their tests to reach the same place.</div>
+
+<div class="why"><strong>Discord ids cross as strings.</strong> A snowflake exceeds 2<sup>53</sup> and a browser parsing it as a JSON number rounds the last digits. The rounded id addresses a channel nobody is in, so every control silently read as forbidden and every playlist read as someone else's.</div>
+
+<div class="why"><strong>History is session state, not a record.</strong> A capped Valkey list under the session keys, so the heartbeat refreshes it and the orphan sweep removes it without either learning a new key. Persisting it would have been a per-guild play log - a different thing from the durable counters, and it would reopen the retention question the counters exist to close.</div>
+
+<div class="why"><strong>Re-queue needs no new command.</strong> A history entry carries the same metadata a search result does, so it travels back down the existing <code>add</code> path. A <code>requeue</code> action would have given one intent two implementations.</div>
+
+<div class="why"><strong>The panel shows ten, the website shows all.</strong> Ten is what fits in two rows of buttons beside a numbered list; paging the panel costs an edit per page for something nobody is watching.</div>
+
+<h2 id="bugs">9. Bugs found and fixed</h2>
+
+<div class="why bug">
+  <strong>The stats consumer counted nothing, silently.</strong> A blocking <code>XREADGROUP</code> occupies its socket for the whole block, and the shared request client is built with a far shorter socket timeout. Every poll timed out and the service sat in a permanent retry loop. Green in every test, because tests read non-blocking - it was visible only in the deployed stack's logs. Fixed with an owned client at <code>socket_timeout=None</code>; the regression test asserts the connection kwarg, since no functional test can catch this.
+</div>
+
+<div class="why bug">
+  <strong>Seek did nothing at all.</strong> The extrapolated position is built from a float epoch, so <code>position_ms</code> arrived fractional and pydantic refused it - an integer field rejects a number with a fractional part. Rounded at both the source and the send site.
+</div>
+
+<div class="why bug">
+  <strong>The volume slider was inert twice over.</strong> A Radix slider given <code>value</code> is fully controlled: without feeding the drag back, the thumb cannot move, <em>and</em> <code>handleSlideEnd</code> sees no change so <code>onValueCommit</code> never fires. Keyboard worked because that path commits from inside the state updater. Both sliders now feed their drag back into their own value.
+</div>
+
+<div class="why bug">
+  <strong>A reorder deleted the cover.</strong> The web rewrites a playlist's whole track list to reorder or remove, so a field the browser forgot to carry was deleted from the table rather than left alone. Now pinned by an integration test.
+</div>
+
+<div class="why bug">
+  <strong>Adding a key to the session set broke the heartbeat test.</strong> Adding <code>HISTORY</code> to <code>SESSION_KEYS</code> meant the refresh test's seeder never created it, and the TTL assertion read <code>-2</code>. The seeder creates it now - the failure was correct.
+</div>
+
+<h2 id="tests">10. Test coverage</h2>
+
+<div class="scroll">
+<table>
+  <thead><tr><th>Suite</th><th>Count</th><th>Reaches</th></tr></thead>
+  <tbody>
+    <tr><td>api-backend unit</td><td>574</td><td>Every endpoint, mocked Valkey, schema guards.</td></tr>
+    <tr><td>api-backend integration</td><td>60</td><td>Real Postgres + Valkey: playlists, live reads, the stats consumer.</td></tr>
+    <tr><td>discord-utils unit</td><td>171</td><td>Models, resolution, naming, views, bridge, contracts.</td></tr>
+    <tr><td>discord-utils integration</td><td>81</td><td>Real Valkey: queue, state, history, activity, pool leases.</td></tr>
+    <tr><td>discord-server integration</td><td>2</td><td>Unchanged by this work.</td></tr>
+    <tr><td>web-app</td><td>82</td><td>Pure functions: position extrapolation, formatting, track conversion, session pick.</td></tr>
+    <tr><td>e2e (Playwright)</td><td>3</td><td>web &rarr; api &rarr; DB through a browser.</td></tr>
+    <tr><td>e2e (discord_e2e)</td><td>19</td><td>Both seams end to end against the real stack.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>All green at the time of writing. The e2e music journeys assert the things no unit test can: that a session the bot created is readable from the website, that a web command reaches the channel the bot listens on, and that a played track can be queued again from the browser with its cover intact.</p>
+
+<h2 id="commits">11. Commits</h2>
+
+<div class="scroll">
+<table>
+  <thead><tr><th>Repo</th><th>Commit</th><th>Subject</th></tr></thead>
+  <tbody>
+    <tr><td>api-backend</td><td><code>9a387a5</code></td><td>feat: music sessions, playlists and clan listening stats</td></tr>
+    <tr><td>discord-utils</td><td><code>7a2e603</code></td><td>feat: music player bots, panel and web bridge</td></tr>
+    <tr><td>web-app</td><td><code>f876694</code></td><td>style: reflow hooks to the formatter's line width</td></tr>
+    <tr><td>web-app</td><td><code>74dc0a4</code></td><td>feat: music panel, mini player and playlist library</td></tr>
+    <tr><td>root</td><td><code>12fe48d</code></td><td>feat: run Lavalink and cover the music seams in e2e</td></tr>
+    <tr><td>root</td><td><code>2d28e2e</code></td><td>docs: pin the music contracts and record the design</td></tr>
+    <tr><td>root</td><td><code>64ea720</code></td><td>docs: record the Discord id resolution rule and music memories</td></tr>
+    <tr><td>root</td><td><code>67ee37a</code></td><td>chore: advance api-backend, discord-utils and web-app for music</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The <code>discord-server</code> and <code>discord-event</code> pointers were deliberately left unstaged - their drift predates this work and belongs to whoever made it.</p>
+
+<h3>Not done, on purpose</h3>
+<ul>
+  <li><strong>No version bump.</strong> Everything sits under <code>## [Unreleased]</code> in all three changelogs. A 1.0.0 tag would be a MAJOR move for discord-utils (currently 0.6.1), which is the maintainer's call. api-backend is 1.1.0, web-app 1.0.1.</li>
+  <li><strong>Queue removals are not confirmed.</strong> A queue is transient and a removed track is one click from being re-added; a prompt there is friction on the most-used control.</li>
+</ul>
+
+<footer>
+  Generated as a working document for The Iron Foundry Project. Detail here is drawn from the code as committed; <code>designs/MUSIC_BOTS.md</code> is the canonical stage tracker.
+</footer>
+
+</div>
+</body>
+</html>

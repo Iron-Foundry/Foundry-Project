@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Music Feature - Surface Previews</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #faf9f7; --panel: #fff; --ink: #1c1a17; --muted: #6b6559;
+    --line: #e3ded4; --accent: #8a6d3b; --accent-soft: #f2ead9;
+    --code-bg: #f4f1ea; --prim: #8a6d3b; --mut-bg: #ece7dd;
+    --dc-bg: #f2f3f5; --dc-card: #fff; --dc-line: #e3e5e8; --dc-ink: #2e3338; --dc-mut: #747f8d;
+    --green: #3f7d47; --red: #a8443a; --blue: #3a6ea8; --purple: #6b4fa8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f; --panel: #1c1a16; --ink: #ece7dd; --muted: #9a9285;
+      --line: #2e2b24; --accent: #d1a75f; --accent-soft: #2a2419;
+      --code-bg: #201d17; --prim: #d1a75f; --mut-bg: #2a2721;
+      --dc-bg: #2b2d31; --dc-card: #313338; --dc-line: #3f4147; --dc-ink: #dbdee1; --dc-mut: #949ba4;
+      --green: #7fb587; --red: #d98b81; --blue: #7fa8d9; --purple: #a98fd9;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width:1200px; margin:0 auto; padding:3rem 1.25rem 6rem; }
+  header { border-bottom:2px solid var(--line); padding-bottom:1.5rem; margin-bottom:2rem; }
+  h1 { font-size:2rem; margin:0 0 .4rem; letter-spacing:-.02em; }
+  h2 { font-size:1.35rem; margin:3.5rem 0 .3rem; letter-spacing:-.01em; }
+  h2 .of { color:var(--muted); font-weight:400; font-size:.85rem; display:block; margin-top:.2rem; }
+  h3 { font-size:.78rem; text-transform:uppercase; letter-spacing:.09em; color:var(--muted);
+       margin:2.2rem 0 .8rem; padding-bottom:.35rem; border-bottom:1px solid var(--line); }
+  h4 { font-size:1rem; margin:0 0 .15rem; }
+  .lede { color:var(--muted); font-size:1.05rem; margin:0; }
+  .meta { color:var(--muted); font-size:.85rem; margin-top:.6rem; }
+  a { color:var(--accent); }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; background:var(--code-bg);
+         padding:.1em .35em; border-radius:3px; font-size:.86em; }
+  pre { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; background:var(--code-bg);
+        border:1px solid var(--line); border-radius:6px; padding:.85rem; margin:0;
+        overflow-x:auto; font-size:.76rem; line-height:1.55; }
+  pre code { background:none; padding:0; font-size:inherit; }
+  .cmt { color:var(--muted); font-style:italic; }
+  .kw { color:var(--purple); }
+  .str { color:var(--green); }
+
+  .item { margin:0 0 2.2rem; }
+  .item > .head { margin-bottom:.6rem; }
+  .item > .head p { margin:.15rem 0 0; color:var(--muted); font-size:.88rem; }
+  .file { font-family:ui-monospace,Consolas,monospace; font-size:.74rem; color:var(--muted); }
+  .pv { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1rem; align-items:start; }
+  @media (max-width:920px) { .pv { grid-template-columns:minmax(0,1fr); } }
+  .pv > figure { margin:0; }
+  figcaption { font-size:.7rem; text-transform:uppercase; letter-spacing:.07em;
+               color:var(--muted); margin-bottom:.35rem; }
+
+  /* ---- web mock kit ---- */
+  .mock { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+          padding:.85rem; font-size:.78rem; }
+  .m-title { color:var(--prim); font-weight:700; font-size:.82rem; margin-bottom:.2rem; }
+  .m-sub { color:var(--muted); font-size:.7rem; }
+  .m-sep { height:1px; background:var(--line); margin:.6rem 0; }
+  .m-row { display:flex; align-items:center; gap:.5rem; padding:.25rem 0; }
+  .m-art { width:2rem; height:2rem; border-radius:4px; background:var(--mut-bg); flex:none;
+           display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:.7rem; }
+  .m-art.lg { width:4.2rem; height:4.2rem; }
+  .m-art.img { background:linear-gradient(135deg,#8a6d3b,#d1a75f); color:#fff; }
+  .m-grow { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .m-dim { color:var(--muted); font-size:.72rem; }
+  .m-num { width:1.1rem; text-align:right; color:var(--muted); font-size:.7rem; flex:none; }
+  .m-btn { border:1px solid var(--line); border-radius:4px; padding:.1rem .4rem;
+           font-size:.68rem; color:var(--muted); background:var(--bg); flex:none; }
+  .m-btn.on { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+  .m-track { height:5px; border-radius:99px; background:var(--mut-bg); position:relative; margin:.55rem 0 .3rem; }
+  .m-fill { position:absolute; inset:0 auto 0 0; width:42%; background:var(--prim); border-radius:99px; }
+  .m-thumb { position:absolute; left:42%; top:50%; width:11px; height:11px; margin:-5.5px 0 0 -5.5px;
+             border-radius:99px; background:#fff; border:1px solid var(--prim); }
+  .m-bubble { position:absolute; left:42%; top:-1.65rem; transform:translateX(-50%);
+              background:var(--panel); border:1px solid var(--line); border-radius:4px;
+              padding:.05rem .3rem; font-size:.65rem; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+  .m-times { display:flex; justify-content:space-between; color:var(--muted); font-size:.68rem; }
+  .m-bar { height:6px; border-radius:99px; background:var(--mut-bg); flex:1; overflow:hidden; }
+  .m-bar > i { display:block; height:100%; background:var(--prim); }
+  .m-stat { }
+  .m-stat dt { color:var(--muted); font-size:.65rem; }
+  .m-stat dd { margin:0; color:var(--prim); font-weight:700; font-size:1.05rem; }
+  .m-grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; }
+  .m-shell { display:flex; gap:.6rem; }
+  .m-nav { width:6.5rem; border-right:1px solid var(--line); padding-right:.5rem; flex:none; }
+  .m-navgroup { font-size:.6rem; text-transform:uppercase; letter-spacing:.06em;
+                color:var(--muted); margin:.4rem 0 .15rem; }
+  .m-navitem { padding:.18rem .3rem; border-radius:3px; color:var(--muted); font-size:.72rem; }
+  .m-navitem.on { background:var(--mut-bg); color:var(--prim); }
+  .m-mini { display:flex; align-items:center; gap:.5rem; border-top:1px solid var(--line);
+            padding-top:.5rem; margin-top:.3rem; }
+  .m-dialog { border:1px solid var(--line); border-radius:6px; background:var(--panel);
+              padding:.7rem; box-shadow:0 4px 14px rgba(0,0,0,.14); }
+
+  /* ---- discord mock kit ---- */
+  .dc { background:var(--dc-bg); border-radius:8px; padding:.7rem; font-size:.78rem; color:var(--dc-ink); }
+  .dc-card { background:var(--dc-card); border-left:4px solid #1DB954; border-radius:4px; padding:.6rem .7rem; }
+  .dc-h { font-weight:700; font-size:.8rem; }
+  .dc-m { color:var(--dc-mut); font-size:.7rem; }
+  .dc-mention { color:#5865f2; background:rgba(88,101,242,.12); border-radius:3px; padding:0 .15em; }
+  .dc-sep { height:1px; background:var(--dc-line); margin:.5rem 0; }
+  .dc-row { display:flex; gap:.3rem; flex-wrap:wrap; margin-top:.4rem; }
+  .dc-btn { border-radius:3px; padding:.2rem .55rem; font-size:.72rem;
+            background:#4e5058; color:#fff; border:none; }
+  .dc-btn.pri { background:#5865f2; } .dc-btn.dan { background:#da373c; }
+  .dc-btn.suc { background:#248046; } .dc-btn.off { opacity:.45; }
+  .dc-thumb { width:3.2rem; height:3.2rem; border-radius:4px; flex:none;
+              background:linear-gradient(135deg,#1DB954,#0d7a37); }
+  .dc-flex { display:flex; gap:.6rem; align-items:flex-start; }
+
+  .why { border-left:3px solid var(--accent); background:var(--accent-soft);
+         padding:.55rem .85rem; margin:.7rem 0 0; border-radius:0 5px 5px 0; font-size:.85rem; }
+  .why strong { color:var(--accent); }
+  .toc { columns:2; column-gap:2rem; font-size:.9rem; margin-bottom:1rem; }
+  .toc a { text-decoration:none; border-bottom:1px solid var(--line); color:var(--ink); }
+  .toc a:hover { color:var(--accent); }
+  @media (max-width:640px){ .toc{columns:1;} h1{font-size:1.5rem;} }
+  footer { margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--line);
+           color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="file">THE IRON FOUNDRY PROJECT</span>
+  <h1>Music feature - surface previews</h1>
+  <p class="lede">Every surface the feature puts in front of a person, with the code that produces it. Grouped by module, then by type.</p>
+  <p class="meta">Companion to <a href="music-feature-overview.html">music-feature-overview.html</a>, which covers architecture and flows. Mockups are CSS recreations, not screenshots; code is quoted from the committed source.</p>
+</header>
+
+<nav class="toc">
+  <a href="#web">web-app</a><br>
+  <a href="#web-shell">&nbsp;&nbsp;- shell</a><br>
+  <a href="#web-pages">&nbsp;&nbsp;- pages</a><br>
+  <a href="#web-controls">&nbsp;&nbsp;- controls</a><br>
+  <a href="#web-dialogs">&nbsp;&nbsp;- dialogs and prompts</a><br>
+  <a href="#web-transport">&nbsp;&nbsp;- transport</a><br>
+  <a href="#bot">discord-utils</a><br>
+  <a href="#bot-panel">&nbsp;&nbsp;- the panel</a><br>
+  <a href="#bot-rows">&nbsp;&nbsp;- control rows</a><br>
+  <a href="#bot-views">&nbsp;&nbsp;- ephemeral views</a><br>
+  <a href="#bot-core">&nbsp;&nbsp;- core paths</a><br>
+  <a href="#api">api-backend</a><br>
+  <a href="#api-routers">&nbsp;&nbsp;- routers and payloads</a><br>
+  <a href="#api-services">&nbsp;&nbsp;- services</a><br>
+</nav>
+
+<!-- ============================ WEB-APP ============================ -->
+<h2 id="web">web-app <span class="of">React 19 + TanStack Router + Shadcn. 6 pages, 1 shell, 1 pinned bar.</span></h2>
+
+<h3 id="web-shell">Type: shell</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>MusicPanel</h4>
+    <p>One dialog, a grouped nav, one page at a time - built like the Control Panel. The nav collapses into a Sheet below <code>md</code>.</p>
+    <span class="file">src/components/music/MusicPanel.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-row" style="border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:.4rem">
+          <strong style="font-size:.8rem">Music</strong>
+        </div>
+        <div class="m-shell">
+          <div class="m-nav">
+            <div class="m-navgroup">Playback</div>
+            <div class="m-navitem on">Now Playing</div>
+            <div class="m-navitem">Queue</div>
+            <div class="m-navgroup">Library</div>
+            <div class="m-navitem">Playlists</div>
+            <div class="m-navitem">History</div>
+            <div class="m-navgroup">Insight</div>
+            <div class="m-navitem">Clan Stats</div>
+            <div class="m-navitem">Activity</div>
+          </div>
+          <div class="m-grow">
+            <div class="m-title">Now playing</div>
+            <div class="m-row">
+              <div class="m-art img">art</div>
+              <div class="m-grow">
+                <div>Zanaris Nocturne</div>
+                <div class="m-dim">Barbarian Assault</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>const activeId = MUSIC_PAGES.some((page) =&gt; page.id === selectedId)
+  ? selectedId
+  : MUSIC_PAGES[0].id;
+
+&lt;div className="min-w-0 flex-1 overflow-y-auto p-4 sm:p-6"&gt;
+  &lt;ActiveComponent key={active.id} /&gt;
+&lt;/div&gt;</code></pre>
+      <div class="why"><strong>One page mounted at a time,</strong> keyed by id. Every page reads the same session out of <code>MusicContext</code>, so switching costs no reconnection - the socket belongs to the page, not the panel.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>MiniPlayer</h4>
+    <p>Pinned to the bottom of every page while something plays, hidden while the panel is open. A status line first, a control second.</p>
+    <span class="file">src/components/music/MiniPlayer.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock" style="padding:.5rem .85rem">
+        <div style="height:2px;background:var(--mut-bg);margin:-.5rem -.85rem .5rem">
+          <div style="height:100%;width:42%;background:var(--prim)"></div>
+        </div>
+        <div class="m-row">
+          <span class="m-dim">&#9834;</span>
+          <span class="m-grow">Zanaris Nocturne <span class="m-dim">Barbarian Assault</span></span>
+          <span class="m-dim">1:24 / 3:00</span>
+          <span class="m-btn">&#10073;&#10073;</span>
+          <span class="m-btn">&#9654;&#9654;</span>
+          <span class="m-dim">Music Lounge</span>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>&lt;div
+  <span class="cmt">// Matched to the once-a-second tick behind it, so the bar</span>
+  <span class="cmt">// crosses continuously instead of easing into a step.</span>
+  key={track.identifier}
+  className="h-full bg-primary transition-[width] duration-1000 ease-linear"
+  style={{ width: `${progress}%` }}
+/&gt;</code></pre>
+      <div class="why"><strong>Keyed by track.</strong> Without it a new track slides the bar backwards to zero over a full second instead of resetting.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="web-pages">Type: pages</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>Now Playing</h4>
+    <p>Cover, requester, source path, seek bar with a scrub readout, transport, and the next five queued.</p>
+    <span class="file">src/components/music/NowPlayingPage.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview - mid-scrub</figcaption>
+      <div class="mock">
+        <div class="m-row" style="align-items:flex-start">
+          <div class="m-art lg img">art</div>
+          <div class="m-grow">
+            <div style="color:var(--prim);font-weight:700">Zanaris Nocturne</div>
+            <div class="m-dim">Barbarian Assault</div>
+            <div class="m-dim">Requested by <span style="color:var(--ink)">Saltis</span> &middot;
+              <span style="color:#1DB954">spotify</span> &rarr; <span style="color:#FF0000">youtube</span></div>
+          </div>
+        </div>
+        <div class="m-track">
+          <div class="m-fill"></div><div class="m-thumb"></div><div class="m-bubble">1:16</div>
+        </div>
+        <div class="m-times"><span>1:16</span><span>3:00</span></div>
+        <div class="m-sep"></div>
+        <div class="m-row">
+          <span class="m-btn">&#9664;&#9664;</span><span class="m-btn">&#10073;&#10073;</span>
+          <span class="m-btn">&#9654;&#9654;</span><span class="m-btn">&#9632;</span>
+          <span class="m-btn on">shuffle</span><span class="m-btn">loop off</span>
+          <span class="m-grow"></span><span class="m-dim">60%</span>
+        </div>
+        <div class="m-sep"></div>
+        <div class="m-title" style="font-size:.75rem">Up next</div>
+        <div class="m-row"><span class="m-num">1</span><span class="m-art">&#9834;</span>
+          <span class="m-grow">Sea Shanty 2</span><span class="m-dim">2:41</span></div>
+        <div class="m-row"><span class="m-num">2</span><span class="m-art img"></span>
+          <span class="m-grow">Newbie Melody</span><span class="m-dim">1:58</span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>const shown = scrub ?? (track ? Math.min(position, track.length_ms) : position);
+
+&lt;Slider
+  key={track.identifier}
+  value={[shown]}
+  glide={playing &amp;&amp; scrub === null}
+  onValueChange={(v) =&gt; setScrub(v[0] ?? null)}
+  onValueCommit={(v) =&gt; command.mutate(
+    { action: "seek", position_ms: Math.round(v[0]) },
+    { onError: () =&gt; setScrub(null) },
+  )}
+/&gt;</code></pre>
+      <div class="why"><strong>Three states in one value.</strong> <code>scrub</code> holds the drag, outlives the release until the bot confirms, and clears on <code>updated_at</code>. <code>glide</code> is off during a drag or the thumb trails the pointer by a second.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Queue</h4>
+    <p>Search to add, drag to reorder, jump, remove, and save the whole thing as a playlist.</p>
+    <span class="file">src/components/music/QueuePage.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-title">Queue</div>
+        <div class="m-sub">3 tracks &middot; 7:39 remaining</div>
+        <div class="m-sep"></div>
+        <div class="m-row" style="background:var(--mut-bg);border-radius:4px">
+          <span class="m-dim">&#8942;&#8942;</span><span class="m-num">1</span>
+          <span class="m-art img"></span>
+          <span class="m-grow">Sea Shanty 2 <span class="m-dim">Ian Taylor</span></span>
+          <span class="m-dim">2:41</span><span class="m-btn">&#9654;</span><span class="m-btn">&#128465;</span>
+        </div>
+        <div class="m-row">
+          <span class="m-dim">&#8942;&#8942;</span><span class="m-num">2</span>
+          <span class="m-art">&#9834;</span>
+          <span class="m-grow">Newbie Melody <span class="m-dim">Ian Taylor</span></span>
+          <span class="m-dim">1:58</span><span class="m-btn">&#9654;</span><span class="m-btn">&#128465;</span>
+        </div>
+        <div class="m-sep"></div>
+        <div class="m-row"><span class="m-btn" style="flex:1">Playlist name</span><span class="m-btn on">Save</span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>tracks: tracks.map((row) =&gt; ({
+  source: row.source,     identifier: row.identifier,
+  title:  row.title,      author:     row.author,
+  duration_ms: row.length_ms,
+  isrc: row.isrc,         uri: row.uri,
+  artwork: row.artwork,   <span class="cmt">// carried, never re-derived</span>
+})),</code></pre>
+      <div class="why"><strong>The row with no art still renders a box.</strong> A track reaches the queue without a cover - it is only recovered when the audio resolves at play time - and an empty row would sit out of line with its neighbours.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Playlists</h4>
+    <p>Import, create, rename, share, delete. Opening one reveals its tracks: reorder, remove, queue one, queue all.</p>
+    <span class="file">src/components/music/PlaylistsPage.tsx &middot; PlaylistRow.tsx &middot; PlaylistTracks.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview - one row expanded</figcaption>
+      <div class="mock">
+        <div class="m-title">Playlists</div>
+        <div class="m-sub">Editing never needs a voice channel; only queueing does.</div>
+        <div class="m-sep"></div>
+        <div style="border:1px solid var(--line);border-radius:5px;padding:.4rem .5rem">
+          <div class="m-row">
+            <span class="m-grow">Slayer Tunes <span class="m-dim">2 tracks</span></span>
+            <span class="m-btn">&#9998;</span><span class="m-btn">&#128274;</span>
+            <span class="m-btn on">Queue</span><span class="m-btn">&#128465;</span>
+          </div>
+          <div class="m-sep" style="margin:.4rem -.5rem"></div>
+          <div class="m-row"><span class="m-dim">&#8942;&#8942;</span><span class="m-num">1</span>
+            <span class="m-grow" style="font-size:.72rem">Zanaris Nocturne <span class="m-dim">Barbarian Assault</span></span>
+            <span class="m-dim">3:00</span><span class="m-btn">&#43;</span><span class="m-btn">&#128465;</span></div>
+          <div class="m-row"><span class="m-dim">&#8942;&#8942;</span><span class="m-num">2</span>
+            <span class="m-grow" style="font-size:.72rem">Sea Shanty 2 <span class="m-dim">Ian Taylor</span></span>
+            <span class="m-dim">2:41</span><span class="m-btn">&#43;</span><span class="m-btn">&#128465;</span></div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt">// The saved row travels as it is, the same shape a search result is</span>
+<span class="cmt">// queued in, so the bot queues exactly the track that was saved</span>
+<span class="cmt">// rather than searching the title again and finding something else.</span>
+const queue = (index: number): void =&gt; {
+  const row = rows[index];
+  if (row) onQueue({ action: "add", tracks: [row] });
+};</code></pre>
+      <div class="why"><strong>Per-track queueing is not owner-gated.</strong> The whole-playlist Queue button works on shared playlists, so one track out of one does too. Only remove stays owner-only.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>History</h4>
+    <p>Everything the session has played, newest first, with requeue and save-to-playlist. The panel shows ten; this shows all of it.</p>
+    <span class="file">src/components/music/HistoryPage.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-title">Recently played</div>
+        <div class="m-sub">Kept only while the session is alive. Saving to a playlist keeps it for good.</div>
+        <div class="m-sep"></div>
+        <div class="m-row"><span class="m-dim" style="width:3.2rem;text-align:right">20:15</span>
+          <span class="m-grow">Zanaris Nocturne <span class="m-dim">Barbarian Assault</span></span>
+          <span class="m-dim">&#9654;&#9654;</span><span class="m-dim">3:00</span>
+          <span class="m-btn">&#8635;</span><span class="m-btn">&#43;</span></div>
+        <div class="m-row"><span class="m-dim" style="width:3.2rem;text-align:right">20:11</span>
+          <span class="m-grow">Sea Shanty 2 <span class="m-dim">Ian Taylor</span></span>
+          <span class="m-dim">2:41</span>
+          <span class="m-btn">&#8635;</span><span class="m-btn">&#43;</span></div>
+        <div class="m-sub" style="margin-top:.5rem">Join Music Lounge to queue any of these again. Saving to a playlist works either way.</div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>{entry.event === "skipped" &amp;&amp; (
+  &lt;SkipForward className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
+               aria-label="Skipped" /&gt;
+)}
+
+onClick={() =&gt; command.mutate(
+  { action: "add", tracks: [toTrackInput(entry)] }
+)}</code></pre>
+      <div class="why"><strong>Requeue needs no new command.</strong> A history entry carries the same metadata a search result does, so it travels back down the existing <code>add</code> path rather than giving one intent two implementations.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Clan Stats</h4>
+    <p>Totals over a chosen window, where the audio actually streamed from, and the most-played recordings.</p>
+    <span class="file">src/components/music/StatsPage.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-row"><span class="m-title m-grow">Clan listening</span>
+          <span class="m-btn">7d</span><span class="m-btn on">30d</span>
+          <span class="m-btn">90d</span><span class="m-btn">365d</span></div>
+        <div class="m-sub">Counted per clan, never per person.</div>
+        <div class="m-sep"></div>
+        <dl class="m-grid4 m-stat">
+          <div><dt>Listened</dt><dd>42h 18m</dd></div>
+          <div><dt>Tracks played</dt><dd>713</dd></div>
+          <div><dt>Skipped</dt><dd>96</dd></div>
+          <div><dt>Sessions</dt><dd>48</dd></div>
+        </dl>
+        <div class="m-sep"></div>
+        <div class="m-title" style="font-size:.75rem">Where the audio came from</div>
+        <div class="m-row"><span style="width:4.5rem;color:#FF0000">youtube</span>
+          <span class="m-bar"><i style="width:74%"></i></span><span class="m-dim">528</span></div>
+        <div class="m-row"><span style="width:4.5rem;color:#FF5500">soundcloud</span>
+          <span class="m-bar"><i style="width:26%"></i></span><span class="m-dim">185</span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt">/**
+ * Nothing on this page is per member and nothing can be: the counters
+ * behind it carry a guild and a track, never a user id, so there is no
+ * personal listening history to show even to the person who asked.
+ */</span></code></pre>
+      <div class="why"><strong>No Spotify bar, ever.</strong> The split counts <code>played_source</code>, and Spotify audio is always mirrored before it plays - which is the only reason requested and played sources are tracked separately.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Activity</h4>
+    <p>Who did what to this session, newest first, capped at 25 and gone when the session ends.</p>
+    <span class="file">src/components/music/ActivityPage.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-title">Recent activity</div>
+        <div class="m-sub">Kept only while the session is alive, and never written to the database.</div>
+        <div class="m-sep"></div>
+        <div class="m-row"><span class="m-dim" style="width:3.4rem">20:15:04</span>
+          <span class="m-grow"><span style="color:var(--ink)">Saltis</span> <span>queued</span>
+          <span class="m-dim">- Zanaris Nocturne</span></span></div>
+        <div class="m-row"><span class="m-dim" style="width:3.4rem">20:11:47</span>
+          <span class="m-grow"><span style="color:var(--ink)">Saltis</span> <span>skipped</span>
+          <span class="m-dim">- Sea Shanty 2</span></span></div>
+        <div class="m-row"><span class="m-dim" style="width:3.4rem">20:04:12</span>
+          <span class="m-grow"><span style="color:var(--ink)">225683257146998785</span> <span>jumped to</span>
+          <span class="m-dim">- Newbie Melody</span></span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>&lt;span className="text-foreground"&gt;
+  {entry.actor_name || entry.actor_id}
+&lt;/span&gt;</code></pre>
+      <div class="why"><strong>The third row is the fallback showing its work.</strong> A member the bot's guild cache could not resolve keeps the raw id rather than an empty space. Naming is never worth a Discord round trip, let alone blocking a write.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="web-controls">Type: controls</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>TrackSearch</h4>
+    <p>Shared by the queue and the playlist editor. Searching needs no session - it is a Lavalink lookup, not playback.</p>
+    <span class="file">src/components/music/TrackSearch.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock">
+        <div class="m-row"><span class="m-btn" style="flex:1;text-align:left">Search, or paste a link</span>
+          <span class="m-btn">Spotify &#9662;</span><span class="m-btn on">Search</span></div>
+        <div class="m-row"><span class="m-grow">Zanaris Nocturne <span class="m-dim">Barbarian Assault</span></span>
+          <span style="color:#1DB954;font-size:.6rem;text-transform:uppercase">spotify</span>
+          <span class="m-dim">3:00</span><span class="m-btn">&#43;</span></div>
+        <div class="m-row"><span class="m-grow">Zanaris Nocturne (Live) <span class="m-dim">Barbarian Assault</span></span>
+          <span style="color:#1DB954;font-size:.6rem;text-transform:uppercase">spotify</span>
+          <span class="m-dim">3:24</span><span class="m-btn">&#43;</span></div>
+        <div class="m-row"><span class="m-btn">&#43; Add all 2</span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>export function toTrackInput(result: SearchResult): TrackInput {
+  return {
+    source: result.source, identifier: result.identifier,
+    title: result.title,   author: result.author,
+    duration_ms: result.duration_ms,
+    isrc: result.isrc, uri: result.uri, artwork: result.artwork,
+  };
+}</code></pre>
+      <div class="why"><strong>Spotify is the default source</strong> because Spotify results carry an ISRC - the only stable identity a song has across sources. Without it the same song from two sources counts as two songs.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>TransportControls &middot; TrackArt</h4>
+    <p>The transport row, and the cover-or-placeholder used by every list.</p>
+    <span class="file">src/components/music/TransportControls.tsx &middot; TrackArt.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview - no session control</figcaption>
+      <div class="mock">
+        <div class="m-row">
+          <span class="m-btn off" style="opacity:.5">&#9664;&#9664;</span>
+          <span class="m-btn off" style="opacity:.5">&#9654;</span>
+          <span class="m-btn off" style="opacity:.5">&#9654;&#9654;</span>
+          <span class="m-btn off" style="opacity:.5">&#9632;</span>
+          <span class="m-grow"></span>
+          <span class="m-dim">&#128266;</span>
+          <span class="m-bar" style="max-width:5rem"><i style="width:60%"></i></span>
+          <span class="m-dim">60%</span>
+        </div>
+        <div class="m-sub" style="margin-top:.4rem">Join Music Lounge to control playback.</div>
+        <div class="m-sep"></div>
+        <div class="m-row"><span class="m-art img"></span><span class="m-art">&#9834;</span>
+          <span class="m-dim">cover, and the placeholder that keeps the row aligned</span></div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>const [dragVolume, setDragVolume] = useState&lt;number | null&gt;(null);
+useEffect(() =&gt; setDragVolume(null), [session.volume]);
+const volume = dragVolume ?? session.volume;
+
+value={[volume]}
+onValueChange={(v) =&gt; setDragVolume(v[0] ?? null)}
+onValueCommit={(v) =&gt; onCommand({ action: "volume", volume: Math.round(v[0]) })}</code></pre>
+      <div class="why"><strong>The drag must feed back into the value.</strong> A Radix slider given <code>value</code> is fully controlled: without this the thumb cannot move <em>and</em> <code>onValueCommit</code> never fires, because the internal value never changed. This is the bug that left volume stuck at 60%.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="web-dialogs">Type: dialogs and prompts</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>AddToPlaylistDialog &middot; delete confirmations</h4>
+    <p>Saving a played track into a library playlist, and the two destructive prompts.</p>
+    <span class="file">src/components/music/AddToPlaylistDialog.tsx &middot; PlaylistRow.tsx &middot; PlaylistTracks.tsx</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="mock" style="background:var(--bg)">
+        <div class="m-dialog">
+          <div class="m-title" style="font-size:.78rem">Add to a playlist</div>
+          <div class="m-sub">Zanaris Nocturne &middot; Barbarian Assault</div>
+          <div class="m-sep"></div>
+          <div class="m-row"><span class="m-grow">Slayer Tunes <span class="m-dim">2 tracks</span></span><span class="m-btn on">Add</span></div>
+          <div class="m-row"><span class="m-grow">Bossing <span class="m-dim">17 tracks</span></span><span class="m-btn on">Add</span></div>
+        </div>
+        <div class="m-dialog" style="margin-top:.7rem;border-color:var(--muted)">
+          <div style="font-size:.75rem">Delete playlist "Slayer Tunes"? This cannot be undone.</div>
+          <div class="m-row" style="justify-content:flex-end"><span class="m-btn">Cancel</span><span class="m-btn on">OK</span></div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt">// Nothing restores a deleted playlist, and the button sits next to</span>
+<span class="cmt">// the ones that only rename or share it.</span>
+const destroy = (): void =&gt; {
+  if (!confirm(`Delete playlist "${playlist.name}"? This cannot be undone.`)) {
+    return;
+  }
+  remove.mutate(playlist.id);
+};</code></pre>
+      <div class="why"><strong>Native <code>confirm</code>, not a styled dialog.</strong> Fourteen other destructive actions in this app already use it. A second pattern for two buttons would be the inconsistency, not the fix.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="web-transport">Type: transport</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>useMusicSocket</h4>
+    <p>One socket for the whole page, shared by the panel and the mini player.</p>
+    <span class="file">src/hooks/useMusicSocket.ts</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Frame sequence</figcaption>
+<pre><code>open   ──▶ <span class="str">{"type":"auth","token":"..."}</span>      <span class="cmt">first frame, not a header</span>
+       ◀── <span class="str">{"type":"sessions","sessions":[...]}</span> <span class="cmt">snapshot</span>
+       ◀── <span class="str">{"type":"session","session":{...}}</span>   <span class="cmt">one moved</span>
+       ◀── <span class="str">{"type":"closed","voice_channel_id":"..."}</span>
+close  ──▶ retry in 1s, 2s, 4s ... capped at 30s
+sweep  ──▶ every 15s, drop sessions silent for 2.5 min</code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt">// Self-scheduling rather than an interval: the next attempt is only</span>
+<span class="cmt">// queued once the current socket has actually failed, so a slow API</span>
+<span class="cmt">// can never stack connection attempts up behind each other.</span>
+const connect = (): void =&gt; {
+  const socket = new WebSocket(musicSocketUrl(API_URL));
+  socket.onopen = () =&gt; {
+    backoffRef.current = FIRST_RETRY_MS;
+    socket.send(JSON.stringify({ type: "auth", token }));</code></pre>
+      <div class="why"><strong>Auth on the first frame.</strong> A browser cannot set headers on a WebSocket, and a token in the query string is written into every access log that records the path.</div>
+    </figure>
+  </div>
+</div>
+
+<!-- ============================ DISCORD-UTILS ============================ -->
+<h2 id="bot">discord-utils <span class="of">Components V2 panel, five ephemeral views, four slash commands.</span></h2>
+
+<h3 id="bot-panel">Type: the panel</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>MusicPanel (LayoutView)</h4>
+    <p>One components-v2 message per session, edited in place. The accent colour is the source the audio actually came from.</p>
+    <span class="file">music/views/panel_view.py &middot; format.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="dc">
+        <div class="dc-card">
+          <div class="dc-flex">
+            <div class="m-grow">
+              <div class="dc-h">Now playing</div>
+              <div><strong>Zanaris Nocturne</strong></div>
+              <div class="dc-m">Barbarian Assault</div>
+              <div style="font-size:.72rem">Requested by <span class="dc-mention">@Saltis</span> &middot; spotify &rarr; youtube</div>
+              <div class="dc-m">3:00 &middot; ends in 2 minutes</div>
+            </div>
+            <div class="dc-thumb"></div>
+          </div>
+          <div class="dc-sep"></div>
+          <div style="font-size:.74rem">1. Sea Shanty 2 &middot; <span class="dc-m">2:41</span><br>
+                                       2. Newbie Melody &middot; <span class="dc-m">1:58</span></div>
+          <div class="dc-m">2 tracks, 4:39 remaining</div>
+          <div class="dc-m">Loop off &middot; Shuffle on &middot; Volume 60%</div>
+          <div class="dc-row">
+            <span class="dc-btn pri">&#10073;&#10073;</span><span class="dc-btn">&#9197;</span>
+            <span class="dc-btn dan">&#9209;</span><span class="dc-btn">&#9193;</span>
+          </div>
+          <div class="dc-row">
+            <span class="dc-btn">&#128265;</span><span class="dc-btn">&#128266;</span>
+            <span class="dc-btn">&#128257; Off</span><span class="dc-btn suc">&#128256;</span>
+          </div>
+          <div class="dc-row">
+            <span class="dc-btn">Queue</span><span class="dc-btn">History</span>
+            <span class="dc-btn">Activity</span><span class="dc-btn">Playlists</span>
+          </div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="kw">def</span> _header(snapshot: PanelSnapshot) -&gt; discord.ui.Item[Any]:
+    <span class="str">"""The now-playing block, with artwork as the section accessory."""</span>
+    text = discord.ui.TextDisplay(now_playing(snapshot))
+    artwork = snapshot.current.artwork <span class="kw">if</span> snapshot.current <span class="kw">else</span> <span class="kw">None</span>
+    <span class="kw">if not</span> artwork:
+        <span class="kw">return</span> text
+    <span class="kw">return</span> discord.ui.Section(text, accessory=discord.ui.Thumbnail(artwork))</code></pre>
+      <div class="why"><strong>Components-v2 on send and on every edit.</strong> The flag cannot be removed once sent, and <code>content</code> and <code>embeds</code> stop working under it - so nothing in this module may ever pass either.</div>
+      <div class="why"><strong>The mention is the resolved form here.</strong> Discord renders <code>&lt;@id&gt;</code> as the member and links to them. The stamped name exists for the surface that cannot resolve anything.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="bot-rows">Type: control rows</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>transport_row &middot; modifier_row &middot; views_row</h4>
+    <p>Three rows, capped at five buttons each. Every callback runs the in-channel check before it touches playback.</p>
+    <span class="file">music/views/controls.py &middot; buttons.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview - idle session</figcaption>
+      <div class="dc">
+        <div class="dc-card" style="border-left-color:#5865f2">
+          <div class="dc-h">Nothing playing</div>
+          <div class="dc-m">Queue something to get started.</div>
+          <div class="dc-row">
+            <span class="dc-btn pri off">&#9654;</span><span class="dc-btn off">&#9197;</span>
+            <span class="dc-btn dan off">&#9209;</span><span class="dc-btn off">&#9193;</span>
+          </div>
+          <div class="dc-row">
+            <span class="dc-btn off">&#128265;</span><span class="dc-btn">&#128266;</span>
+            <span class="dc-btn suc">&#128257; All</span><span class="dc-btn">&#128256;</span>
+          </div>
+          <div class="dc-m" style="margin-top:.3rem">disabled while idle &middot; loop lit while in force</div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code>seekable = <span class="kw">not</span> idle <span class="kw">and not</span> (
+    snapshot.current <span class="kw">is not None and</span> snapshot.current.is_stream
+)
+
+<span class="kw">def</span> _toggle_style(enabled: <span class="kw">bool</span>) -&gt; discord.ButtonStyle:
+    <span class="str">"""Lit while a mode is in force, so the row shows its own state."""</span>
+    <span class="kw">return</span> ButtonStyle.success <span class="kw">if</span> enabled <span class="kw">else</span> ButtonStyle.secondary</code></pre>
+      <div class="why"><strong>No playlist API configured means no Playlists button at all,</strong> rather than one that errors when pressed.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="bot-views">Type: ephemeral views</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>History view</h4>
+    <p>The last ten played, each with a numbered button that queues it again. Ten is what fits in two rows of five.</p>
+    <span class="file">music/views/history_view.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview - ephemeral</figcaption>
+      <div class="dc">
+        <div class="dc-card" style="border-left-color:#4e5058">
+          <div class="dc-h">Recently played</div>
+          <div style="font-size:.72rem;font-family:ui-monospace,Consolas,monospace">
+            ` 1` Zanaris Nocturne &middot; 3:00 &middot; 4 minutes ago<br>
+            ` 2` Sea Shanty 2 &middot; 2:41 &middot; 8 minutes ago &middot; skipped<br>
+            ` 3` Newbie Melody &middot; 1:58 &middot; 12 minutes ago
+          </div>
+          <div class="dc-row">
+            <span class="dc-btn">1</span><span class="dc-btn">2</span><span class="dc-btn">3</span>
+          </div>
+          <div class="dc-m">Only you can see this &middot; press a number to queue it again</div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># The name goes with the id: keeping it would credit the new request</span>
+<span class="cmt"># to whoever asked for it the first time.</span>
+again = track.model_copy(
+    update={<span class="str">"requester_id"</span>: interaction.user.id, <span class="str">"requester_name"</span>: <span class="str">""</span>}
+)</code></pre>
+      <div class="why"><strong>Ephemeral, per viewer.</strong> The panel is one shared message, so a select on it could only ever have offered what everyone may see. Every view here opens for the person who pressed.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Queue view &middot; Playlist picker &middot; Search picker &middot; Seek modal</h4>
+    <p>The remaining ephemeral surfaces, all reached from <code>views_row</code> or a command.</p>
+    <span class="file">music/views/queue_view.py &middot; playlist_view.py &middot; picker.py &middot; modals.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Preview</figcaption>
+      <div class="dc">
+        <div class="dc-card" style="border-left-color:#4e5058;margin-bottom:.5rem">
+          <div class="dc-h">Your playlists</div>
+          <div class="dc-m">3 available. Loading one adds every track to the queue.</div>
+          <div class="dc-row"><span class="dc-btn" style="width:100%;text-align:left">
+            Slayer Tunes &nbsp;<span style="opacity:.7">2 tracks &middot; yours</span> &nbsp;&#9662;</span></div>
+        </div>
+        <div class="dc-card" style="border-left-color:#4e5058">
+          <div class="dc-h">Jump to a position</div>
+          <div class="dc-m">mm:ss, or a number of seconds</div>
+          <div class="dc-row"><span class="dc-btn" style="width:100%;text-align:left;background:var(--dc-bg);color:var(--dc-mut)">1:30</span></div>
+          <div class="dc-row"><span class="dc-btn pri">Submit</span><span class="dc-btn">Cancel</span></div>
+        </div>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># A search returns alternatives. Queueing all of them was never what</span>
+<span class="cmt"># anyone asked for, so the caller picks and nothing is queued yet.</span>
+<span class="kw">if</span> result.needs_choice:
+    <span class="kw">await</span> interaction.followup.send(
+        view=SearchPicker(context_for(service, session), query, result.tracks),
+        ephemeral=<span class="kw">True</span>,
+    )
+    <span class="kw">return</span></code></pre>
+      <div class="why"><strong>A list longer than one is precisely a search with alternatives.</strong> wavelink returns <code>list[Playable]</code> for both a link and a search and drops the load type, so the length is the only signal - and a link always resolves to exactly one.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="bot-core">Type: core paths</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>enqueue &middot; _play</h4>
+    <p>The funnel every surface reaches, and the moment a cover can be recovered.</p>
+    <span class="file">music/session.py &middot; naming.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Six callers, one funnel</figcaption>
+<pre><code>/play ──┐
+picker ─┤
+panel ──┼──▶ enqueue()  ──▶ stamp_requesters()  <span class="cmt">names, once</span>
+web add ┤                ──▶ queue.add()
+load pl ┤                ──▶ activity.push()    <span class="cmt">names again</span>
+requeue ┘                ──▶ play_next() if idle
+                                   │
+                                   ▼
+                             _play(track)
+                               resolve audio ──▶ Lavalink
+                               played_source = actual
+                               artwork ||= resolved  <span class="cmt">cover recovered</span></code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="kw">async def</span> enqueue(self, tracks, *, actor_id, label) -&gt; <span class="kw">None</span>:
+    stamp_requesters(tracks, self._names)
+    <span class="kw">await</span> self.queue.add(tracks)
+    <span class="kw">await</span> self.activity.push(actor_id, <span class="str">"queued"</span>, label)
+
+<span class="cmt"># A track saved without cover art can only recover one from the audio</span>
+<span class="cmt"># that was just resolved for it, so this is the moment to take it.</span>
+track.artwork = track.artwork <span class="kw">or</span> playable.artwork</code></pre>
+      <div class="why"><strong>One stamping point beats a threaded parameter.</strong> Passing a name through <code>search_tracks</code>, <code>to_track</code> and <code>to_tracks</code> would have touched every caller and their tests to reach the same place.</div>
+    </figure>
+  </div>
+</div>
+
+<!-- ============================ API-BACKEND ============================ -->
+<h2 id="api">api-backend <span class="of">Nine routers, four services. The only place the browser's view is shaped.</span></h2>
+
+<h3 id="api-routers">Type: routers and payloads</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>GET /music/sessions/{id}</h4>
+    <p>The live session as the website renders it. Audio handles never appear.</p>
+    <span class="file">app/routers/music/sessions.py &middot; _live_schemas.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Response</figcaption>
+<pre><code>{
+  <span class="str">"voice_channel_id"</span>: <span class="str">"555000111"</span>,   <span class="cmt">// string: &gt; 2^53</span>
+  <span class="str">"channel_name"</span>: <span class="str">"Music Lounge"</span>,
+  <span class="str">"current"</span>: {
+    <span class="str">"title"</span>: <span class="str">"Zanaris Nocturne"</span>,
+    <span class="str">"artwork"</span>: <span class="str">"https://i.scdn.co/image/abc123"</span>,
+    <span class="str">"requested_source"</span>: <span class="str">"spotify"</span>,
+    <span class="str">"played_source"</span>: <span class="str">"youtube"</span>,
+    <span class="str">"requester_id"</span>: <span class="str">"225683257146998785"</span>,
+    <span class="str">"requester_name"</span>: <span class="str">"Saltis"</span>
+  },
+  <span class="str">"position_ms"</span>: 42000,
+  <span class="str">"updated_at"</span>: 1774000000.5,      <span class="cmt">// extrapolate from here</span>
+  <span class="str">"listener_count"</span>: 2
+}</code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># The stored row also carries the encoded Lavalink audio and its raw</span>
+<span class="cmt"># payload. Neither is named here, so pydantic drops them: they are</span>
+<span class="cmt"># large, of no use to a browser, and echoing them would put playable</span>
+<span class="cmt"># audio handles into a page.</span>
+SNOWFLAKE_SAFE = ConfigDict(coerce_numbers_to_str=<span class="kw">True</span>)</code></pre>
+      <div class="why"><strong>The schema is the redaction.</strong> Nothing strips <code>encoded</code> or <code>payload</code> - they are simply not declared, so they cannot leak by omission later.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>POST /music/sessions/{id}/commands</h4>
+    <p>One body for every action. 200 means published, not performed.</p>
+    <span class="file">app/routers/music/control.py &middot; _command_schemas.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Request / response</figcaption>
+<pre><code><span class="cmt">// request</span>
+{ <span class="str">"action"</span>: <span class="str">"seek"</span>, <span class="str">"position_ms"</span>: 90000 }
+
+<span class="cmt">// response</span>
+{ <span class="str">"accepted"</span>: <span class="kw">true</span>, <span class="str">"action"</span>: <span class="str">"seek"</span>, <span class="str">"delivered_to"</span>: 1 }
+
+<span class="cmt">// published on music:commands</span>
+{ <span class="str">"voice_channel_id"</span>: 555000111,
+  <span class="str">"actor_id"</span>: 225683257146998785,
+  <span class="str">"action"</span>: <span class="str">"seek"</span>, <span class="str">"position_ms"</span>: 90000 }</code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># Pause and resume are one action with a flag. discord-utils takes</span>
+<span class="cmt"># `paused` rather than two verbs because the transport call is</span>
+<span class="cmt"># `player.pause(bool)`; splitting it on the web is only so a button</span>
+<span class="cmt"># can name what it does.</span>
+<span class="kw">if</span> body.action <span class="kw">in</span> {<span class="str">"pause"</span>, <span class="str">"resume"</span>}:
+    command[<span class="str">"paused"</span>] = body.action == <span class="str">"pause"</span></code></pre>
+      <div class="why"><strong><code>position_ms</code> is an integer field.</strong> The browser extrapolates from a float epoch, so an unrounded value was refused with a 422 and the seek bar did nothing at all.</div>
+    </figure>
+  </div>
+</div>
+
+<div class="item">
+  <div class="head">
+    <h4>Playlists &middot; import &middot; stats &middot; bot surface</h4>
+    <p>The durable half, plus the read-only surface discord-utils uses.</p>
+    <span class="file">app/routers/music/playlists.py &middot; importing.py &middot; stats.py &middot; bot.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>Routes</figcaption>
+<pre><code>GET    /music/playlists?scope=mine|public|all
+POST   /music/playlists
+PATCH  /music/playlists/{id}          <span class="cmt">rename, share</span>
+DELETE /music/playlists/{id}
+POST   /music/playlists/{id}/tracks   <span class="cmt">append</span>
+PUT    /music/playlists/{id}/tracks   <span class="cmt">replace whole list</span>
+POST   /music/playlists/import        <span class="cmt">YouTube / YT Music only</span>
+
+GET    /music/stats?days=30
+GET    /music/stats/top-tracks?limit=25
+
+GET    /music/bot/{discord_user_id}/playlists        <span class="cmt">service key</span>
+GET    /music/bot/{discord_user_id}/playlists/{id}   <span class="cmt">read-only</span></code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># Visibility has two distinct rules and they are deliberately not the</span>
+<span class="cmt"># same one: a public playlist can be read and loaded by anyone, but</span>
+<span class="cmt"># only its owner may change it. Every write path therefore goes</span>
+<span class="cmt"># through `require_owned`, never through `require_visible`.</span></code></pre>
+      <div class="why"><strong>A private playlist reads as 404, not 403.</strong> Its existence is not disclosed to someone who cannot see it - and "gone" and "not yours" are deliberately the same message.</div>
+      <div class="why"><strong>Spotify links cannot be imported.</strong> Spotify serves a playlist, album or artist page only to a signed-in account. The page says so rather than inviting a paste that always fails.</div>
+    </figure>
+  </div>
+</div>
+
+<h3 id="api-services">Type: services</h3>
+
+<div class="item">
+  <div class="head">
+    <h4>MusicStatsService</h4>
+    <p>The consumer that turns the event stream into durable counters.</p>
+    <span class="file">app/services/music_stats.py &middot; music_stream.py &middot; music_counters.py</span>
+  </div>
+  <div class="pv">
+    <figure>
+      <figcaption>One poll</figcaption>
+<pre><code>XREADGROUP "0"  <span class="cmt">pending first - retry what a dead worker left</span>
+   │ empty
+   ▼
+XREADGROUP "&gt;"  <span class="cmt">then new, blocking 5s</span>
+   │
+   ▼ per message
+SET NX seen:{id}  ──▶ taken? skip + XACK   <span class="cmt">at-least-once guard</span>
+   │ claimed
+   ▼
+ON CONFLICT DO UPDATE  music_counters
+ON CONFLICT DO UPDATE  music_track_plays
+   │ failed ──▶ DEL claim, leave unacked
+   ▼
+XACK</code></pre>
+    </figure>
+    <figure>
+      <figcaption>Code</figcaption>
+<pre><code><span class="cmt"># Never the request client. A blocking `XREADGROUP` holds its socket</span>
+<span class="cmt"># for as long as it blocks, and the shared client carries a socket</span>
+<span class="cmt"># timeout far shorter than that - which turned every poll into a</span>
+<span class="cmt"># timeout and the whole consumer into a retry loop that counted</span>
+<span class="cmt"># nothing.</span>
+<span class="kw">if</span> self._owned <span class="kw">is None</span>:
+    self._owned = Valkey.from_url(self._valkey_uri, socket_timeout=<span class="kw">None</span>)</code></pre>
+      <div class="why"><strong>The bug no test could catch.</strong> Tests read non-blocking, so every suite passed. It was visible only in the deployed stack's logs. The regression test asserts the connection kwarg itself.</div>
+    </figure>
+  </div>
+</div>
+
+<footer>
+  Mockups are CSS recreations for review, not screenshots - spacing and colour approximate the real components rather than matching them pixel for pixel. Code excerpts are quoted verbatim from the committed source. Architecture, flows and decisions live in <a href="music-feature-overview.html">music-feature-overview.html</a>.
+</footer>
+
+</div>
+</body>
+</html>
