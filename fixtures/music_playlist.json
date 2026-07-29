@@ -1,0 +1,33 @@
+{
+  "id": 12,
+  "owner_discord_id": "800800800",
+  "name": "Slayer Tunes",
+  "is_public": false,
+  "track_count": 2,
+  "created_at": "2026-07-28T12:00:00Z",
+  "updated_at": "2026-07-28T12:00:00Z",
+  "tracks": [
+    {
+      "source": "spotify",
+      "identifier": "4b93D55xv3YCH5mT4p6HPn",
+      "title": "Zanaris Nocturne",
+      "author": "Barbarian Assault",
+      "duration_ms": 180000,
+      "isrc": "USABC1234567",
+      "uri": "https://open.spotify.com/track/4b93D55xv3YCH5mT4p6HPn",
+      "artwork": "https://i.scdn.co/image/4b93D55xv3YCH5mT4p6HPn",
+      "position": 0
+    },
+    {
+      "source": "youtube",
+      "identifier": "dQw4w9WgXcQ",
+      "title": "Sea Shanty 2",
+      "author": "Ian Taylor",
+      "duration_ms": 214000,
+      "isrc": null,
+      "uri": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "artwork": null,
+      "position": 1
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "_comment": "The web<->Discord music seam. discord-utils writes session_hash and reads command; api-backend reads session_hash and writes command. Both publish and read state_notice. Asserted by api-backend/app/tests/test_music_sessions.py and discord-utils/tests/test_bridge_contract.py.",
+  "channels": {
+    "commands": "music:commands",
+    "state": "music:state"
+  },
+  "history_key": "music:history:{voice_channel_id}",
+  "history_entry": "{\"at\":\"2026-07-29T20:15:00Z\",\"event\":\"skipped\",\"track\":{\"encoded\":\"\",\"identifier\":\"abc123\",\"title\":\"Zanaris Nocturne\",\"author\":\"Barbarian Assault\",\"length_ms\":180000,\"is_stream\":false,\"uri\":\"https://open.spotify.com/track/abc123\",\"artwork\":\"https://i.scdn.co/image/abc123\",\"isrc\":\"USABC1234567\",\"source\":\"spotify\",\"requested_source\":\"spotify\",\"played_source\":\"youtube\",\"requester_id\":111222333444555666,\"requester_name\":\"Saltis\",\"payload\":{}}}",
+  "session_hash": {
+    "bot_index": "0",
+    "nickname": "Zanaris Zamorak",
+    "guild_id": "1234567890",
+    "channel_name": "Music Lounge",
+    "track": "{\"encoded\":\"QAAA\",\"identifier\":\"abc123\",\"title\":\"Zanaris Nocturne\",\"author\":\"Barbarian Assault\",\"length_ms\":180000,\"is_stream\":false,\"uri\":\"https://open.spotify.com/track/abc123\",\"artwork\":\"https://i.scdn.co/image/abc123\",\"isrc\":\"USABC1234567\",\"source\":\"spotify\",\"requested_source\":\"spotify\",\"played_source\":\"youtube\",\"requester_id\":111222333444555666,\"requester_name\":\"Saltis\",\"payload\":{}}",
+    "volume": "60",
+    "loop": "off",
+    "shuffle": "0",
+    "paused": "0",
+    "position_ms": "42000",
+    "updated_at": "1774000000.5"
+  },
+  "command": {
+    "voice_channel_id": 555000111,
+    "actor_id": 111222333444555666,
+    "action": "seek",
+    "position_ms": 90000
+  },
+  "state_notice": {
+    "voice_channel_id": 555000111,
+    "event": "changed"
+  }
+}
