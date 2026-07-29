@@ -15,6 +15,8 @@
 - Secrets via Infisical; keep env changes in the example file + the compose files.
 - Python: `uv` only (`uv add`, `uv run ruff/pytest/pyright`). Web: `bun`.
 - `.claude/intel/` — PAG corpus (grammar, authoring guides, templates); its own index at `.claude/intel/INDEX.md`. Consult before writing/editing any PAG document.
+- `previews/` — standalone HTML deliverables (mockups, visual overviews, surface previews). Every HTML deliverable lands here, never the scratchpad; see [[no-artifacts]].
+- `designs/` — specs and stage trackers, e.g. `MUSIC_BOTS.md`. `fixtures/` — cross-service contract fixtures both sides assert against.
 
 ## Reference repos (D:\claude-git-references)
 - `wise-old-man-repo` — WiseOldMan (github.com/wise-old-man/wise-old-man). Used with `add-metric` skill for WOM metric additions.
