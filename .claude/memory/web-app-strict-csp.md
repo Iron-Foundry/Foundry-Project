@@ -12,6 +12,7 @@ metadata:
 **Non-obvious constraints (breaking any of these takes the site down under enforce mode):**
 - **Cloudflare Rocket Loader MUST stay disabled** (Speed -> Optimization). It rewrites `<script>` tags and injects an un-nonced inline bootstrap, which strict CSP blocks. Also removes it from the fingerprint (see scan).
 - **`https://esm.sh` must stay in `script-src` AND `connect-src`** - the built `dist/index.html` importmap loads `recharts` from esm.sh. Drop it and all charts break.
+- **`connect-src` must carry the `wss://` API origin as its own entry** - a CSP source expression that names a scheme matches only that scheme, so the `https://` API origin does NOT authorize a websocket to the same host and `GET /music/live` is refused. `buildCsp` derives it from the API origin the same way `musicSocketUrl` (`src/api/music.ts`) does; the two must stay in step.
 - **`style-src` must keep `'unsafe-inline'`** - React/Radix use inline `style=` attributes, which nonces cannot cover. Do not "tighten" this.
 - **`frame-src` lists `youtube-nocookie.com` + `teamup.com`** - the only external iframes (video embeds, events page). Add here when a new external iframe is introduced.
 - The importmap nonce depends on `build.ts` emitting `<script type="importmap">` verbatim; reformatting that emit silently drops the nonce and breaks charts.
