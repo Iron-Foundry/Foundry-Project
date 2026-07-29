@@ -27,6 +27,10 @@ services:
 
   valkey:
     image: valkey/valkey:8-alpine
+    # Exposed to the host so the music suite can seed a session and watch the
+    # command channel, which is what discord-utils would otherwise be doing.
+    ports:
+      - "127.0.0.1:6379:6379"
     networks: [e2e]
     healthcheck:
       test: ["CMD", "valkey-cli", "ping"]

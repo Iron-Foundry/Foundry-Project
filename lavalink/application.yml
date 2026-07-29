@@ -1,0 +1,108 @@
+# Lavalink v4 node for the discord-utils music bots.
+#
+# Plugins are resolved from Maven by the server at boot, so no jars live in this
+# repo. Versions are pinned deliberately - see designs/MUSIC_BOTS.md.
+#
+# Secrets are NOT in this file. Lavalink documents that environment variables
+# take precedence over application.yml, using the uppercased underscore form of
+# the key path, so docker-compose supplies:
+#   LAVALINK_SERVER_PASSWORD
+#   PLUGINS_LAVASRC_SPOTIFY_CLIENTID
+#   PLUGINS_LAVASRC_SPOTIFY_CLIENTSECRET
+# The empty values below only document the shape.
+#
+# The built-in YouTube source is deprecated upstream and MUST stay disabled:
+# youtube-source replaces it, and running both fights over the same URLs.
+
+server:
+  port: 2333
+  address: 0.0.0.0
+
+lavalink:
+  plugins:
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.18.2"
+      repository: "https://maven.lavalink.dev/releases"
+      snapshot: false
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.3"
+      repository: "https://maven.lavalink.dev/releases"
+      snapshot: false
+
+  server:
+    password: ""
+    sources:
+      youtube: false
+      soundcloud: true
+      bandcamp: false
+      twitch: false
+      vimeo: false
+      nico: false
+      http: false
+      local: false
+    bufferDurationMs: 400
+    frameBufferDurationMs: 5000
+    opusEncodingQuality: 10
+    resamplingQuality: LOW
+    trackStuckThresholdMs: 10000
+    useSeekGhosting: true
+    playerUpdateInterval: 5
+    youtubePlaylistLoadLimit: 6
+    soundcloudSearchEnabled: true
+    soundcloudFilterOutPreviewTracks: true
+    timeouts:
+      connectTimeoutMs: 3000
+      connectionRequestTimeoutMs: 3000
+      socketTimeoutMs: 3000
+
+plugins:
+  youtube:
+    enabled: true
+    allowSearch: true
+    allowDirectVideoIds: true
+    allowDirectPlaylistIds: true
+    clients:
+      - MUSIC
+      - ANDROID_VR
+      - WEB
+      - WEBEMBEDDED
+
+  lavasrc:
+    # Spotify cannot be streamed by a bot. LavaSrc resolves Spotify metadata and
+    # then mirrors the audio from another source. ISRC first, so the same song
+    # queued from Spotify and from YouTube resolves to one identity.
+    # No scsearch ISRC provider: only sources with a real ISRC lookup (dzisrc)
+    # take one, SoundCloud would just text-search the ISRC string and mismatch.
+    providers:
+      - 'ytsearch:"%ISRC%"'
+      - "ytsearch:%QUERY%"
+      - "scsearch:%QUERY%"
+    sources:
+      spotify: true
+      applemusic: false
+      deezer: false
+      yandexmusic: false
+      flowerytts: false
+      youtube: false
+      vkmusic: false
+      tidal: false
+      qobuz: false
+      ytdlp: false
+      jiosaavn: false
+    spotify:
+      clientId: ""
+      clientSecret: ""
+      countryCode: "SE"
+      playlistLoadLimit: 6
+      albumLoadLimit: 6
+      resolveArtistsInSearch: false
+      localFiles: false
+
+logging:
+  level:
+    root: INFO
+    lavalink: INFO
+  request:
+    enabled: false
+  logback:
+    rollingpolicy:
+      max-history: 3
+      max-file-size: 10MB

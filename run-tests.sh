@@ -74,14 +74,15 @@ require_docker() {
 run_fast() {
   step "api-backend (fast)"        bash -c 'cd "$ROOT/api-backend" && "$UV" run pytest -q -p no:cacheprovider'
   step "discord-server (fast)"     bash -c 'cd "$ROOT/discord-server" && "$UV" run pytest -q -p no:cacheprovider'
+  step "discord-utils (fast)"      bash -c 'cd "$ROOT/discord-utils" && "$UV" run pytest -q -p no:cacheprovider'
   step "osrs-cache-service (fast)" bash -c 'cd "$ROOT/osrs-cache-service" && "$UV" run pytest -q -p no:cacheprovider'
   step "web-app (unit)"            bash -c 'cd "$ROOT/web-app" && "$BUN" test tests/'
 }
 
 # ----- lint + typecheck --------------------------------------------------------
 
-# discord-utils and discord-event have no pytest suite yet, so they appear here
-# (lint + types) but not in run_fast.
+# discord-event has no pytest suite yet, so it appears here (lint + types) but
+# not in run_fast.
 _PY_MODULES="api-backend discord-server discord-utils discord-event osrs-cache-service"
 
 run_lint() {
@@ -103,6 +104,8 @@ run_integration() {
     'cd "$ROOT/api-backend" && "$UV" run pytest -m integration -o addopts= app/tests/integration -q -p no:cacheprovider'
   step "discord-server (integration)" bash -c \
     'cd "$ROOT/discord-server" && "$UV" run pytest -m integration -o addopts= tests/integration -q -p no:cacheprovider'
+  step "discord-utils (integration)" bash -c \
+    'cd "$ROOT/discord-utils" && "$UV" run pytest -m integration -o addopts= tests/integration -q -p no:cacheprovider'
 }
 
 # ----- E2E (docker compose stack) ----------------------------------------------
@@ -110,15 +113,17 @@ run_integration() {
 run_e2e() {
   require_docker e2e || return 0
 
-  local web=3000 api=8000 pg=5432 override=""
-  if port_busy 3000 || port_busy 8000 || port_busy 5432; then
-    web=13000 api=18000 pg=55432
-    c_green "Default ports busy - using $web/$api/$pg for the E2E stack."
+  local web=3000 api=8000 pg=5432 vk=6379 override=""
+  if port_busy 3000 || port_busy 8000 || port_busy 5432 || port_busy 6379; then
+    web=13000 api=18000 pg=55432 vk=16379
+    c_green "Default ports busy - using $web/$api/$pg/$vk for the E2E stack."
     override="$(mktemp)"
     cat >"$override" <<EOF
 services:
   postgres:
     ports: !override ["127.0.0.1:$pg:5432"]
+  valkey:
+    ports: !override ["127.0.0.1:$vk:6379"]
   api-backend:
     ports: !override ["127.0.0.1:$api:8000"]
     environment:
@@ -170,12 +175,13 @@ EOF
   export E2E_BASE_URL="http://localhost:$web"
   export E2E_API_URL="http://localhost:$api"
   export E2E_DB_DSN="postgresql://foundry:foundry@localhost:$pg/foundry"
+  export E2E_VALKEY_URI="redis://localhost:$vk"
   export E2E_METRICS_API_KEY="e2e-metrics-key"
   export E2E_JWT_SECRET="e2e-test-secret-e2e-test-secret-01"
   # Under WSL the suites run as Windows uv.exe/bun.exe via interop; WSL only
   # forwards env vars named in WSLENV, so the E2E_* config must be listed there
   # or the Windows processes fall back to defaults and hit the wrong ports.
-  export WSLENV="E2E_BASE_URL:E2E_API_URL:E2E_DB_DSN:E2E_METRICS_API_KEY:E2E_JWT_SECRET${WSLENV:+:$WSLENV}"
+  export WSLENV="E2E_BASE_URL:E2E_API_URL:E2E_DB_DSN:E2E_VALKEY_URI:E2E_METRICS_API_KEY:E2E_JWT_SECRET${WSLENV:+:$WSLENV}"
 
   step "Playwright (web -> api -> DB)" bash -c \
     'cd "$ROOT/integration/e2e" && "$BUN" install >/dev/null && "$BUN" run browser >/dev/null && "$BUN" run test'

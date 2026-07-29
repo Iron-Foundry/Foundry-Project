@@ -21,3 +21,8 @@ services:
   cache-tiles:
     ports:
       - "8101:80"
+
+  # Lets discord-utils run on the host against the containerised audio node.
+  lavalink:
+    ports:
+      - "127.0.0.1:2333:2333"

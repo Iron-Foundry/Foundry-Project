@@ -78,6 +78,37 @@ services:
       retries: 5
       start_period: 20s
 
+  # Audio node for the discord-utils music bots. Internal only - never routed
+  # through Traefik.
+  #
+  # Plugins are re-downloaded from Maven on every boot, deliberately. A named
+  # volume on /opt/Lavalink/plugins does NOT work: the image ships no plugins
+  # directory, so Docker has no ownership to copy and creates the volume as
+  # root:root, while the container runs as uid 322 - the download then dies with
+  # "./plugins/youtube-plugin-1.18.2.jar (Permission denied)" and Spring aborts
+  # startup. Without the mount, Lavalink creates the directory itself inside its
+  # own 322-owned WORKDIR. Two jars take a couple of seconds to fetch.
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4.2.2-alpine
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      _JAVA_OPTIONS: -Xmx512M
+      SERVER_PORT: 2333
+      LAVALINK_SERVER_PASSWORD: ${LAVALINK_PASSWORD}
+      PLUGINS_LAVASRC_SPOTIFY_CLIENTID: ${SPOTIFY_CLIENT_ID:-}
+      PLUGINS_LAVASRC_SPOTIFY_CLIENTSECRET: ${SPOTIFY_CLIENT_SECRET:-}
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
+    networks:
+      - foundry
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --header=\"Authorization: $$LAVALINK_SERVER_PASSWORD\" http://localhost:2333/version || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
   # ── Backend ─────────────────────────────────────────────────────────
 
   api-backend:
@@ -110,6 +141,11 @@ services:
       OSRS_CACHE_SERVICE_URL: http://osrs-cache-service:8100
       API_BACKEND_URL: ${API_BACKEND_URL}
       MAP_TILES_BASE_URL: ${MAP_TILES_BASE_URL:-}
+      # Track search only. The API resolves queries over Lavalink's REST API so
+      # the website can build a playlist with no bot in a voice channel; it
+      # never holds a player.
+      LAVALINK_URI: http://lavalink:2333
+      LAVALINK_PASSWORD: ${LAVALINK_PASSWORD}
     volumes:
       - uploads_data:/app/uploads
     networks:
@@ -200,8 +236,16 @@ services:
       VALKEY_URI: ${VALKEY_URI}
       STAFF_ROLE_ID: ${STAFF_ROLE_ID}
       SENIOR_STAFF_ROLE_ID: ${SENIOR_STAFF_ROLE_ID}
+      LAVALINK_URI: http://lavalink:2333
+      LAVALINK_PASSWORD: ${LAVALINK_PASSWORD}
+      MUSIC_BOT_TOKENS: ${MUSIC_BOT_TOKENS:-}
+      API_BACKEND_URL: http://api-backend:8000
+      METRICS_API_KEY: ${METRICS_API_KEY}
     networks:
       - foundry
+    # Deliberately no depends_on for lavalink. It takes ~a minute to boot while it
+    # resolves plugins, and the music service connects lazily on first use, so
+    # gating the whole bot on it would delay temp_vc and chat_events for nothing.
     depends_on:
       postgres:
         condition: service_healthy

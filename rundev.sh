@@ -9,7 +9,7 @@ infisical run \
   --projectId=9047f633-a675-497c-8ca2-1e75ffd95db9 \
   --env=dev \
   -- docker compose up -d --build \
-  mongodb postgres valkey cache-postgres api-backend osrs-cache-service cache-tiles discord-server discord-utils discord-event "$@"
+  mongodb postgres valkey cache-postgres lavalink api-backend osrs-cache-service cache-tiles discord-server discord-utils discord-event "$@"
 
 exec infisical run \
   --projectId=9047f633-a675-497c-8ca2-1e75ffd95db9 \
