@@ -98,13 +98,13 @@ bun run typecheck  # tsc --noEmit (strict)
 
 ## Repository structure
 
-Monorepo root for The Iron Foundry Project. All services are Git submodules under the [Iron-Foundry](https://github.com/Iron-Foundry) organisation; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers (auto-advanced by CI on submodule pushes).
+Monorepo root for The Iron Foundry Project. All services except `osrs-cache-service` are Git submodules under the [IronFoundry](https://codeberg.org/IronFoundry) organisation on Codeberg; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers (auto-advanced by CI on submodule pushes).
 
 | Submodule | Stack | DB |
 |---|---|---|
 | `discord-server` | Python 3.14+, discord.py | PostgreSQL |
 | `discord-utils` | Python 3.14+, discord.py | PostgreSQL + Valkey |
-| `discord-event` | Python 3.13+, discord.py | MongoDB |
+| `discord-event` | Python 3.14+, discord.py | MongoDB |
 | `api-backend` | Python 3.14+, FastAPI + Gunicorn | PostgreSQL + Valkey |
 | `web-app` | TypeScript, React 19, Bun | - |
 | `osrs-cache-service` | Python 3.14+, FastAPI + Gunicorn | PostgreSQL (dedicated `cache-postgres`) |
