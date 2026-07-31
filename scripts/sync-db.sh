@@ -8,16 +8,39 @@ PROJECT_ID=9047f633-a675-497c-8ca2-1e75ffd95db9
 SSH_HOST=193.181.23.235
 SSH_USER=salt
 TUNNEL_PORT=15432
+PG_IMAGE=postgres:17-alpine
+HEALTH_TIMEOUT=120
 
 get_secret() {
   infisical secrets get "$1" --env="$2" --projectId="$PROJECT_ID" --plain
 }
 
+# docker compose substitutes ${POSTGRES_*} from the process environment, which
+# only Infisical can supply here - there is no committed .env.
+compose() {
+  infisical run --projectId="$PROJECT_ID" --env=dev --silent -- docker compose "$@"
+}
+
+# The postgres client tools are not installed on the host; run them from the
+# same image the container uses so the dump format always matches the server.
+pg() {
+  local pass=$1
+  shift
+  docker run --rm --network host --user "$(id -u):$(id -g)" \
+    -e PGPASSWORD="$pass" -v /tmp:/tmp "$PG_IMAGE" "$@"
+}
+
 echo "Ensuring postgres is running..."
-docker compose up -d postgres
-until [ "$(docker inspect --format '{{.State.Health.Status}}' "$(docker compose ps -q postgres)")" = "healthy" ]; do
+compose up -d postgres
+CONTAINER=$(compose ps -q postgres)
+for ((i = 0; i < HEALTH_TIMEOUT; i++)); do
+  [ "$(docker inspect --format '{{.State.Health.Status}}' "$CONTAINER")" = "healthy" ] && break
   sleep 1
 done
+if [ "$(docker inspect --format '{{.State.Health.Status}}' "$CONTAINER")" != "healthy" ]; then
+  echo "postgres did not become healthy in ${HEALTH_TIMEOUT}s. Check: docker logs $CONTAINER" >&2
+  exit 1
+fi
 
 echo "Fetching connection details from Infisical..."
 PROD_USER=$(get_secret POSTGRES_USER prod)
@@ -50,18 +73,18 @@ EXCLUDED_TABLES=(config role_panels tickets transcripts survey_active survey_res
 echo "Saving local excluded table data..."
 TABLE_ARGS=()
 for t in "${EXCLUDED_TABLES[@]}"; do TABLE_ARGS+=(-t "$t"); done
-PGPASSWORD="$DEV_PASS" pg_dump \
+pg "$DEV_PASS" pg_dump \
   -h 127.0.0.1 \
   -U "$DEV_USER" \
   -d "$DEV_DB" \
   --data-only \
   "${TABLE_ARGS[@]}" \
-  -f "$LOCAL_DUMP" 2>/dev/null || { echo "No local DB found, skipping save."; LOCAL_DUMP=""; }
+  -f "$LOCAL_DUMP" || { echo "No local DB found, skipping save."; LOCAL_DUMP=""; }
 
 echo "Dumping prod DB ($PROD_DB)..."
 EXCLUDE_ARGS=()
 for t in "${EXCLUDED_TABLES[@]}"; do EXCLUDE_ARGS+=(--exclude-table-data="$t"); done
-PGPASSWORD="$PROD_PASS" /usr/lib/postgresql/17/bin/pg_dump \
+pg "$PROD_PASS" pg_dump \
   -h 127.0.0.1 \
   -p "$TUNNEL_PORT" \
   -U "$PROD_USER" \
@@ -71,11 +94,11 @@ PGPASSWORD="$PROD_PASS" /usr/lib/postgresql/17/bin/pg_dump \
   -f "$DUMP"
 
 echo "Dropping local dev DB ($DEV_DB)..."
-PGPASSWORD="$DEV_PASS" dropdb --if-exists -h 127.0.0.1 -U "$DEV_USER" "$DEV_DB"
-PGPASSWORD="$DEV_PASS" createdb -h 127.0.0.1 -U "$DEV_USER" "$DEV_DB"
+pg "$DEV_PASS" dropdb --if-exists -h 127.0.0.1 -U "$DEV_USER" "$DEV_DB"
+pg "$DEV_PASS" createdb -h 127.0.0.1 -U "$DEV_USER" "$DEV_DB"
 
 echo "Restoring prod data to local dev DB..."
-PGPASSWORD="$DEV_PASS" pg_restore \
+pg "$DEV_PASS" pg_restore \
   -h 127.0.0.1 \
   -U "$DEV_USER" \
   -d "$DEV_DB" \
@@ -85,7 +108,7 @@ PGPASSWORD="$DEV_PASS" pg_restore \
 
 if [[ -n "$LOCAL_DUMP" ]]; then
   echo "Restoring local excluded table data..."
-  PGPASSWORD="$DEV_PASS" psql \
+  pg "$DEV_PASS" psql \
     -h 127.0.0.1 \
     -U "$DEV_USER" \
     -d "$DEV_DB" \
