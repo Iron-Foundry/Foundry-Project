@@ -1,0 +1,55 @@
+{
+  "_comment": "The tile race Discord provisioning seam. api-backend publishes `command` on the Valkey channel; discord-server consumes it, acts on the guild, and POSTs `result` back to /tilerace/events/{event_id}/discord/result with the METRICS_API_KEY as a verification-code header. Every command carries the full desired shape, never a diff. Asserted by api-backend/app/tests/test_tilerace_discord.py and discord-server/tests/test_tilerace_contract.py.",
+  "channel": "foundry:tilerace_discord",
+  "actions": ["setup", "sync", "teardown", "teardown_team"],
+  "command": {
+    "action": "setup",
+    "event_id": "12",
+    "event_name": "Summer Tile Race",
+    "category_id": null,
+    "captains_role_id": null,
+    "captains_channel_id": null,
+    "captain_user_ids": ["111222333444555666"],
+    "teams": [
+      {
+        "team_id": "31",
+        "name": "Abyssal Ashes",
+        "slug": "abyssal-ashes",
+        "role_id": null,
+        "text_channel_id": null,
+        "voice_channel_id": null,
+        "member_user_ids": ["111222333444555666", "222333444555666777"]
+      }
+    ]
+  },
+  "result": {
+    "category_id": 900000000000000001,
+    "captains_role_id": 900000000000000002,
+    "captains_channel_id": 900000000000000003,
+    "teams": [
+      {
+        "team_id": 31,
+        "role_id": 900000000000000004,
+        "text_channel_id": 900000000000000005,
+        "voice_channel_id": 900000000000000006
+      }
+    ]
+  },
+  "teardown_team_command": {
+    "action": "teardown_team",
+    "event_id": "12",
+    "event_name": "Summer Tile Race",
+    "team": {
+      "team_id": "31",
+      "role_id": "900000000000000004",
+      "text_channel_id": "900000000000000005",
+      "voice_channel_id": "900000000000000006"
+    }
+  },
+  "teardown_result": {
+    "category_id": null,
+    "captains_role_id": null,
+    "captains_channel_id": null,
+    "teams": []
+  }
+}

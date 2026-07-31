@@ -38,3 +38,4 @@
 - [Resolve Discord ids](resolve-discord-ids.md) — never show a bare snowflake to a user; stamp the display name where it is known (discord-utils holds the guild) and fall back to the id only on a miss
 - [Tilerace signups are the roster](tilerace-signups-are-the-roster.md) — `tilerace_signups.team_id` is the source of truth; team rosters are derived, never stored, so generate/reset/delete are always reversible
 - [Tilerace draft balances score mass](tilerace-draft-balances-score-mass.md) — ranking points are right-skewed, so the draft is greedy lowest-average, never a snake order, and its test pools must be skewed
+- [Tilerace Discord provisioning](tilerace-discord-provisioning.md) — discord-server builds the category/roles/channels from full-shape Valkey commands and holds no tile race state; every roster or name change must re-sync
