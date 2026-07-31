@@ -1,0 +1,35 @@
+name: End-to-end integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # run-tests.sh calls `playwright install chromium` without --with-deps;
+      # the runner needs the system libraries that flag pulls in.
+      - name: Install Playwright system dependencies
+        working-directory: integration/e2e
+        run: |
+          bun install
+          bunx playwright install --with-deps chromium
+
+      - name: Full stack E2E
+        run: bash run-tests.sh e2e
