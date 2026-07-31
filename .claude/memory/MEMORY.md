@@ -29,7 +29,7 @@
 - [Reference-data external shapes](reference-data-external-shapes.md) — verified live shapes of the OSRS Wiki drop-table (MediaWiki wikitext + {{DropsLine}}), WOM /efficiency/rates?type=ironman, and WOM group bulk-hiscores (player.ehp/ehb/type, skills.overall)
 - [Semver & /version endpoints](semver-and-version-endpoints.md) — per-maturity module versions single-sourced from the manifest, `GET /version` build provenance, CHANGELOGs, CI bump gate
 - [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
-- [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only
+- [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only; staff-gated routes our own web-app consumes are not "breaking"
 - [Bump at push only](bump-at-push-only.md) — bump once when work is about to be pushed, never per component; entries accumulate under `## [Unreleased]`
 - [Forgejo ignores `permissions:`](forgejo-no-permissions-key.md) — the GitHub Actions `permissions:` key is unsupported in Forgejo workflows and only emits warnings; token scope comes from Codeberg Authorized Integrations
 - [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims

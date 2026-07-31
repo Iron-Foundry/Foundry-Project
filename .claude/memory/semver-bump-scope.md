@@ -33,4 +33,14 @@ to minor and run the uv command. If the change is genuinely breaking, make the
 change, leave the version alone, and tell the user a major bump looks due and
 why.
 
-Related: [[semver-and-version-endpoints]].
+**What "breaking" means here:** breakage is measured by who actually consumes
+the surface, not by whether it appears in `openapi.json`. Removing or reshaping
+a **staff-gated endpoint whose only consumer is our own web-app** is a MINOR
+change - both sides ship together, so nothing outside the monorepo can break.
+Reserve the major-bump flag for surfaces others depend on: unauthenticated
+endpoints, authenticated endpoints external clients call (RuneLite plugin,
+third-party tooling), and cross-service contracts pinned by `fixtures/`. Do not
+raise it for internal admin routes; the user has ruled that out and the flag is
+noise there.
+
+Related: [[semver-and-version-endpoints]], [[integration-testing]].
