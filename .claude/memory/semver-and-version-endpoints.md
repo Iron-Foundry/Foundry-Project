@@ -25,7 +25,7 @@ not bust the uv cache) and are `null` outside Docker. Build a stamped image with
 `GIT_SHA=$(git rev-parse HEAD) BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ) docker compose build`.
 
 Each module has a Keep-a-Changelog `CHANGELOG.md`, updated in the same change as
-the code. A `version` job in the three 1.0.0 modules' `.forgejo/workflows/test.yml`
+the code. A `version` job in the three 1.0.0 modules' `.github/workflows/test.yml`
 fails a pull request that changes shipped code without bumping the manifest;
 docs- and CI-only diffs are exempt. Bump with `uv version --bump <level>` or
 `npm version --no-git-tag-version <level>`.

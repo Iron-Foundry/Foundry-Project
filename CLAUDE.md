@@ -98,7 +98,7 @@ bun run typecheck  # tsc --noEmit (strict)
 
 ## Repository structure
 
-Monorepo root for The Iron Foundry Project. All services except `osrs-cache-service` are Git submodules under the [IronFoundry](https://codeberg.org/IronFoundry) organisation on Codeberg; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers (auto-advanced by CI on submodule pushes).
+Monorepo root for The Iron Foundry Project. All services except `osrs-cache-service` are Git submodules under the [Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers, advanced by `.github/workflows/update-submodules.yml` on a `repository_dispatch` from each submodule's `notify-parent.yml`.
 
 | Submodule | Stack | DB |
 |---|---|---|

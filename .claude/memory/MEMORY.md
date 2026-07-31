@@ -12,7 +12,6 @@
 - [No artifacts](no-artifacts.md) — Artifact tool is banned; deliver HTML mockups/previews as a standalone file in the repo's `previews/` and give the path
 - [No commit co-author](no-commit-coauthor.md) — never add a Claude/Anthropic Co-Authored-By trailer to commits or PRs; user rejects anything that does
 - [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit
-- [Codeberg push auth retry](codeberg-push-auth-retry.md) — expired-credentials on push is a retryable Codeberg quirk; "could not read Username / prompts disabled" is not, that needs the user to push interactively
 - [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push or even offer to; standing permission doesn't carry to unrelated files noticed later
 - [Commit scope means all uncommitted](commit-scope-means-all-uncommitted.md) — "commit ... including prior ones" means every dirty file in root + submodules, not just this session's edits
 - [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
@@ -31,7 +30,6 @@
 - [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
 - [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only; staff-gated routes our own web-app consumes are not "breaking"
 - [Bump at push only](bump-at-push-only.md) — bump once when work is about to be pushed, never per component; entries accumulate under `## [Unreleased]`
-- [Forgejo ignores `permissions:`](forgejo-no-permissions-key.md) — the GitHub Actions `permissions:` key is unsupported in Forgejo workflows and only emits warnings; token scope comes from Codeberg Authorized Integrations
 - [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims
 - [Music bots plan](music-bots-plan.md) — spec + stage tracker live in `designs/MUSIC_BOTS.md`; stage 0 gates all work, never build on an unpromoted U-row assumption
 - [Evidence over assumption](evidence-over-assumption.md) — never claim library/protocol behaviour from recall; cite reference-repo `file:line` or official docs, else log it as a tracked unverified assumption

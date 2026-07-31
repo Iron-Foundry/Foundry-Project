@@ -23,5 +23,4 @@ cached copies of `/robots.txt`. This bit us: the SEO commit imported
 Dockerfile COPY list. `import type` lines are elided by Bun and need no COPY
 (e.g. `./types/content` is never copied). Only value imports matter. After
 adding, `git grep -oE 'src/lib/[a-z-]+\.ts' Dockerfile` vs the value imports.
-Related: [[web-app-two-servers-embed-routes]], [[web-app-strict-csp]],
-[[codeberg-push-auth-retry]].
+Related: [[web-app-two-servers-embed-routes]], [[web-app-strict-csp]].
