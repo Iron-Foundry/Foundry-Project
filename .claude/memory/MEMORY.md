@@ -38,3 +38,4 @@
 - [Valkey blocking reads need their own connection](valkey-blocking-reads-own-connection.md) — a blocking XREADGROUP/BLPOP/pubsub consumer must build its own client with `socket_timeout=None`; the shared request client's timeout kills it silently and no test catches it
 - [Clone after three fetches](clone-after-three-fetches.md) — >3 fetches against one project means clone it into `D:\claude-git-references` and read locally; docs sites usually ship inside the source repo
 - [Resolve Discord ids](resolve-discord-ids.md) — never show a bare snowflake to a user; stamp the display name where it is known (discord-utils holds the guild) and fall back to the id only on a miss
+- [Tilerace signups are the roster](tilerace-signups-are-the-roster.md) — `tilerace_signups.team_id` is the source of truth; team rosters are derived, never stored, so generate/reset/delete are always reversible
