@@ -39,3 +39,4 @@
 - [Tilerace signups are the roster](tilerace-signups-are-the-roster.md) — `tilerace_signups.team_id` is the source of truth; team rosters are derived, never stored, so generate/reset/delete are always reversible
 - [Tilerace draft balances score mass](tilerace-draft-balances-score-mass.md) — ranking points are right-skewed, so the draft is greedy lowest-average, never a snake order, and its test pools must be skewed
 - [Tilerace Discord provisioning](tilerace-discord-provisioning.md) — discord-server builds the category/roles/channels from full-shape Valkey commands and holds no tile race state; every roster or name change must re-sync
+- [httpx2 TestClient migration](httpx2-testclient-migration.md) — deferred 2026-08-01; starlette 1.3.1 deprecated `httpx` with `starlette.testclient`, api-backend tests move to `httpx2` in their own change

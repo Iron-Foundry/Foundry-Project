@@ -11,11 +11,11 @@
 
 This repository is the monorepo root for The Iron Foundry Project. It tracks five services as
 Git submodules, each in its own repository under the
-[IronFoundry](https://codeberg.org/IronFoundry) organisation on Codeberg. A sixth service,
+[Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub. A sixth service,
 `osrs-cache-service`, lives directly in this repository rather than as a submodule.
 
 Submodule references are kept up to date automatically - pushing to `main` in any submodule
-dispatches a Forgejo Actions workflow in this repo that advances the recorded commit pointer.
+dispatches a GitHub Actions workflow in this repo that advances the recorded commit pointer.
 
 ---
 
@@ -41,11 +41,11 @@ dispatches a Forgejo Actions workflow in this repo that advances the recorded co
 
 | Service | Repository |
 |---|---|
-| discord-server | [IronFoundry/discord-server](https://codeberg.org/IronFoundry/discord-server) |
-| discord-utils | [IronFoundry/discord-utils](https://codeberg.org/IronFoundry/discord-utils) |
-| discord-event | [IronFoundry/discord-event](https://codeberg.org/IronFoundry/discord-event) |
-| api-backend | [IronFoundry/api-backend](https://codeberg.org/IronFoundry/api-backend) |
-| web-app | [IronFoundry/web-app](https://codeberg.org/IronFoundry/web-app) |
+| discord-server | [Iron-Foundry/discord-server](https://github.com/Iron-Foundry/discord-server) |
+| discord-utils | [Iron-Foundry/discord-utils](https://github.com/Iron-Foundry/discord-utils) |
+| discord-event | [Iron-Foundry/discord-event](https://github.com/Iron-Foundry/discord-event) |
+| api-backend | [Iron-Foundry/api-backend](https://github.com/Iron-Foundry/api-backend) |
+| web-app | [Iron-Foundry/web-app](https://github.com/Iron-Foundry/web-app) |
 | osrs-cache-service | in this repository (`osrs-cache-service/`) |
 
 ---
@@ -55,7 +55,7 @@ dispatches a Forgejo Actions workflow in this repo that advances the recorded co
 Clone the repo with all submodules:
 
 ```bash
-git clone --recurse-submodules https://codeberg.org/IronFoundry/Foundry-Project.git
+git clone --recurse-submodules https://github.com/Iron-Foundry/Foundry-Project.git
 ```
 
 Or if you've already cloned without submodules:
@@ -76,7 +76,7 @@ Refer to the README in each submodule directory for service-specific setup instr
 | Web app | TypeScript, React 19, Bun, TanStack Router, Tailwind CSS 4, Shadcn/ui |
 | Database | PostgreSQL (primary, shared across discord-server, discord-utils, api-backend), a dedicated `cache-postgres` for osrs-cache-service, MongoDB (discord-event), Valkey/Redis (caching, pubsub) |
 | Quality | Ruff, Pyright/Mypy, Bandit, pre-commit hooks, `./run-tests.sh {lint\|fast\|integration\|e2e\|all}` |
-| CI/CD | Forgejo Actions (Codeberg runners) |
+| CI/CD | GitHub Actions (`ubuntu-latest` runners) |
 
 ---
 
