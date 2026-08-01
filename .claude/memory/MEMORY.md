@@ -40,3 +40,4 @@
 - [Tilerace draft balances score mass](tilerace-draft-balances-score-mass.md) — ranking points are right-skewed, so the draft is greedy lowest-average, never a snake order, and its test pools must be skewed
 - [Tilerace Discord provisioning](tilerace-discord-provisioning.md) — discord-server builds the category/roles/channels from full-shape Valkey commands and holds no tile race state; every roster or name change must re-sync
 - [httpx2 TestClient migration](httpx2-testclient-migration.md) — deferred 2026-08-01; starlette 1.3.1 deprecated `httpx` with `starlette.testclient`, api-backend tests move to `httpx2` in their own change
+- [Docker host is shared](docker-host-shared-stacks.md) — the box also runs traefik/grafana/prometheus/copyparty and their data volumes; cleanup prunes dangling images + build cache only, never volumes, containers, or tagged images

@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Docker build cache and dangling image cleanup
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+RandomizedDelaySec=30min
+Persistent=true
+Unit=docker-cleanup.service
+
+[Install]
+WantedBy=timers.target

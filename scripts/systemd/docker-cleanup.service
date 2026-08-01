@@ -1,0 +1,14 @@
+[Unit]
+Description=Reclaim Docker build cache and dangling image layers
+Documentation=file:///home/salt/Foundry-Project/scripts/README.md
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=salt
+Group=docker
+ExecStart=/home/salt/Foundry-Project/scripts/docker-cleanup.sh
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=30min
