@@ -96,8 +96,8 @@ Base prefix: `/tilerace/`
 
 | Group | Endpoint | Method |
 |---|---|---|
-| Public | `/tilerace/active` | GET |
-| Public | `/tilerace/events/:id` | GET |
+| Public | `/tilerace/active` | GET (masked - see below) |
+| Staff | `/tilerace/events/:id` | GET (full shape) |
 | Signup | `/tilerace/events/:id/signup` | POST `{ account_id?, wants_captain? }` (gated by `signups_open`) / PATCH `{ account_id?, wants_captain? }` (change, any time) / DELETE (rescind, any time) |
 | Repository | `/tilerace/repository` | GET / POST |
 | Repository | `/tilerace/repository/:id` | GET / PATCH / DELETE |
@@ -115,6 +115,16 @@ Base prefix: `/tilerace/`
 | OSRS ref | `/frenzy/osrs/items?q=` \| `/tilerace/osrs/npcs?q=` | GET |
 
 `PATCH /tilerace/events/:id` accepts `grid_cols, grid_rows, dice_count, dice_sides, background_url, fog_of_war, is_finished, cells[], start_pad, end_pad, name, dates`. It uses `model_fields_set` server-side so an explicit `null` on `background_url` / `start_pad` / `end_pad` clears the field.
+
+### The public board (`GET /tilerace/active`)
+The only unauthenticated tile race surface, and the only one that is masked. `public_event` (`app/routers/tilerace/_public_view.py`) builds `TileRacePublicEvent` from a `PUBLIC_SUMMARY_KEYS` allowlist, so a field added to `_serialize_summary` stays private until it is listed:
+
+- Cells are fogged server-side (see Fog of War).
+- Discord ids and `discord_permissions` are withheld on the event and on every team; `pending_effects` is withheld too, so trap and sabotage state stays hidden.
+- `teams[].members` is `{ rsn, is_captain }` - no Discord ids, ranking scores or raids KC.
+- `signups[]` is replaced by `signup_count` plus the caller's own row: `my_signup` and `my_team_id`, resolved from the optional bearer token (`get_optional_user`). Anonymous callers get `null` for both. `my_team_id` is what gates the `DiceRoller`.
+
+Staff read the unmasked shape through `GET /tilerace/events/:id`.
 
 ## Component Tree
 
@@ -181,7 +191,9 @@ Rolls are gated behind staff-verified tile completion. A completion is a persist
 `useZoomPan` (`src/hooks/useZoomPan.ts`) drives `BoardViewport`. Wheel zoom is proportional to delta (`exp(-deltaY * 0.0007)`), clamped to scale `[1, 4]` - min scale 1 locks the image to the frame. Pan is clamped so the transformed world always covers the viewport (no empty gaps); at scale 1 it is fully locked. On the public board left-drag pans; in the builder `leftButtonPans={false}` reserves left for drawing and pans on middle/right drag (context menu suppressed). A Fit-to-screen button resets the transform.
 
 ### Fog of War
-When `event.fog_of_war`, `buildFogMask(teams)` = `max(team.position)`; path cells beyond it are hidden. `BoardCell` renders hidden tiles as a white `?` in `font-rs-bold` with the `.text-shadow-fog` utility (`styles/globals.css`) over a darkened background. Non-path cells stay visible.
+Enforced on the server. When `event.fog_of_war`, `mask_cells` (`app/routers/tilerace/_public_view.py`) keeps a path cell whose `path_position` is at or below `max(team.position)` and reduces every cell beyond it to `{cell_x, cell_y, path_position}` - the tile, its requirement and its modifiers are never embedded, so `GET /tilerace/active` cannot be scraped for the unrevealed board. Non-path cells stay visible.
+
+The client mirrors the same rule for rendering: `buildFogMask(teams)` = `max(team.position)`, and `BoardCell` draws a hidden cell as a white `?` in `font-rs-bold` with the `.text-shadow-fog` utility (`styles/globals.css`) over a darkened background.
 
 ### Consistent Tile Sizing
 Grid tracks use `minmax(0, 1fr)` (not bare `1fr`, which is `minmax(auto, 1fr)`) and cells get `min-w-0 min-h-0 overflow-hidden`, so content never stretches a track and all tiles render the same size.

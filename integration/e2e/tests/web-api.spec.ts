@@ -17,8 +17,23 @@ test("api serves a DB-backed endpoint (schema migrated)", async ({ request }) =>
 
 test("web app renders and reaches the api from the browser", async ({ page }) => {
   const apiResponses: number[] = [];
+  // A request that never reaches the server fires `requestfailed`, not
+  // `response`, so counting responses alone reports "0 calls" and hides the
+  // reason. Collect the failures and the console too, and put them in the
+  // assertion message - a silent zero is the least useful way to fail.
+  const failures: string[] = [];
+  const consoleLines: string[] = [];
+
   page.on("response", (res) => {
     if (res.url().startsWith(API_URL)) apiResponses.push(res.status());
+  });
+  page.on("requestfailed", (req) => {
+    failures.push(`${req.method()} ${req.url()} - ${req.failure()?.errorText ?? "unknown"}`);
+  });
+  page.on("console", (msg) => {
+    if (msg.type() === "error" || msg.type() === "warning") {
+      consoleLines.push(`${msg.type()}: ${msg.text()}`);
+    }
   });
 
   await page.goto("/", { waitUntil: "networkidle" });
@@ -27,6 +42,11 @@ test("web app renders and reaches the api from the browser", async ({ page }) =>
   await expect(page.locator("body")).not.toBeEmpty();
   // ... and the browser successfully talked to the API (web -> api -> DB),
   // with no server error on those calls.
-  expect(apiResponses.length).toBeGreaterThan(0);
-  expect(apiResponses.every((s) => s < 500)).toBe(true);
+  const diagnosis = [
+    failures.length ? `failed requests:\n  ${failures.join("\n  ")}` : "no failed requests",
+    consoleLines.length ? `console:\n  ${consoleLines.join("\n  ")}` : "console clean",
+  ].join("\n");
+
+  expect(apiResponses.length, `no browser call reached ${API_URL}.\n${diagnosis}`).toBeGreaterThan(0);
+  expect(apiResponses.every((s) => s < 500), `5xx from the api.\n${diagnosis}`).toBe(true);
 });
