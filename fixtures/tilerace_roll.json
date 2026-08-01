@@ -1,0 +1,54 @@
+{
+  "_comment": "The tile race roll-feedback seam. api-backend publishes one message per roll on the existing tile race command channel; discord-server renders it as a Components V2 card in the rolling team's own text channel and reports nothing back. Asserted by api-backend/app/tests/test_tilerace_roll_feed.py and discord-server/tests/test_tilerace_roll_contract.py.",
+  "_direction_comment": "One way. Unlike setup/sync/teardown there is no result callback: the bot creates nothing, so api-backend has no ids to record. A team whose Discord is not provisioned has a null discord_text_channel_id and no message is published at all.",
+  "channel": "foundry:tilerace_discord",
+  "action": "roll",
+  "command": {
+    "action": "roll",
+    "event_id": "12",
+    "event_name": "Summer Tile Race",
+    "channel_id": "900000000000000001",
+    "rolled_by": "111222333444555666",
+    "team": {
+      "team_id": "31",
+      "name": "Abyssal Ashes",
+      "color": "#8b0000"
+    },
+    "roll": {
+      "dice": [2, 1],
+      "total": 3,
+      "skipped": false,
+      "new_position": 7
+    },
+    "tile": {
+      "id": "204",
+      "title": "Bandos armour",
+      "description": "Any two pieces from General Graardor.",
+      "icon_url": "https://utfs.io/f/bandos.webp",
+      "requirements": ["- Bandos chestplate", "- Bandos tassets x2"]
+    },
+    "notes": ["Trap: your next turn is skipped"]
+  },
+  "skipped_command": {
+    "action": "roll",
+    "event_id": "12",
+    "event_name": "Summer Tile Race",
+    "channel_id": "900000000000000001",
+    "rolled_by": "111222333444555666",
+    "team": {
+      "team_id": "31",
+      "name": "Abyssal Ashes",
+      "color": "#8b0000"
+    },
+    "roll": {
+      "dice": [],
+      "total": 0,
+      "skipped": true,
+      "new_position": 4
+    },
+    "tile": null,
+    "notes": []
+  },
+  "_tile_comment": "`tile` is null when the landed cell carries no tile - an empty cell, a pad, or a tile deleted from the repository since the board was built. The card then shows the roll and the notes alone.",
+  "_notes_comment": "Landing side effects, already worded for the team: snakes/ladders movement, extra roll, skipped turn, reroll, and reaching the end pad. The bot prints them verbatim and never derives its own."
+}
