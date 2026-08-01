@@ -12,10 +12,12 @@ on:
 permissions:
   contents: read
 
-# Five submodules dispatch into this one workflow, so two pushes landing close
-# together would otherwise race for the same pointer commit.
+# One queue per submodule. A single shared group is wrong here: GitHub keeps
+# only the newest pending run in a group and cancels the others, so five
+# submodules pushing at once silently lost three of their pointer updates.
+# Races between the queues are handled by the retry loop below instead.
 concurrency:
-  group: update-submodules
+  group: update-submodules-${{ github.event.client_payload.submodule || inputs.submodule || 'all' }}
   cancel-in-progress: false
 
 jobs:
@@ -27,28 +29,13 @@ jobs:
           token: ${{ secrets.SUBMODULE_PAT }}
           submodules: true
 
-      - name: Advance submodule pointer
+      - name: Advance submodule pointer and push
         env:
           SUB_RAW: ${{ github.event.client_payload.submodule || inputs.submodule }}
         run: |
-          if [ -n "$SUB_RAW" ]; then
-            case "$SUB_RAW" in
-              *[!a-zA-Z0-9_-]*) echo "Invalid submodule name: $SUB_RAW"; exit 1 ;;
-            esac
-            git submodule update --remote -- "$SUB_RAW"
-          else
-            git submodule update --remote
-          fi
+          set -euo pipefail
 
-      - name: Commit and push (if changed)
-        env:
-          SUB_RAW: ${{ github.event.client_payload.submodule || inputs.submodule }}
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff --staged --quiet && echo "No changes" && exit 0
-          if [ -n "$SUB_RAW" ]; then
+          if [ -n "${SUB_RAW}" ]; then
             case "$SUB_RAW" in
               *[!a-zA-Z0-9_-]*) echo "Invalid submodule name: $SUB_RAW"; exit 1 ;;
             esac
@@ -56,5 +43,41 @@ jobs:
           else
             LABEL="submodules"
           fi
-          git commit -m "chore: update ${LABEL} submodule reference"
-          git push
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Another submodule's run can land between our checkout and our push,
+          # which is what "! [rejected] (fetch first)" was. Rebuild the pointer
+          # commit on the current tip and retry rather than failing the run.
+          for attempt in 1 2 3 4 5; do
+            git fetch --quiet origin main
+            git reset --quiet --hard origin/main
+
+            if [ -n "${SUB_RAW}" ]; then
+              git submodule update --init --remote -- "$SUB_RAW"
+              git add -- "$SUB_RAW"
+            else
+              git submodule update --init --remote
+              git config --file .gitmodules --get-regexp '^submodule\..*\.path$' \
+                | awk '{print $2}' | xargs -r git add --
+            fi
+
+            if git diff --staged --quiet; then
+              echo "No pointer change for ${LABEL}"
+              exit 0
+            fi
+
+            git commit --quiet -m "chore: update ${LABEL} submodule reference"
+
+            if git push --quiet origin HEAD:main; then
+              echo "Pushed ${LABEL} pointer on attempt ${attempt}"
+              exit 0
+            fi
+
+            echo "Push rejected (attempt ${attempt}); another run got there first, retrying"
+            sleep $((attempt * 3))
+          done
+
+          echo "Could not push the ${LABEL} pointer after 5 attempts"
+          exit 1

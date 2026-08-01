@@ -8,6 +8,13 @@ on:
 permissions:
   contents: read
 
+# A batch of submodule pointer commits pushes to main several times in a row,
+# and each push started its own full-stack run. Superseded runs test a tip that
+# no longer exists, so the newest one cancels them.
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
