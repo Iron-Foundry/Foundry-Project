@@ -43,6 +43,7 @@ Core types live in `src/types/tilerace.ts`. The recursive requirement and modifi
 - `{ type: "fog"; radius }` - render-only fog hint
 - `{ type: "bonus_penalty"; effect: "extra_roll" | "skip_turn" | "reroll" }`
 - `{ type: "sabotage"; action: "steal_progress" | "block"; amount }` - applied via the sabotage endpoint / staff action
+- `{ type: "trap"; dice_count; dice_sides }` - landing rolls the trap's own dice and moves the team back that many steps; sprung once per team per cell
 
 **`BoardCell`** - A cell in the event grid.
 - `cell_x, cell_y: number` - 0-indexed column / row
@@ -157,7 +158,11 @@ TileRepositoryPage (/members/config/tile-repository)
 Tiles hold a recursive `RequirementNode`. `RequirementEditor` builds it (add item leaves via `ItemSearch`, nest AND/OR/NOT groups); `RequirementSummary` renders it read-only in tooltips and `TileDetail`. On save, `TileEditor` also derives a flat `items[]` from the tree leaves (`collectRequirementItems`) for icon/back-compat. Requirements are display + authoring only - the authoritative "done" gate is staff completion (below).
 
 ### Cell Modifiers
-Each path cell may carry `modifiers: CellModifier[]`, edited per cell in `CellModifiers` (builder side panel). On the board, `ModifierBadge` shows a corner badge with a hover-card describing the effect and its params (`describeModifier` in `src/lib/tilerace-modifiers.ts`). Server applies landing modifiers in the roll handler (`snakes_ladders` relocates, `bonus_penalty` sets `pending_effects` / returns flags; `sabotage` is applied by the sabotage endpoint).
+Each path cell may carry `modifiers: CellModifier[]`, edited per cell in `CellModifiers` (builder side panel; trap dice live in `TrapModifierFields`). On the board, `ModifierBadge` shows a corner badge with a hover-card describing the effect and its params (`describeModifier` in `src/lib/tilerace-modifiers.ts`).
+
+A trap is the exception: `getCellPresentation` (`src/lib/tilerace-presentation.ts`) gives a trap-only cell the tile treatment instead - the bear trap icon from `/osrs-cache/item-icons/8144` in the cell body, "Trap" as its caption, and the dice in its tooltip - and both the public board and the builder grid draw from it. A cell with an assigned tile keeps the tile in the body and the trap falls back to its badge. A trap cell has no `tile_id`, so it never gates a roll: the team rolls straight on whether the trap just fired or was already spent.
+
+Server applies landing modifiers in the roll handler (`snakes_ladders` relocates, `bonus_penalty` sets `pending_effects` / returns flags, `trap` rolls its own dice and walks the team back; `sabotage` is applied by the sabotage endpoint). A trap counts back from the cell's own `path_position`, and the positions a team has already sprung are kept in `pending_effects.traps_sprung`, so one trap bites a given team once while every other trap on the board still bites.
 
 ### Roll Gating & Completion
 Rolls are gated behind staff-verified tile completion. A completion is a persisted row per `(team, path_position)`. Staff toggle it in `CompletionsPanel`; the roll endpoint returns `409` while a team's current tile has a `tile_id` and no completion row. The public `DiceRoller` disables the button (tooltip "Complete the current tile first") using `useCompletions`.
