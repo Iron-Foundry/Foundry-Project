@@ -32,15 +32,60 @@
         "label": "Bandos chestplate",
         "kind": "item",
         "item_id": 11832,
-        "covered": false
+        "covered": false,
+        "needed": true
       },
       {
         "key": "item:11834:1",
         "label": "Bandos tassets",
         "kind": "item",
         "item_id": 11834,
-        "covered": true
+        "covered": true,
+        "needed": false
       }
+    ],
+    "outstanding": 1,
+    "requirement_lines": [
+      "- Bandos chestplate",
+      "- ~~Bandos tassets~~ (submitted)"
+    ]
+  },
+  "_outstanding_comment": "`outstanding` is how many MORE leaves must be proved, not how many are unticked: an `or` costs its cheapest branch and a `not` costs nothing. The bot prints this count and renders `requirement_lines` verbatim - it never counts leaves itself, because a flat leaf list cannot tell 'all of these' from 'any one of these'.",
+  "_needed_comment": "`needed` marks a leaf whose proof would bring the tile closer to satisfied, and is what the submission select offers. Every branch of an unproved `or` is needed; once one branch lands the others go false, as do all leaves under a `not`.",
+  "any_of_context_response": {
+    "_comment": "Same seam, a tile asking for any one of three items with nothing proved yet. Three leaves are offered, but only one submission is outstanding.",
+    "leaves": [
+      {
+        "key": "item:11832:1",
+        "label": "Bandos chestplate",
+        "kind": "item",
+        "item_id": 11832,
+        "covered": false,
+        "needed": true
+      },
+      {
+        "key": "item:11834:1",
+        "label": "Bandos tassets",
+        "kind": "item",
+        "item_id": 11834,
+        "covered": false,
+        "needed": true
+      },
+      {
+        "key": "item:11836:1",
+        "label": "Bandos boots",
+        "kind": "item",
+        "item_id": 11836,
+        "covered": false,
+        "needed": true
+      }
+    ],
+    "outstanding": 1,
+    "requirement_lines": [
+      "- Any one of:",
+      "  - Bandos chestplate",
+      "  - Bandos tassets",
+      "  - Bandos boots"
     ]
   },
   "create_request": {
