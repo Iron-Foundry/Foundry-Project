@@ -1,0 +1,68 @@
+{
+  "_comment": "The tile race submissions seam. discord-server calls api-backend over HTTP with the METRICS_API_KEY as a verification-code header; api-backend owns every tile race table and the claim state machine. Asserted by api-backend/app/tests/test_tilerace_submissions.py and discord-server/tests/test_tilerace_submissions_contract.py.",
+  "_claim_comment": "A tile is `claimed` once every requirement leaf carries a submission that has not been rejected - that is what unlocks the next roll, with no staff wait. Staff approval upgrades the completion row to `approved`; a rejection sets it to `rejected` and sends the team back to that tile, remembering `furthest_position` until the tile is claimed again.",
+  "routes": {
+    "context": "GET /tilerace/submissions/context?discord_user_id=",
+    "create": "POST /tilerace/events/{event_id}/submissions",
+    "review": "POST /tilerace/events/{event_id}/submissions/threads/{thread_id}/review"
+  },
+  "auth_header": "verification-code",
+  "tile_statuses": ["none", "claimed", "approved", "rejected"],
+  "submission_statuses": ["pending", "approved", "rejected"],
+  "context_response": {
+    "event_id": "12",
+    "event_name": "Summer Tile Race",
+    "is_finished": false,
+    "team": {
+      "id": "31",
+      "name": "Abyssal Ashes",
+      "slug": "abyssal-ashes",
+      "color": "#8b0000"
+    },
+    "path_position": 7,
+    "tile": {
+      "id": "204",
+      "title": "Bandos armour",
+      "description": "Any two pieces from General Graardor.",
+      "icon_url": null
+    },
+    "leaves": [
+      {
+        "key": "item:11832:1",
+        "label": "Bandos chestplate",
+        "kind": "item",
+        "item_id": 11832,
+        "covered": false
+      },
+      {
+        "key": "item:11834:1",
+        "label": "Bandos tassets",
+        "kind": "item",
+        "item_id": 11834,
+        "covered": true
+      }
+    ]
+  },
+  "create_request": {
+    "discord_user_id": "111222333444555666",
+    "path_position": 7,
+    "leaf_keys": ["item:11832:1"],
+    "proof_urls": ["https://utfs.io/f/tilerace-900000000000000008-000.webp"],
+    "discord_thread_id": "900000000000000008"
+  },
+  "create_response": {
+    "ids": ["81"],
+    "tile_status": "claimed"
+  },
+  "review_request": {
+    "status": "rejected",
+    "review_notes": "Tassets are not visible in the screenshot.",
+    "reviewed_by": "222333444555666777"
+  },
+  "review_response": {
+    "ok": true,
+    "status": "rejected",
+    "reviewed": 1,
+    "tile_status": "rejected"
+  }
+}

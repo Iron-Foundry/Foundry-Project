@@ -18,6 +18,7 @@
     "category_id": null,
     "captains_role_id": null,
     "captains_channel_id": null,
+    "submissions_channel_id": null,
     "captain_user_ids": ["111222333444555666"],
     "permissions": {
       "pin_messages": true,
@@ -43,6 +44,7 @@
     "category_id": 900000000000000001,
     "captains_role_id": 900000000000000002,
     "captains_channel_id": 900000000000000003,
+    "submissions_channel_id": 900000000000000007,
     "teams": [
       {
         "team_id": 31,
@@ -67,6 +69,7 @@
     "category_id": null,
     "captains_role_id": null,
     "captains_channel_id": null,
+    "submissions_channel_id": null,
     "teams": []
   }
 }

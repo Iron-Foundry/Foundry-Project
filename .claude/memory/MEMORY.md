@@ -39,6 +39,7 @@
 - [Tilerace signups are the roster](tilerace-signups-are-the-roster.md) — `tilerace_signups.team_id` is the source of truth; team rosters are derived, never stored, so generate/reset/delete are always reversible
 - [Tilerace draft balances score mass](tilerace-draft-balances-score-mass.md) — ranking points are right-skewed, so the draft is greedy lowest-average, never a snake order, and its test pools must be skewed
 - [Tilerace Discord provisioning](tilerace-discord-provisioning.md) — discord-server builds the category/roles/channels from full-shape Valkey commands and holds no tile race state; every roster or name change must re-sync
+- [Tilerace claim, not approval](tilerace-claim-not-approval.md) — a roll unlocks on a claim (all leaves submitted); rejection rolls the team back and `furthest_position` restores it
 - [Tilerace channel permissions](tilerace-channel-permissions.md) — event-wide grant-only perm toggles applied in place with `set_permissions`; an off toggle inherits, never denies, and no channel is ever rebuilt
 - [Integration seed ids before commit](integration-seed-ids-before-commit.md) — capture a seeded row's `id` right after `flush()`; reading it after `commit()` raises MissingGreenlet with a misleading traceback
 - [httpx2 TestClient migration](httpx2-testclient-migration.md) — deferred 2026-08-01; starlette 1.3.1 deprecated `httpx` with `starlette.testclient`, api-backend tests move to `httpx2` in their own change
