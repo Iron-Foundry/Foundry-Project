@@ -1,7 +1,16 @@
 {
   "_comment": "The tile race Discord provisioning seam. api-backend publishes `command` on the Valkey channel; discord-server consumes it, acts on the guild, and POSTs `result` back to /tilerace/events/{event_id}/discord/result with the METRICS_API_KEY as a verification-code header. Every command carries the full desired shape, never a diff. Asserted by api-backend/app/tests/test_tilerace_discord.py and discord-server/tests/test_tilerace_contract.py.",
+  "_permissions_comment": "`command.permissions` holds the event-wide elevated grants for a team's own role in its own channels. Every toggle is always present and always a bool. Each one only grants: an off toggle leaves the flag inherited, never denied. The bot applies them with set_permissions on the existing channel, so a toggle change never recreates a channel. `pin_messages` is Discord's own narrow permission (discord.py 2.7), deliberately separate from `manage_messages`.",
   "channel": "foundry:tilerace_discord",
   "actions": ["setup", "sync", "teardown", "teardown_team"],
+  "permission_toggles": [
+    "pin_messages",
+    "manage_messages",
+    "mention_everyone",
+    "manage_threads",
+    "manage_channel",
+    "voice_moderation"
+  ],
   "command": {
     "action": "setup",
     "event_id": "12",
@@ -10,6 +19,14 @@
     "captains_role_id": null,
     "captains_channel_id": null,
     "captain_user_ids": ["111222333444555666"],
+    "permissions": {
+      "pin_messages": true,
+      "manage_messages": false,
+      "mention_everyone": true,
+      "manage_threads": false,
+      "manage_channel": false,
+      "voice_moderation": false
+    },
     "teams": [
       {
         "team_id": "31",
