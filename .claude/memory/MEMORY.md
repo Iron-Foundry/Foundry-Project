@@ -44,3 +44,5 @@
 - [Integration seed ids before commit](integration-seed-ids-before-commit.md) — capture a seeded row's `id` right after `flush()`; reading it after `commit()` raises MissingGreenlet with a misleading traceback
 - [httpx2 TestClient migration](httpx2-testclient-migration.md) — deferred 2026-08-01; starlette 1.3.1 deprecated `httpx` with `starlette.testclient`, api-backend tests move to `httpx2` in their own change
 - [Docker host is shared](docker-host-shared-stacks.md) — the box also runs traefik/grafana/prometheus/copyparty and their data volumes; cleanup prunes dangling images + build cache only, never volumes, containers, or tagged images
+- [Loopback localhost IPv6 stall](loopback-localhost-ipv6-stall.md) — `localhost` resolves to `::1` first here, costing ~2s per connect to a docker-published port; always write `127.0.0.1` in host-to-container URLs
+- [ccdispatch single-worker broadcast](ccdispatch-single-worker-broadcast.md) — OPEN BUG: in-process ConnectionManager + 3 gunicorn workers means ~2/3 of RuneLite clients miss every dispatch; only e2e can see it, and flakily

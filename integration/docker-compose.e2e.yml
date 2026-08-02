@@ -43,18 +43,27 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://foundry:foundry@postgres:5432/foundry
       VALKEY_URI: redis://valkey:6379
-      FRONTEND_URL: http://localhost:3000
+      # 127.0.0.1 rather than localhost throughout: the host-side suites connect
+      # over the IPv4 loopback the ports are published on, and these values have
+      # to match theirs or CORS and the OAuth redirect stop lining up.
+      FRONTEND_URL: http://127.0.0.1:3000
       JWT_SECRET: e2e-test-secret-e2e-test-secret-01
       METRICS_API_KEY: e2e-metrics-key
       DISCORD_CLIENT_ID: e2e
       DISCORD_CLIENT_SECRET: e2e
-      DISCORD_REDIRECT_URI: http://localhost:3000/auth/callback
+      DISCORD_REDIRECT_URI: http://127.0.0.1:3000/auth/callback
       GUILD_ID: "1"
       DISCORD_SERVER_TOKEN: e2e
-      API_BACKEND_URL: http://localhost:8000
+      API_BACKEND_URL: http://127.0.0.1:8000
     ports:
       - "127.0.0.1:8000:8000"
     networks: [e2e]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,16 +74,23 @@ services:
     build:
       context: ../web-app
       args:
-        BUN_PUBLIC_API_URL: http://localhost:8000
+        BUN_PUBLIC_API_URL: http://127.0.0.1:8000
     environment:
-      BUN_PUBLIC_API_URL: http://localhost:8000
+      BUN_PUBLIC_API_URL: http://127.0.0.1:8000
       INTERNAL_API_URL: http://api-backend:8000
-      SITE_URL: http://localhost:3000
+      SITE_URL: http://127.0.0.1:3000
     ports:
       - "127.0.0.1:3000:3000"
     networks: [e2e]
+    healthcheck:
+      test: ["CMD", "bun", "-e", "await fetch('http://localhost:3000/')"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
     depends_on:
-      - api-backend
+      api-backend:
+        condition: service_healthy
 
 networks:
   e2e:

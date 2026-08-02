@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 from datetime import datetime, timezone
@@ -12,6 +13,12 @@ import websockets
 
 API_URL = os.getenv("E2E_API_URL", "http://localhost:8000")
 DB_DSN = os.getenv("E2E_DB_DSN", "postgresql://foundry:foundry@localhost:5432/foundry")
+
+# Every recv is bounded: the api runs three gunicorn workers over an in-process
+# ConnectionManager, so a dispatch that lands on a worker other than the one
+# holding this socket never arrives. That is a delivery bug worth failing on -
+# but it must fail, not block the whole e2e lane forever.
+_RECV_TIMEOUT_SECONDS = 10
 
 _API_KEY = "e2e-runelite-key"
 _GUILD_ID = 555000222
@@ -45,7 +52,8 @@ async def test_dispatch_reaches_ws() -> None:
     async with websockets.connect(
         ws_url, additional_headers={"verification-code": _API_KEY}
     ) as ws:
-        hello = json.loads(await ws.recv())
+        async with asyncio.timeout(_RECV_TIMEOUT_SECONDS):
+            hello = json.loads(await ws.recv())
         assert hello["message_type"] == "ToClanChat"
         assert hello["message"]["sender"] == "System"
 
@@ -57,7 +65,8 @@ async def test_dispatch_reaches_ws() -> None:
             )
         assert resp.status_code == 200
 
-        frame = json.loads(await ws.recv())
+        async with asyncio.timeout(_RECV_TIMEOUT_SECONDS):
+            frame = json.loads(await ws.recv())
         assert frame["message_type"] == "ToClanChat"
         assert frame["message"]["sender"] == "Zezima"
         assert frame["message"]["message"] == "e2e drop"
