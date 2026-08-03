@@ -1,8 +1,10 @@
 .claude/settings.local.json
 .claude/skills/
 .ruff_cache
+__pycache__/
 .env
 .env.local
+CODEBASE-STATS.md
 FRENZY_DESIGN.md
 METRIC_REPORTS.md
 skills-lock.json

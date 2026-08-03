@@ -1,14 +1,15 @@
 ---
 name: secrets-and-startup
-description: How secrets are managed (Infisical) and how the project is started (root sh/ps1 scripts, compose injection)
+description: How secrets are managed (Infisical) and how the project is started (the ./run launcher, compose injection)
 metadata:
   type: project
 ---
 
-Secrets are managed via Infisical (3rd-party). The project is started using the
-`sh` or `ps1` scripts at the repo root (`rundev.sh` / `rundev.ps1`). Secrets are
-injected at container-creation time through the docker-compose files - not baked
-into images and not read from a checked-in `.env`.
+Secrets are managed via Infisical (3rd-party). The project is started through the
+root launcher (`./run dev` / `staging` / `prod`, or `.\run.ps1` on Windows), which
+wraps `docker compose` in `infisical run`. Secrets are injected at container-creation
+time through the docker-compose files - not baked into images and not read from a
+checked-in `.env`. See [[root-launcher]].
 
 **Why:** knowing the injection point matters when adding or changing an env var -
 the change must reach the compose files (and `.env.example`), because that is where

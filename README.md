@@ -66,6 +66,24 @@ git submodule update --init --recursive
 
 Refer to the README in each submodule directory for service-specific setup instructions.
 
+### The launcher
+
+`./run` (POSIX) or `.\run.ps1` (Windows) is the single entry point for running, testing
+and maintaining the monorepo. Run it bare for a menu, or name an action directly:
+
+```bash
+./run                    # menu: run / test / maintenance
+./run dev                # backend services in Docker, web-app natively for HMR
+./run staging            # full stack behind Traefik, staging secrets
+./run prod               # full stack behind Traefik, prod secrets, rebuilt images
+./run test fast          # a test lane: lint | fast | integration | e2e | all
+./run --list             # every action, its choices and its flags
+```
+
+It runs on [`uv`](https://docs.astral.sh/uv/), which resolves its dependencies on first
+use - nothing to install. Full reference, including the maintenance jobs it exposes, is in
+[`scripts/README.md`](scripts/README.md).
+
 ---
 
 ## Tech Stack
@@ -75,7 +93,7 @@ Refer to the README in each submodule directory for service-specific setup instr
 | Python services | Python 3.14+, `uv` package manager, Ruff, Pyright |
 | Web app | TypeScript, React 19, Bun, TanStack Router, Tailwind CSS 4, Shadcn/ui |
 | Database | PostgreSQL (primary, shared across discord-server, discord-utils, api-backend), a dedicated `cache-postgres` for osrs-cache-service, MongoDB (discord-event), Valkey/Redis (caching, pubsub) |
-| Quality | Ruff, Pyright/Mypy, Bandit, pre-commit hooks, `./run-tests.sh {lint\|fast\|integration\|e2e\|all}` |
+| Quality | Ruff, Pyright/Mypy, Bandit, pre-commit hooks, `./run test {lint\|fast\|integration\|e2e\|all}` |
 | CI/CD | GitHub Actions (`ubuntu-latest` runners) |
 
 ---

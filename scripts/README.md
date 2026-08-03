@@ -3,13 +3,59 @@
 Host and database maintenance helpers. Each `.sh` has a `.ps1` twin where it is
 meant to run from Windows; host-only jobs ship as `.sh` alone.
 
+Everything here is also reachable from the launcher at the repo root - `./run` on
+POSIX, `.\run.ps1` on Windows - which picks the right twin for the platform and
+prompts for each script's options. See [The launcher](#the-launcher) below.
+
 | Script | Purpose |
 |---|---|
 | `backfill-events.sh` / `.ps1` | Backfill historical event records |
 | `docker-cleanup.sh` | Reclaim Docker build cache and dangling image layers (see below) |
 | `export-secrets.sh` / `.ps1` | Export Infisical secrets to the local environment |
 | `migrate-clan-rank-to-lowercase.sh` | One-off `users.clan_rank` migration to WOM role format |
+| `run-tests.ps1` | PowerShell port of the root `run-tests.sh` monorepo test runner |
 | `sync-db.sh` / `.ps1` | Sync prod Postgres to the local dev DB over an SSH tunnel |
+
+## The launcher
+
+`run.py` plus the `launcher/` package are the one entry point for running, testing
+and maintaining the monorepo. The root shims hand the script to `uv`, which resolves
+its PEP 723 dependencies on first run - there is nothing to install.
+
+```bash
+./run                      # open the menu
+./run --list               # every action, its choices and its flags
+./run --help               # the direct command form
+./run --print prod         # resolve the commands without running them
+
+./run dev                  # backend stack in Docker, then web-app natively
+./run test fast            # one test lane
+./run backfill-events prod --apply
+./run dev -- cache-tiles   # anything after -- is appended to the command
+```
+
+Windows uses `.\run.ps1` with the same arguments.
+
+Picking an entry closes the menu before the command starts, so the job owns a real
+terminal: colours, prompts, Ctrl-C and long-running output all behave normally.
+
+The dev, staging and prod stacks are built in Python (`launcher/stack.py`) - they
+replaced the `rundev`/`runprod`/`runstaging` `.sh`/`.ps1` pairs that used to sit in
+the repo root. Everything else shells out to the scripts documented above, choosing
+the `.ps1` twin on Windows and the `.sh` elsewhere.
+
+| Module | Role |
+|---|---|
+| `launcher/catalog.py` | Every menu entry: its options, requirements and warnings |
+| `launcher/stack.py` | The infisical + docker compose stacks |
+| `launcher/actions.py` | The action/step model |
+| `launcher/cli.py` | Argument parsing and the launch flow |
+| `launcher/app.py`, `panel.py` | The Textual menu |
+| `launcher/fallback.py` | Numbered prompt, used when Textual cannot start |
+| `launcher/runner.py` | Runs the resolved steps with the terminal attached |
+
+CI does not go through the launcher; `.github/workflows/e2e.yml` still calls
+`bash run-tests.sh e2e` directly.
 
 ## docker-cleanup.sh
 

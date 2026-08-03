@@ -1,11 +1,12 @@
 #!/usr/bin/env pwsh
 # One-command test runner for the monorepo (PowerShell port of run-tests.sh).
+# Usually reached through the launcher: .\run.ps1 test <lane>
 #
-#   .\run-tests.ps1 lint          ruff + pyright per Python module, tsc for web-app
-#   .\run-tests.ps1 fast          fast suites only (no Docker): api + discord + cache + web
-#   .\run-tests.ps1 integration   real-infra suites (Docker): api + discord testcontainers
-#   .\run-tests.ps1 e2e           full stack E2E (Docker compose): playwright + discord_e2e
-#   .\run-tests.ps1 all           everything (default)
+#   .\scripts\run-tests.ps1 lint          ruff + pyright per Python module, tsc for web-app
+#   .\scripts\run-tests.ps1 fast          fast suites only (no Docker): api + discord + cache + web
+#   .\scripts\run-tests.ps1 integration   real-infra suites (Docker): api + discord testcontainers
+#   .\scripts\run-tests.ps1 e2e           full stack E2E (Docker compose): playwright + discord_e2e
+#   .\scripts\run-tests.ps1 all           everything (default)
 #
 # E2E auto-detects free host ports: it uses 3000/8000/5432/6379 when free, otherwise
 # 13000/18000/55432/16379 (so it never fights a running dev stack), and always tears
@@ -15,7 +16,7 @@
 
 $ErrorActionPreference = 'Continue'
 
-$Root = $PSScriptRoot
+$Root = Split-Path -Parent $PSScriptRoot
 $Compose = Join-Path $Root 'integration\docker-compose.e2e.yml'
 $script:Failures = 0
 
@@ -283,7 +284,7 @@ switch ($scope) {
   'e2e' { Invoke-E2E }
   'all' { Invoke-Lint; Invoke-Fast; Invoke-Integration; Invoke-E2E }
   default {
-    [Console]::Error.WriteLine("usage: .\run-tests.ps1 {lint|fast|integration|e2e|all}")
+    [Console]::Error.WriteLine("usage: .\scripts\run-tests.ps1 {lint|fast|integration|e2e|all}")
     exit 2
   }
 }

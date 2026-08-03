@@ -3,7 +3,9 @@
 # Memory
 
 - [Memory location](memory-location.md) — project memory lives ONLY in repo `.claude/memory/`, never the harness auto-memory path
-- [Secrets & startup](secrets-and-startup.md) — Infisical-managed secrets; started via root sh/ps1 scripts; bare docker compose recreates with blank env; both services auto-migrate (`alembic upgrade head`) on container start
+- [No invented names](no-invented-names.md) — name a command/module for what it does using existing repo vocabulary; never coin a product-style name (`foundry` was rejected)
+- [Root launcher](root-launcher.md) — `./run` (menu or `./run <action>`) is the one root entry point; the run*.sh/ps1 pairs are gone, new jobs go in `scripts/launcher/catalog.py`
+- [Secrets & startup](secrets-and-startup.md) — Infisical-managed secrets; started via `./run dev|staging|prod`; bare docker compose recreates with blank env; both services auto-migrate (`alembic upgrade head`) on container start
 - [Cache icon coverage](cache-icon-coverage.md) — cache serves item icons + UI sprites only (no NPC/boss art); how web-app sources item icons/names/skill icons off the Wiki
 - [Cache image CORS](cache-image-cors.md) — proxied cache image endpoints must send Access-Control-Allow-Origin:* or cross-origin fetch/canvas loads break
 - [Check refs before asking](check-refs-before-asking.md) — ls D:\claude-git-references before asking to clone a reference repo; runelite-repo etc already present
@@ -28,7 +30,7 @@
 - [Reference-data external shapes](reference-data-external-shapes.md) — verified live shapes of the OSRS Wiki drop-table (MediaWiki wikitext + {{DropsLine}}), WOM /efficiency/rates?type=ironman, and WOM group bulk-hiscores (player.ehp/ehb/type, skills.overall)
 - [Semver & /version endpoints](semver-and-version-endpoints.md) — per-maturity module versions single-sourced from the manifest, `GET /version` build provenance, CHANGELOGs, CI bump gate
 - [API docs (Scalar)](api-docs-scalar.md) — all reference metadata lives in `app/docs/`; declared security schemes turned missing-credential 422s into 401s
-- [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); Python bumps via `uv version --bump` only; staff-gated routes our own web-app consumes are not "breaking"
+- [Semver bump scope](semver-bump-scope.md) — bump minor/patch/alpha/beta/rc freely, NEVER major (suggest only); test-only changes bump nothing; Python bumps via `uv version --bump` only; staff-gated routes our own web-app consumes are not "breaking"
 - [Bump at push only](bump-at-push-only.md) — bump once when work is about to be pushed, never per component; entries accumulate under `## [Unreleased]`
 - [WSL shared node_modules](wsl-shared-node-modules.md) — tests run from WSL against the Windows `node_modules` on `/mnt/c`, so package scripts call JS entry points, never `.bin` shims
 - [Music bots plan](music-bots-plan.md) — spec + stage tracker live in `designs/MUSIC_BOTS.md`; stage 0 gates all work, never build on an unpromoted U-row assumption

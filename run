@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# Monorepo launcher. Bare invocation opens the menu; see ./run --help for the
+# direct command form. All it does is hand scripts/run.py to uv.
+set -e
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+if command -v uv >/dev/null 2>&1; then
+  UV=uv
+elif [ -x "$HOME/.local/bin/uv" ]; then
+  UV="$HOME/.local/bin/uv"
+else
+  echo "uv not found. Install it from https://docs.astral.sh/uv/ - the launcher runs on it." >&2
+  exit 127
+fi
+
+exec "$UV" run --script "$ROOT/scripts/run.py" "$@"

@@ -274,7 +274,7 @@ Non-negotiable, because each one is a silent-misroute bug rather than an error:
 - `uv add wavelink` in discord-utils, pinned to `3.5.2`.
 - Version bump via `uv version --bump minor` and a CHANGELOG entry.
 
-**Exit criteria: met.** Stack starts clean from `rundev.sh`, node reports healthy, `./run-tests.sh lint` green,
+**Exit criteria: met.** Stack starts clean from the dev launcher (`./run dev`), node reports healthy, `./run-tests.sh lint` green,
 and the U1r spike passed 10/10 against the live node. The second inherited check, a components-v2 post into a
 voice channel's text chat, moved to Stage 4 where the panel actually exists; U5 itself is already an
 established fact from the permissions table.

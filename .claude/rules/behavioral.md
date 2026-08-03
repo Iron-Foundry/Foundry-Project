@@ -114,6 +114,18 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
         WHEN correcting a file/doc:
             ALWAYS STATE the correct fact directly
             NEVER WRITE "was X / now Y" or a self-changelog
+    RULE launcher_is_the_front_door:
+        WHEN a new operator-facing job ships:
+            ALWAYS ADD it AS an Action IN "scripts/launcher/catalog.py"
+            NEVER ADD a new script TO the repository root
+            NEVER MAKE a CI / Dockerfile / systemd entry point DEPEND ON the launcher
+            # full ruleset: .claude/rules/launcher-actions.md
+    RULE no_invented_names:
+        WHEN naming a new command, script, module, or directory:
+            ALWAYS PICK a plain descriptive name FROM vocabulary the repo already uses
+            NEVER COIN a product-style or branded name ON own initiative
+            ALWAYS CHECK the name FOR a collision BEFORE proposing it
+            ASK_USER WHEN no plain descriptive name fits
     RULE no_unilateral_rule_disable:
         WHEN a lint/gate/check fires:
             ALWAYS FIX the underlying smell

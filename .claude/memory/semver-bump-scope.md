@@ -33,6 +33,14 @@ to minor and run the uv command. If the change is genuinely breaking, make the
 change, leave the version alone, and tell the user a major bump looks due and
 why.
 
+**Test-only changes do not bump the version at all.** A change confined to the
+test suite or its harness (fixtures, conftest, runners, flake fixes) ships no
+new behaviour to any consumer, so it gets no version move - not even a patch.
+Its changelog entry still accumulates under `## [Unreleased]` and is renamed by
+whatever real bump comes next. This overrides the "bump once when the
+accumulated work is about to be pushed" rule in [[bump-at-push-only]]: if the
+accumulated work is only tests, there is nothing to bump.
+
 **What "breaking" means here:** breakage is measured by who actually consumes
 the surface, not by whether it appears in `openapi.json`. Removing or reshaping
 a **staff-gated endpoint whose only consumer is our own web-app** is a MINOR

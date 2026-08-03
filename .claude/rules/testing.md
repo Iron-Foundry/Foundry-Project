@@ -37,6 +37,8 @@ SET run_scope = "none"
 
     ANALYZE change_set FOR touched_modules
     ANALYZE change_set FOR change_kinds
+    # WHICH layers to run is derived below; WHAT each layer must assert is derived
+    # from `.claude/intel/reference_test_surface_coverage.md` (surface x lens -> invariant)
 
     FOR EACH change IN change_set.changes:
         IF change.kind IN ["endpoint", "router", "component", "hook", "pure_function"]:
