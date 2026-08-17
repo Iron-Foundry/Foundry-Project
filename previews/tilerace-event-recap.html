@@ -211,15 +211,15 @@
               <p class="rs" style="margin:0; font-size:1.35rem; color:var(--primary);">Iron Kings</p>
             </div>
           </div>
-          <p class="sub" style="margin:0; text-align:right;">Reached tile 40 on day 13<br>28 proofs approved &middot; 24 tiles cleared</p>
+          <p class="sub" style="margin:0; text-align:right;">Reached tile 40 on day 13<br>28 tiles approved &middot; 24 tiles cleared</p>
         </div>
       </div>
 
       <!-- stat row -->
       <div class="stats">
-        <div class="stat"><div class="k">Teams</div><div class="v">4</div><div class="n">17 racers at close</div></div>
+        <div class="stat"><div class="k">Teams</div><div class="v">4</div><div class="n">17 participants at close</div></div>
         <div class="stat"><div class="k">Tiles cleared</div><div class="v">80</div><div class="n">of 160 team-tiles</div></div>
-        <div class="stat"><div class="k">Proofs approved</div><div class="v gold">92</div><div class="n">of 118 submitted</div></div>
+        <div class="stat"><div class="k">Tiles approved</div><div class="v gold">92</div><div class="n">of 118 submitted</div></div>
         <div class="stat"><div class="k">Dice rolled</div><div class="v">86</div><div class="n">avg 6.4 per team-day</div></div>
         <div class="stat"><div class="k">Approval rate</div><div class="v">78%</div><div class="n">21 rejected, 5 unreviewed</div></div>
       </div>
@@ -232,23 +232,16 @@
         <div class="legend" id="legend-positions"></div>
       </div>
 
-      <!-- two-up: cumulative submissions + daily volume -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.1rem;">
-        <div class="card">
-          <p class="ctitle">Approved proofs, cumulative</p>
-          <p class="cdesc">Only proofs from racers still on the roster at close.</p>
-          <div id="chart-cumulative"></div>
-          <div class="legend" id="legend-cumulative"></div>
-        </div>
-        <div class="card">
-          <p class="ctitle">Submissions per day</p>
-          <p class="cdesc">Every proof filed that day, by the verdict it ended on.</p>
-          <div id="chart-daily"></div>
-          <div class="legend">
-            <span><span class="d" style="background:var(--ok)"></span>Approved</span>
-            <span><span class="d" style="background:var(--bad)"></span>Rejected</span>
-            <span><span class="d" style="background:var(--muted-foreground)"></span>Unreviewed</span>
-          </div>
+      <!-- daily volume -->
+      <div class="card">
+        <p class="ctitle">Tiles submitted per day</p>
+        <p class="cdesc">Every tile submitted that day, by the verdict it ended on.
+          Only tiles from participants still on the roster at close.</p>
+        <div id="chart-daily"></div>
+        <div class="legend">
+          <span><span class="d" style="background:var(--ok)"></span>Approved</span>
+          <span><span class="d" style="background:var(--bad)"></span>Rejected</span>
+          <span><span class="d" style="background:var(--muted-foreground)"></span>Unreviewed</span>
         </div>
       </div>
 
@@ -263,7 +256,7 @@
               <th class="num">Final tile</th><th class="num">Furthest</th>
               <th class="num">Tiles cleared</th><th class="num">Approved</th>
               <th class="num">Rejected</th><th style="width:120px">Approval</th>
-              <th class="num">Rolls</th><th class="num">Racers</th>
+              <th class="num">Rolls</th><th class="num">Participants</th>
             </tr>
           </thead>
           <tbody id="team-rows"></tbody>
@@ -275,16 +268,16 @@
         <div class="row" style="align-items:baseline;">
           <div>
             <p class="ctitle">Top contributors</p>
-            <p class="cdesc">Approved proofs per racer. Racers removed during the event are excluded.</p>
+            <p class="cdesc">Approved tiles per participant. Participants removed during the event are excluded.</p>
           </div>
-          <span class="badge dim">3 removed racers excluded</span>
+          <span class="badge dim">3 removed participants excluded</span>
         </div>
         <table class="app-t">
           <thead>
             <tr>
-              <th style="width:2rem">#</th><th>Racer</th><th>Team</th>
+              <th style="width:2rem">#</th><th>Participant</th><th>Team</th>
               <th class="num">Approved</th><th class="num">Rejected</th>
-              <th class="num">Tiles proved</th><th style="width:140px">Share of team</th>
+              <th class="num">Tiles proven</th><th style="width:140px">Share of team</th>
             </tr>
           </thead>
           <tbody id="player-rows"></tbody>
@@ -326,13 +319,13 @@
         <div class="stat" style="background:transparent; border:0; padding:0">
           <div class="k">Winner</div><div class="v gold rs" style="font-size:1.1rem">Iron Kings</div></div>
         <div class="stat" style="background:transparent; border:0; padding:0">
-          <div class="k">Proofs approved</div><div class="v">92</div></div>
+          <div class="k">Tiles approved</div><div class="v">92</div></div>
         <div class="stat" style="background:transparent; border:0; padding:0">
           <div class="k">Tiles cleared</div><div class="v">80</div></div>
         <div class="stat" style="background:transparent; border:0; padding:0">
           <div class="k">Dice rolled</div><div class="v">86</div></div>
         <div class="stat" style="background:transparent; border:0; padding:0">
-          <div class="k">Racers</div><div class="v">17</div></div>
+          <div class="k">Participants</div><div class="v">17</div></div>
       </div>
     </div>
   </div>
@@ -375,18 +368,18 @@
 </figure>
 
 <!-- ============================================================ -->
-<h2>4. Dropping removed racers<span class="of">the counting rule</span></h2>
+<h2>4. Dropping removed participants<span class="of">the counting rule</span></h2>
 
 <p style="color:var(--muted); font-size:.92rem;">
 A submission row keeps <code>discord_user_id</code> and <code>player_rsn</code> forever
 (<code>TileRaceSubmission</code>), but the roster row it came from can be deleted mid-event via
-<code>DELETE /tilerace/events/{id}/roster/{discord_user_id}</code>. The recap counts a racer only
+<code>DELETE /tilerace/events/{id}/roster/{discord_user_id}</code>. The recap counts a participant only
 when a <code>tilerace_signups</code> row for them still exists at close.
 </p>
 
 <div class="cols">
   <figure>
-    <figcaption>the struck row is illustrative - a removed racer never reaches the browser at all</figcaption>
+    <figcaption>the struck row is illustrative - a removed participant never reaches the browser at all</figcaption>
     <div class="app">
       <div class="card">
         <p class="ctitle" style="font-size:.85rem">Iron Kings</p>
@@ -400,25 +393,25 @@ when a <code>tilerace_signups</code> row for them still exists at close.
           </tbody>
         </table>
         <p class="cdesc" style="margin-top:.6rem">Team total: <b style="color:var(--foreground)">28</b> approved
-        (33 including removed racers)</p>
+        (33 including removed participants)</p>
       </div>
     </div>
   </figure>
   <div>
     <h3 style="margin-top:0">Where the rule bites</h3>
     <table class="doc">
-      <tr><th>Surface</th><th>Removed racer</th></tr>
+      <tr><th>Surface</th><th>Removed participant</th></tr>
       <tr><td>Contributor leaderboard</td><td>omitted entirely</td></tr>
       <tr><td>Roster cards</td><td>omitted entirely</td></tr>
-      <tr><td>Team approved / rejected totals</td><td>their proofs not counted</td></tr>
-      <tr><td>Cumulative + daily submission graphs</td><td>their proofs not counted</td></tr>
+      <tr><td>Team approved / rejected totals</td><td>their tiles not counted</td></tr>
+      <tr><td>Tiles-submitted-per-day graph</td><td>their tiles not counted</td></tr>
       <tr><td>Team position history</td><td><b>unchanged</b> - the team moved, and a roll is the team's</td></tr>
       <tr><td>Tiles cleared</td><td><b>unchanged</b> - a cleared tile stays cleared</td></tr>
-      <tr><td>Event-level <code>submitted</code> count</td><td>excluded, and the delta is stated once ("3 removed racers excluded")</td></tr>
+      <tr><td>Event-level <code>submitted</code> count</td><td>excluded, and the delta is stated once ("3 removed participants excluded")</td></tr>
     </table>
     <div class="note" style="margin-bottom:0">
       <b>Consequence to accept:</b> team approved totals and tiles cleared can disagree
-      (a tile cleared by a since-removed racer has no surviving proof in the counts).
+      (a tile cleared by a since-removed participant is no longer in the team's approved total).
       The stat card footnote is what keeps that honest.
     </div>
   </div>
@@ -430,9 +423,9 @@ when a <code>tilerace_signups</code> row for them still exists at close.
   <figure>
     <figcaption>no submissions at all</figcaption>
     <div class="app"><div class="card">
-      <p class="ctitle">Approved proofs, cumulative</p>
+      <p class="ctitle">Tiles submitted per day</p>
       <p style="text-align:center; color:var(--muted-foreground); font-size:.8rem; padding:2.2rem 0; margin:0;">
-        No proofs were filed for this event.</p>
+        No tiles were submitted for this event.</p>
     </div></div>
   </figure>
   <figure>
@@ -473,21 +466,21 @@ when a <code>tilerace_signups</code> row for them still exists at close.
   <tr><td>Tiles cleared per team</td>
       <td><code>tilerace_tile_completions</code> (claimed or approved)</td>
       <td><code>teams[].tiles_cleared</code></td></tr>
-  <tr><td>Submission counts, per team and per racer</td>
+  <tr><td>Submission counts, per team and per participant</td>
       <td><code>tilerace_submissions</code></td>
       <td><code>teams[].approved/rejected</code>, <code>teams[].roster[]</code>,
           <code>teams[].submission_series</code></td></tr>
-  <tr><td>Which racers survived to close</td>
+  <tr><td>Which participants survived to close</td>
       <td><code>tilerace_signups</code> rows still present</td>
       <td>never sent - the filter runs server-side, only the count of dropped
-          authors ships as <code>totals.removed_racers</code></td></tr>
+          authors ships as <code>totals.removed_participants</code></td></tr>
 </table>
 
 <div class="note">
   <b>Why it is aggregated server-side.</b> The rows behind these numbers carry proof URLs, review
   notes, thread ids and Discord ids. Shipping counts and series instead means none of that can leak,
   the same discipline <code>_public_view.py</code> applies to the board - and it keeps the
-  "removed racer" filter in one place, next to the roster it filters against.
+  "removed participant" filter in one place, next to the roster it filters against.
 </div>
 
 <pre><code><span class="cmt"># api-backend/app/routers/tilerace/recap.py - unauthenticated</span>
@@ -497,7 +490,7 @@ GET /tilerace/events/{event_id}/recap
   "event": { <span class="cmt">... PUBLIC_SUMMARY_KEYS subset ...</span>, "path_length": 40 },
   "next_event": null,                      <span class="cmt"># drives the section-1 gate</span>
   "totals": {
-    "teams": 4, "racers": 17, "removed_racers": 3,
+    "teams": 4, "participants": 17, "removed_participants": 3,
     "tiles_cleared": 80, "rolls": 86,
     "submitted": 118, "approved": 92, "rejected": 21, "unreviewed": 5
   },
@@ -508,7 +501,7 @@ GET /tilerace/events/{event_id}/recap
     "tiles_cleared": 24, "rolls": 23,
     "submitted": 34, "approved": 28, "rejected": 6, "unreviewed": 0,
     "roster": [{ "rsn": "Zezima Jr", "is_captain": true,
-                 "approved": 12, "rejected": 2, "tiles_proved": 9 }],
+                 "approved": 12, "rejected": 2, "tiles_proven": 9 }],
     "position_series": [{ "at": "2026-07-02T18:04:11Z", "position": 3 }],
     "submission_series": [{ "day": "2026-07-02",
                             "approved": 2, "rejected": 0, "unreviewed": 0 }]
@@ -522,20 +515,20 @@ GET /tilerace/events/{event_id}/recap
   <tr><td><code>src/types/tilerace.ts</code></td>
       <td><code>TileRaceRecap</code>, <code>TileRaceRecapEvent</code>, <code>TileRaceNextEvent</code>,
           <code>TileRaceRecapTotals</code>, <code>TileRaceRecapTeam</code>,
-          <code>TileRaceRecapRacer</code>, <code>TileRaceRecapPoint</code>,
+          <code>TileRaceRecapParticipant</code>, <code>TileRaceRecapPoint</code>,
           <code>TileRaceRecapDay</code></td></tr>
   <tr><td><code>src/api/tilerace.ts</code> + <code>src/hooks/useTilerace.ts</code></td>
       <td><code>getRecap()</code> / <code>useTileraceRecap()</code></td></tr>
   <tr><td><code>src/lib/tilerace-recap.ts</code></td>
       <td>the pure transforms: <code>buildPositionRows</code> (carry-forward merge),
-          <code>buildCumulativeRows</code>, <code>buildDailyRows</code>,
+          <code>buildDailyRows</code>,
           <code>buildContributors</code>, <code>approvalRate</code>,
           <code>formatRecapDay</code>. Tested in
           <code>tests/lib/tileraceRecap.test.ts</code></td></tr>
   <tr><td><code>src/components/tilerace/recap/</code></td>
       <td><code>EventRecap</code>, <code>CollapsedRecap</code>, <code>RecapCard</code>,
           <code>RecapStats</code>, <code>RecapTooltip</code>, <code>PositionChart</code>,
-          <code>CumulativeChart</code>, <code>DailySubmissionsChart</code>,
+          <code>DailySubmissionsChart</code>,
           <code>StandingsTable</code>, <code>ContributorsTable</code>,
           <code>RosterGrid</code></td></tr>
   <tr><td><code>src/routes/activities/tilerace.tsx</code></td>
@@ -554,25 +547,21 @@ const DAYS = 14;
 const TEAMS = [
   { name:"Iron Kings",    color:"var(--t0)", hex:"#ef4444",
     pos:[0,3,7,7,12,15,19,22,22,27,31,34,38,40],
-    cum:[0,2,4,6,9,11,13,16,18,20,23,25,27,28],
     tiles:24, rolls:23, approved:28, rejected:6,
     roster:[["Zezima Jr",true,12,2,9],["Ironbjorn",false,9,3,7],["Kaelith",false,7,1,6]],
     removed:[["Muffin Man",5,"day 6"]] },
   { name:"Blue Vipers",   color:"var(--t1)", hex:"#3b82f6",
     pos:[0,2,5,9,11,14,16,20,24,26,29,31,34,36],
-    cum:[0,1,3,5,7,9,11,13,15,17,19,21,23,25],
     tiles:21, rolls:22, approved:25, rejected:5,
     roster:[["Sirsuds",true,11,2,8],["Frostbyte",false,8,2,7],["Vex",false,6,1,5]],
     removed:[["Lurker99",2,"day 9"]] },
   { name:"Green Wardens", color:"var(--t2)", hex:"#22c55e",
     pos:[0,4,6,8,10,13,17,18,21,23,26,30,32,33],
-    cum:[0,2,3,5,6,8,10,12,14,15,17,19,20,21],
     tiles:19, rolls:21, approved:21, rejected:6,
     roster:[["Thalorien",true,10,3,8],["Grubbins",false,7,2,6],["Nimue",false,4,1,4]],
     removed:[] },
   { name:"Gold Krakens",  color:"var(--t3)", hex:"#eab308",
     pos:[0,1,4,6,9,10,12,15,18,19,22,24,27,29],
-    cum:[0,1,2,3,5,6,8,9,11,12,14,15,17,18],
     tiles:16, rolls:20, approved:18, rejected:4,
     roster:[["Krakenhead",true,9,1,7],["Salty Sam",false,6,2,5],["Bram",false,3,1,3]],
     removed:[["Afkanon",1,"day 4"]] },
@@ -670,13 +659,9 @@ function legend(mount, series) {
 
 /* ---------------- render charts ---------------- */
 const posSeries = TEAMS.map(t => ({ name:t.name, hex:t.hex, data:t.pos }));
-const cumSeries = TEAMS.map(t => ({ name:t.name, hex:t.hex, data:t.cum }));
 
 lineChart(document.getElementById("chart-positions"), posSeries, 40);
 legend(document.getElementById("legend-positions"), posSeries);
-
-lineChart(document.getElementById("chart-cumulative"), cumSeries, 30, { h:230 });
-legend(document.getElementById("legend-cumulative"), cumSeries);
 
 stackedBars(document.getElementById("chart-daily"), DAILY,
   ["#22c55e", "#ef4444", "#6b7280"]);

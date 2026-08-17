@@ -141,11 +141,13 @@ The second unauthenticated surface. Every number a recap needs lives behind auth
 
 - `event` is the same `PUBLIC_SUMMARY_KEYS` allowlist as the board, plus `path_length`. No `cells`.
 - `next_event` names the event that takes over - `is_active`, or the earliest future `starts_at`. `null` when nothing is running or scheduled, which is what makes the recap the page.
-- `totals` carries `teams, racers, removed_racers, tiles_cleared, rolls, submitted, approved, rejected, unreviewed`.
+- `totals` carries `teams, participants, removed_participants, tiles_cleared, rolls, submitted, approved, rejected, unreviewed`.
 - `teams[]` arrives in standings order (position, then tiles cleared, then name) with `position_series` (one point per roll) and `submission_series` (one row per day, by verdict).
-- `teams[].roster[]` is `{ rsn, is_captain, approved, rejected, tiles_proved }` - the roster as it stood at close.
+- `teams[].roster[]` is `{ rsn, is_captain, approved, rejected, tiles_proven }` - the roster as it stood at close.
 
-**Removed racers.** A roster row can be deleted mid-event (`DELETE .../roster/{discord_user_id}`) while their `tilerace_submissions` rows survive. Only a surviving `tilerace_signups` row makes a submission countable, so a removed racer drops out of every per-racer and per-team proof count, and `totals.removed_racers` states how many authors were dropped. Team positions, roll counts and `tiles_cleared` are untouched: a roll belongs to the team, and a cleared tile stays cleared. That means a team's approved total and its tiles cleared can legitimately disagree.
+**Removed participants.** A roster row can be deleted mid-event (`DELETE .../roster/{discord_user_id}`) while their `tilerace_submissions` rows survive. Only a surviving `tilerace_signups` row makes a submission countable, so a removed participant drops out of every per-participant and per-team tile count, and `totals.removed_participants` states how many authors were dropped. Team positions, roll counts and `tiles_cleared` are untouched: a roll belongs to the team, and a cleared tile stays cleared. That means a team's approved total and its tiles cleared can legitimately disagree.
+
+The word for a submitted requirement is a **tile**, not a proof, everywhere a user can read it - "Tiles approved", "Tiles submitted per day", "Tiles proven". `proof_urls` keeps its name because it is the image, not the submission.
 
 ## Component Tree
 
@@ -163,7 +165,7 @@ TileRacePage (/activities/tilerace)
     DiceRoller (captain only; disabled when gated or finished)
   EventRecap        (ended, recap.next_event === null - replaces the board)
     Outcome + RecapStats
-    PositionChart / CumulativeChart / DailySubmissionsChart
+    PositionChart / DailySubmissionsChart
     StandingsTable / ContributorsTable / RosterGrid
   CollapsedRecap    (ended, recap.next_event set - board stays, recap folds away)
 
@@ -253,9 +255,8 @@ Query keys (`src/lib/queryKeys.ts`): `tilerace.active()`, `events()`, `event(id)
 
 `src/lib/tilerace-recap.ts` - the recap's pure transforms, all keyed by team `slug` because a name is not unique per event:
 - `buildPositionRows(teams)` - merge every team's rolls onto one timeline, carrying a team's last position through moments it did not roll
-- `buildCumulativeRows(teams)` - running total of approved proofs per team, one row per day
 - `buildDailyRows(teams)` - every team's verdicts summed into one row per day
-- `buildContributors(teams)` - flat racer list, best first, with each racer's share of their own team
+- `buildContributors(teams)` - flat participant list, best first, with each one's share of their own team
 - `approvalRate(team)`, `formatRecapDay(day)`
 
 ## Backend
