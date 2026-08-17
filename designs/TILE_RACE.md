@@ -97,6 +97,7 @@ Base prefix: `/tilerace/`
 | Group | Endpoint | Method |
 |---|---|---|
 | Public | `/tilerace/active` | GET (masked - see below) |
+| Public | `/tilerace/events/:id/recap` | GET (aggregated - see below) |
 | Staff | `/tilerace/events/:id` | GET (full shape) |
 | Signup | `/tilerace/events/:id/signup` | POST `{ account_id?, wants_captain? }` (gated by `signups_open`) / PATCH `{ account_id?, wants_captain? }` (change, any time) / DELETE (rescind, any time) |
 | Repository | `/tilerace/repository` | GET / POST |
@@ -126,12 +127,23 @@ The only unauthenticated tile race surface, and the only one that is masked. `pu
 
 Staff read the unmasked shape through `GET /tilerace/events/:id`.
 
+### The event recap (`GET /tilerace/events/:id/recap`)
+The second unauthenticated surface. Every number a recap needs lives behind auth in its raw form - rolls and completions want a signed-in caller, submissions want `tilerace.admin` - so `recap_payload` (`app/routers/tilerace/_recap.py`) reduces all five tables to counts and time series before they leave the API. No proof URL, review note, thread id or Discord id is in the shape at all.
+
+- `event` is the same `PUBLIC_SUMMARY_KEYS` allowlist as the board, plus `path_length`. No `cells`.
+- `next_event` names the event that takes over - `is_active`, or the earliest future `starts_at`. `null` when nothing is running or scheduled, which is what makes the recap the page.
+- `totals` carries `teams, racers, removed_racers, tiles_cleared, rolls, submitted, approved, rejected, unreviewed`.
+- `teams[]` arrives in standings order (position, then tiles cleared, then name) with `position_series` (one point per roll) and `submission_series` (one row per day, by verdict).
+- `teams[].roster[]` is `{ rsn, is_captain, approved, rejected, tiles_proved }` - the roster as it stood at close.
+
+**Removed racers.** A roster row can be deleted mid-event (`DELETE .../roster/{discord_user_id}`) while their `tilerace_submissions` rows survive. Only a surviving `tilerace_signups` row makes a submission countable, so a removed racer drops out of every per-racer and per-team proof count, and `totals.removed_racers` states how many authors were dropped. Team positions, roll counts and `tiles_cleared` are untouched: a roll belongs to the team, and a cleared tile stays cleared. That means a team's approved total and its tiles cleared can legitimately disagree.
+
 ## Component Tree
 
 ```
 TileRacePage (/activities/tilerace)
-  Game Over banner (when event.is_finished)
-  TileBoard
+  Game Over banner (when event.is_finished and the full recap is not shown)
+  TileBoard                                (hidden once ended with no next_event)
     BoardViewport (zoom/pan wrapper, useZoomPan)
       BoardPads (start/finish overlays)
       BoardCell (per cell)
@@ -140,6 +152,11 @@ TileRacePage (/activities/tilerace)
         TeamMarker (per team at cell)
   TeamCard (per team)
     DiceRoller (captain only; disabled when gated or finished)
+  EventRecap        (ended, recap.next_event === null - replaces the board)
+    Outcome + RecapStats
+    PositionChart / CumulativeChart / DailySubmissionsChart
+    StandingsTable / ContributorsTable / RosterGrid
+  CollapsedRecap    (ended, recap.next_event set - board stays, recap folds away)
 
 StaffTileracePage (/members/config/tilerace)
   [Events tab]  EventsTab
@@ -207,7 +224,9 @@ Stale times: `STALE_5M` for live event data, `STALE_24H` for repository tiles.
 
 Queries/mutations include the originals plus: `useCompletions(eventId)`, `useToggleCompletion()`, `useSabotage()`. `useRollDice()` takes `{ eventId, teamId }` only. Completion mutations invalidate `completions(id)`, `active()`, and `event(id)`.
 
-Query keys (`src/lib/queryKeys.ts`): `tilerace.active()`, `events()`, `event(id)`, `tiles(paramsKey)`, `tile(id)`, `completions(eventId)`.
+`useTileraceRecap(eventId)` fetches the recap and is enabled only once the event has ended. `useRecentRolls(eventId, live)` stops its 3s poll when `live` is false, which is what a finished event passes.
+
+Query keys (`src/lib/queryKeys.ts`): `tilerace.active()`, `events()`, `event(id)`, `recap(eventId)`, `tiles(paramsKey)`, `tile(id)`, `completions(eventId)`.
 
 ## Lib Utilities
 
@@ -221,6 +240,13 @@ Query keys (`src/lib/queryKeys.ts`): `tilerace.active()`, `events()`, `event(id)
 
 `src/lib/tilerace-modifiers.ts`:
 - `describeModifier(mod)` -> `{ label, symbol, summary, params[] }` for `ModifierBadge` hover-cards
+
+`src/lib/tilerace-recap.ts` - the recap's pure transforms, all keyed by team `slug` because a name is not unique per event:
+- `buildPositionRows(teams)` - merge every team's rolls onto one timeline, carrying a team's last position through moments it did not roll
+- `buildCumulativeRows(teams)` - running total of approved proofs per team, one row per day
+- `buildDailyRows(teams)` - every team's verdicts summed into one row per day
+- `buildContributors(teams)` - flat racer list, best first, with each racer's share of their own team
+- `approvalRate(team)`, `formatRecapDay(day)`
 
 ## Backend
 

@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tile Race - Event Recap Previews</title>
+<style>
+  :root {
+    color-scheme: dark;
+    /* doc chrome */
+    --bg: #14130f; --panel: #1c1a16; --ink: #ece7dd; --muted: #9a9285;
+    --line: #2e2b24; --accent: #d1a75f; --code-bg: #201d17;
+    /* web-app tokens (styles/globals.css, dark) */
+    --background: hsl(222, 20%, 10%);
+    --foreground: hsl(40, 15%, 88%);
+    --card: hsl(222, 18%, 14%);
+    --primary: hsl(42, 80%, 55%);
+    --primary-foreground: hsl(222, 20%, 10%);
+    --mutedc: hsl(222, 15%, 18%);
+    --muted-foreground: hsl(220, 10%, 55%);
+    --destructive: hsl(0, 65%, 50%);
+    --border: hsl(222, 15%, 20%);
+    /* TEAM_COLORS[0..3] from api-backend _teams_shape.py */
+    --t0: #ef4444; --t1: #3b82f6; --t2: #22c55e; --t3: #eab308;
+    --ok: #22c55e; --warn: #eab308; --bad: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width:1180px; margin:0 auto; padding:3rem 1.25rem 6rem; }
+  header.doc { border-bottom:2px solid var(--line); padding-bottom:1.5rem; margin-bottom:.5rem; }
+  h1 { font-size:2rem; margin:0 0 .4rem; letter-spacing:-.02em; }
+  h2 { font-size:1.35rem; margin:3.5rem 0 .3rem; letter-spacing:-.01em; }
+  h2 .of { color:var(--muted); font-weight:400; font-size:.85rem; display:block; margin-top:.25rem; }
+  h3 { font-size:.78rem; text-transform:uppercase; letter-spacing:.09em; color:var(--muted);
+       margin:2.2rem 0 .8rem; padding-bottom:.35rem; border-bottom:1px solid var(--line); }
+  .lede { color:var(--muted); font-size:1.05rem; margin:0; }
+  .meta { color:var(--muted); font-size:.82rem; margin-top:.7rem; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; background:var(--code-bg);
+         padding:.1em .35em; border-radius:3px; font-size:.86em; }
+  pre { font-family:ui-monospace,Consolas,monospace; background:var(--code-bg);
+        border:1px solid var(--line); border-radius:6px; padding:.85rem; margin:0;
+        overflow-x:auto; font-size:.76rem; line-height:1.6; }
+  pre code { background:none; padding:0; font-size:inherit; }
+  .cmt { color:var(--muted); font-style:italic; }
+  figcaption { font-size:.7rem; text-transform:uppercase; letter-spacing:.07em;
+               color:var(--muted); margin:0 0 .4rem; }
+  figure { margin:0 0 1.4rem; }
+  .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; }
+  .note { border:1px solid var(--line); border-left:3px solid var(--accent);
+          background:var(--panel); border-radius:0 6px 6px 0; padding:.8rem 1rem;
+          font-size:.88rem; margin:1rem 0; }
+  .note b { color:var(--accent); }
+  table.doc { width:100%; border-collapse:collapse; font-size:.85rem; }
+  table.doc th { text-align:left; font-weight:600; color:var(--muted); font-size:.72rem;
+                 text-transform:uppercase; letter-spacing:.06em;
+                 border-bottom:1px solid var(--line); padding:.4rem .6rem; }
+  table.doc td { border-bottom:1px solid var(--line); padding:.45rem .6rem; vertical-align:top; }
+
+  /* ---------- app mock shell ---------- */
+  .app { background:var(--background); color:var(--foreground); border:1px solid var(--line);
+         border-radius:10px; padding:1.25rem; overflow:hidden; }
+  .app * { box-sizing:border-box; }
+  .stack { display:flex; flex-direction:column; gap:1.1rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.15rem; }
+  .card.pad-sm { padding:.85rem 1rem; }
+  .rs { font-family:"Trebuchet MS", Verdana, sans-serif; font-weight:700; letter-spacing:.01em; }
+  .h-title { font-size:1.9rem; color:var(--primary); margin:0; }
+  .h-kicker { font-size:.66rem; text-transform:uppercase; letter-spacing:.14em;
+              color:var(--muted-foreground); font-weight:600; margin:0 0 .25rem; }
+  .sub { font-size:.8rem; color:var(--muted-foreground); margin:.3rem 0 0; }
+  .row { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .badge { display:inline-flex; align-items:center; gap:.35rem; font-size:.7rem; font-weight:600;
+           border-radius:999px; padding:.2rem .6rem; border:1px solid var(--border);
+           background:var(--mutedc); color:var(--foreground); white-space:nowrap; }
+  .badge.gold { background:color-mix(in srgb, var(--primary) 18%, transparent);
+                border-color:color-mix(in srgb, var(--primary) 45%, transparent); color:var(--primary); }
+  .badge.dim { color:var(--muted-foreground); }
+  .btn { font-size:.78rem; font-weight:600; border-radius:8px; padding:.35rem .75rem;
+         border:1px solid var(--border); background:transparent; color:var(--foreground); }
+  .btn.prim { background:var(--primary); color:var(--primary-foreground); border-color:transparent; }
+  .sep { height:1px; background:var(--border); border:0; margin:.2rem 0; }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.7rem; }
+  .stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:.75rem .9rem; }
+  .stat .k { font-size:.64rem; text-transform:uppercase; letter-spacing:.09em;
+             color:var(--muted-foreground); font-weight:600; }
+  .stat .v { font-size:1.5rem; font-weight:700; color:var(--foreground); line-height:1.25; }
+  .stat .v.gold { color:var(--primary); }
+  .stat .n { font-size:.7rem; color:var(--muted-foreground); }
+
+  .ctitle { font-size:.95rem; font-weight:700; margin:0; color:var(--foreground); }
+  .cdesc { font-size:.76rem; color:var(--muted-foreground); margin:.15rem 0 .9rem; }
+
+  .legend { display:flex; gap:.9rem; flex-wrap:wrap; font-size:.72rem;
+            color:var(--muted-foreground); margin-top:.5rem; }
+  .legend span.d { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:.35rem; }
+
+  table.app-t { width:100%; border-collapse:collapse; font-size:.78rem; }
+  table.app-t th { text-align:left; font-size:.64rem; text-transform:uppercase; letter-spacing:.08em;
+                   color:var(--muted-foreground); font-weight:600; padding:.35rem .5rem;
+                   border-bottom:1px solid var(--border); }
+  table.app-t td { padding:.42rem .5rem; border-bottom:1px solid var(--border); }
+  table.app-t tr:last-child td { border-bottom:0; }
+  table.app-t td.num, table.app-t th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .tname { display:flex; align-items:center; gap:.5rem; font-weight:600; }
+  .swatch { width:10px; height:10px; border-radius:3px; flex:none; }
+  .pos1 { color:var(--primary); font-weight:700; }
+  .bar { height:6px; border-radius:3px; background:var(--mutedc); overflow:hidden; min-width:60px; }
+  .bar > i { display:block; height:100%; border-radius:3px; }
+  .avatar { width:20px; height:20px; border-radius:50%; background:var(--mutedc);
+            display:inline-flex; align-items:center; justify-content:center;
+            font-size:.6rem; font-weight:700; color:var(--muted-foreground); flex:none; }
+  .strike { text-decoration:line-through; color:var(--muted-foreground); }
+
+  .gate { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:.9rem; }
+  .gate .g { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:.9rem; }
+  .gate .g h4 { margin:0 0 .3rem; font-size:.85rem; }
+  .gate .g p { margin:0; font-size:.78rem; color:var(--muted); }
+  .gate .g .shows { margin-top:.6rem; font-size:.72rem; font-weight:600; }
+  .shows.on { color:var(--ok); } .shows.off { color:var(--muted); }
+
+  .board-frozen { position:relative; border:1px solid var(--border); border-radius:10px;
+                  background:repeating-linear-gradient(135deg, hsl(222,16%,13%) 0 14px, hsl(222,16%,15%) 14px 28px);
+                  height:120px; display:flex; align-items:center; justify-content:center; }
+  .board-frozen span { font-size:.75rem; color:var(--muted-foreground); }
+  svg { display:block; max-width:100%; height:auto; }
+  .tick { font-size:10px; fill:var(--muted-foreground); }
+  .grid-l { stroke:var(--border); stroke-width:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>Tile Race - Event Recap</h1>
+  <p class="lede">What <code>/activities/tilerace</code> renders once an event has ended and no other
+  event is active or scheduled: submission graphs, position history, and final leaderboards built
+  from that event's own data - with players removed during the event dropped from every count.</p>
+  <p class="meta">
+    Mock data. Palette and type from <code>web-app/styles/globals.css</code>;
+    team colours from <code>api-backend/app/routers/tilerace/_teams_shape.py</code> <code>TEAM_COLORS</code>.
+    Charts drawn as inline SVG here; in the app they are recharts 2.15.4 via
+    <code>@/components/ui/chart</code>, matching <code>FrenzyRankChart.tsx</code>.
+  </p>
+</header>
+
+<!-- ============================================================ -->
+<h2>1. When the recap shows<span class="of">gate on the page, not on the endpoint</span></h2>
+
+<div class="gate">
+  <div class="g">
+    <h4>Event running</h4>
+    <p><code>is_active</code>, not finished. Board, dice, team cards, roll feed - today's page.</p>
+    <p class="shows off">recap hidden</p>
+  </div>
+  <div class="g">
+    <h4>Ended, next one scheduled</h4>
+    <p><code>is_finished</code> or past <code>ends_at</code>, and another event has a future
+    <code>starts_at</code>. Keep the frozen board plus a "next event" line.</p>
+    <p class="shows off">recap hidden (or collapsed, see 3B)</p>
+  </div>
+  <div class="g">
+    <h4>Ended, nothing scheduled</h4>
+    <p><code>is_finished</code> or past <code>ends_at</code>, and no upcoming event.
+    The board has nothing left to say.</p>
+    <p class="shows on">recap is the page</p>
+  </div>
+</div>
+
+<div class="note">
+  <b>How the page decides:</b> <code>GET /tilerace/active</code> falls back to the newest finished
+  event (<code>events.py:80-88</code>). The route reads that event as ended when
+  <code>is_finished</code> is set or <code>ends_at</code> is in the past, fetches
+  <code>GET /tilerace/events/{id}/recap</code>, and switches on
+  <code>recap.next_event</code>: null means layout A, present means 3B.
+</div>
+
+<!-- ============================================================ -->
+<h2>2. Layout A - recap replaces the board<span class="of">recommended: ended + nothing scheduled</span></h2>
+
+<figure>
+  <figcaption>full page mock</figcaption>
+  <div class="app">
+    <div class="stack">
+
+      <!-- header card -->
+      <div class="card">
+        <div class="row">
+          <div>
+            <p class="h-kicker">Concluded Event</p>
+            <h1 class="h-title rs">Cursed Cliffs Tile Race</h1>
+            <p class="sub">2 Jul 2026 - 16 Jul 2026 &middot; 14 days &middot; 40 tiles</p>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:.5rem;">
+            <span class="badge gold">Finished</span>
+            <span class="badge dim">No event scheduled</span>
+            <button class="btn">Past events</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- winner -->
+      <div class="card" style="border-color:color-mix(in srgb, var(--primary) 45%, transparent);
+                               background:color-mix(in srgb, var(--primary) 8%, var(--card));">
+        <div class="row" style="align-items:center;">
+          <div style="display:flex; align-items:center; gap:.8rem;">
+            <span class="swatch" style="background:var(--t0); width:16px; height:16px; border-radius:4px;"></span>
+            <div>
+              <p class="h-kicker" style="margin:0">Winner</p>
+              <p class="rs" style="margin:0; font-size:1.35rem; color:var(--primary);">Iron Kings</p>
+            </div>
+          </div>
+          <p class="sub" style="margin:0; text-align:right;">Reached tile 40 on day 13<br>28 proofs approved &middot; 24 tiles cleared</p>
+        </div>
+      </div>
+
+      <!-- stat row -->
+      <div class="stats">
+        <div class="stat"><div class="k">Teams</div><div class="v">4</div><div class="n">17 racers at close</div></div>
+        <div class="stat"><div class="k">Tiles cleared</div><div class="v">80</div><div class="n">of 160 team-tiles</div></div>
+        <div class="stat"><div class="k">Proofs approved</div><div class="v gold">92</div><div class="n">of 118 submitted</div></div>
+        <div class="stat"><div class="k">Dice rolled</div><div class="v">86</div><div class="n">avg 6.4 per team-day</div></div>
+        <div class="stat"><div class="k">Approval rate</div><div class="v">78%</div><div class="n">21 rejected, 5 unreviewed</div></div>
+      </div>
+
+      <!-- position chart -->
+      <div class="card">
+        <p class="ctitle">Team position over time</p>
+        <p class="cdesc">Board position after each roll, stepped. Sourced from the event's roll history.</p>
+        <div id="chart-positions"></div>
+        <div class="legend" id="legend-positions"></div>
+      </div>
+
+      <!-- two-up: cumulative submissions + daily volume -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.1rem;">
+        <div class="card">
+          <p class="ctitle">Approved proofs, cumulative</p>
+          <p class="cdesc">Only proofs from racers still on the roster at close.</p>
+          <div id="chart-cumulative"></div>
+          <div class="legend" id="legend-cumulative"></div>
+        </div>
+        <div class="card">
+          <p class="ctitle">Submissions per day</p>
+          <p class="cdesc">Every proof filed that day, by the verdict it ended on.</p>
+          <div id="chart-daily"></div>
+          <div class="legend">
+            <span><span class="d" style="background:var(--ok)"></span>Approved</span>
+            <span><span class="d" style="background:var(--bad)"></span>Rejected</span>
+            <span><span class="d" style="background:var(--muted-foreground)"></span>Unreviewed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- team leaderboard -->
+      <div class="card">
+        <p class="ctitle">Final standings</p>
+        <p class="cdesc">Ordered by furthest tile reached, then by tiles cleared.</p>
+        <table class="app-t">
+          <thead>
+            <tr>
+              <th style="width:2rem">#</th><th>Team</th>
+              <th class="num">Final tile</th><th class="num">Furthest</th>
+              <th class="num">Tiles cleared</th><th class="num">Approved</th>
+              <th class="num">Rejected</th><th style="width:120px">Approval</th>
+              <th class="num">Rolls</th><th class="num">Racers</th>
+            </tr>
+          </thead>
+          <tbody id="team-rows"></tbody>
+        </table>
+      </div>
+
+      <!-- player leaderboard -->
+      <div class="card">
+        <div class="row" style="align-items:baseline;">
+          <div>
+            <p class="ctitle">Top contributors</p>
+            <p class="cdesc">Approved proofs per racer. Racers removed during the event are excluded.</p>
+          </div>
+          <span class="badge dim">3 removed racers excluded</span>
+        </div>
+        <table class="app-t">
+          <thead>
+            <tr>
+              <th style="width:2rem">#</th><th>Racer</th><th>Team</th>
+              <th class="num">Approved</th><th class="num">Rejected</th>
+              <th class="num">Tiles proved</th><th style="width:140px">Share of team</th>
+            </tr>
+          </thead>
+          <tbody id="player-rows"></tbody>
+        </table>
+      </div>
+
+      <!-- roster -->
+      <div class="card">
+        <p class="ctitle">Rosters at close</p>
+        <p class="cdesc">The roster as it stood when the event ended. Captains marked.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.9rem;" id="roster-cards"></div>
+      </div>
+
+    </div>
+  </div>
+</figure>
+
+<!-- ============================================================ -->
+<h2>3. Alternatives</h2>
+
+<h3>3A - recap header, compact</h3>
+<figure>
+  <figcaption>if the winner card and the stat row feel like two cards doing one job</figcaption>
+  <div class="app">
+    <div class="card">
+      <div class="row">
+        <div>
+          <p class="h-kicker">Concluded Event</p>
+          <h1 class="h-title rs">Cursed Cliffs Tile Race</h1>
+          <p class="sub">2 - 16 Jul 2026 &middot; won by <b style="color:var(--primary)">Iron Kings</b> on day 13</p>
+        </div>
+        <div style="display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end;">
+          <span class="badge gold">Finished</span>
+          <span class="badge dim">No event scheduled</span>
+        </div>
+      </div>
+      <hr class="sep" style="margin:1rem 0">
+      <div class="stats">
+        <div class="stat" style="background:transparent; border:0; padding:0">
+          <div class="k">Winner</div><div class="v gold rs" style="font-size:1.1rem">Iron Kings</div></div>
+        <div class="stat" style="background:transparent; border:0; padding:0">
+          <div class="k">Proofs approved</div><div class="v">92</div></div>
+        <div class="stat" style="background:transparent; border:0; padding:0">
+          <div class="k">Tiles cleared</div><div class="v">80</div></div>
+        <div class="stat" style="background:transparent; border:0; padding:0">
+          <div class="k">Dice rolled</div><div class="v">86</div></div>
+        <div class="stat" style="background:transparent; border:0; padding:0">
+          <div class="k">Racers</div><div class="v">17</div></div>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<h3>3B - frozen board kept above the recap</h3>
+<figure>
+  <figcaption>for "ended, next one scheduled" - board stays, recap collapses under it</figcaption>
+  <div class="app">
+    <div class="stack">
+      <div class="card pad-sm">
+        <div class="row" style="align-items:center;">
+          <div><span class="rs" style="color:var(--primary); font-size:1.1rem;">Cursed Cliffs Tile Race</span>
+            <span class="sub" style="display:block">Finished 16 Jul 2026</span></div>
+          <span class="badge gold">Next: Frostfall Tile Race, 1 Aug</span>
+        </div>
+      </div>
+      <div class="board-frozen"><span>final board, rolls locked, fog lifted</span></div>
+      <div class="card pad-sm">
+        <div class="row" style="align-items:center;">
+          <div><span class="ctitle">Event recap</span>
+            <span class="cdesc" style="display:block; margin:0">Graphs, standings and contributors</span></div>
+          <button class="btn prim">Show recap</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<h3>3C - position chart as area instead of stepped lines</h3>
+<figure>
+  <figcaption>reads the lead gap better, reads individual rolls worse; stepped lines are the recommendation</figcaption>
+  <div class="app">
+    <div class="card">
+      <p class="ctitle">Team position over time</p>
+      <p class="cdesc">Area variant, same series.</p>
+      <div id="chart-positions-area"></div>
+    </div>
+  </div>
+</figure>
+
+<!-- ============================================================ -->
+<h2>4. Dropping removed racers<span class="of">the counting rule</span></h2>
+
+<p style="color:var(--muted); font-size:.92rem;">
+A submission row keeps <code>discord_user_id</code> and <code>player_rsn</code> forever
+(<code>TileRaceSubmission</code>), but the roster row it came from can be deleted mid-event via
+<code>DELETE /tilerace/events/{id}/roster/{discord_user_id}</code>. The recap counts a racer only
+when a <code>tilerace_signups</code> row for them still exists at close.
+</p>
+
+<div class="cols">
+  <figure>
+    <figcaption>the struck row is illustrative - a removed racer never reaches the browser at all</figcaption>
+    <div class="app">
+      <div class="card">
+        <p class="ctitle" style="font-size:.85rem">Iron Kings</p>
+        <table class="app-t">
+          <tbody>
+            <tr><td><div class="tname"><span class="avatar">Z</span>Zezima Jr <span class="badge dim" style="font-size:.6rem">captain</span></div></td><td class="num">12</td></tr>
+            <tr><td><div class="tname"><span class="avatar">I</span>Ironbjorn</div></td><td class="num">9</td></tr>
+            <tr><td><div class="tname"><span class="avatar">K</span>Kaelith</div></td><td class="num">7</td></tr>
+            <tr style="opacity:.45"><td><div class="tname"><span class="avatar">M</span><span class="strike">Muffin Man</span>
+              <span class="badge dim" style="font-size:.6rem">removed day 6</span></div></td><td class="num strike">5</td></tr>
+          </tbody>
+        </table>
+        <p class="cdesc" style="margin-top:.6rem">Team total: <b style="color:var(--foreground)">28</b> approved
+        (33 including removed racers)</p>
+      </div>
+    </div>
+  </figure>
+  <div>
+    <h3 style="margin-top:0">Where the rule bites</h3>
+    <table class="doc">
+      <tr><th>Surface</th><th>Removed racer</th></tr>
+      <tr><td>Contributor leaderboard</td><td>omitted entirely</td></tr>
+      <tr><td>Roster cards</td><td>omitted entirely</td></tr>
+      <tr><td>Team approved / rejected totals</td><td>their proofs not counted</td></tr>
+      <tr><td>Cumulative + daily submission graphs</td><td>their proofs not counted</td></tr>
+      <tr><td>Team position history</td><td><b>unchanged</b> - the team moved, and a roll is the team's</td></tr>
+      <tr><td>Tiles cleared</td><td><b>unchanged</b> - a cleared tile stays cleared</td></tr>
+      <tr><td>Event-level <code>submitted</code> count</td><td>excluded, and the delta is stated once ("3 removed racers excluded")</td></tr>
+    </table>
+    <div class="note" style="margin-bottom:0">
+      <b>Consequence to accept:</b> team approved totals and tiles cleared can disagree
+      (a tile cleared by a since-removed racer has no surviving proof in the counts).
+      The stat card footnote is what keeps that honest.
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>5. Empty and thin states</h2>
+<div class="cols">
+  <figure>
+    <figcaption>no submissions at all</figcaption>
+    <div class="app"><div class="card">
+      <p class="ctitle">Approved proofs, cumulative</p>
+      <p style="text-align:center; color:var(--muted-foreground); font-size:.8rem; padding:2.2rem 0; margin:0;">
+        No proofs were filed for this event.</p>
+    </div></div>
+  </figure>
+  <figure>
+    <figcaption>one team only - legend drops, single series</figcaption>
+    <div class="app"><div class="card">
+      <p class="ctitle">Final standings</p>
+      <table class="app-t"><tbody>
+        <tr><td class="pos1">1</td><td><div class="tname"><span class="swatch" style="background:var(--t0)"></span>Iron Kings</div></td>
+        <td class="num">40</td><td class="num">28</td></tr>
+      </tbody></table>
+      <p class="cdesc" style="margin:.7rem 0 0">Unopposed - no position comparison drawn.</p>
+    </div></div>
+  </figure>
+  <figure>
+    <figcaption>ended without a winner (ran out of time)</figcaption>
+    <div class="app"><div class="card">
+      <p class="h-kicker">Concluded Event</p>
+      <h1 class="h-title rs" style="font-size:1.4rem">Cursed Cliffs Tile Race</h1>
+      <p class="sub">Time expired on day 14. No team reached tile 40 -
+      <b style="color:var(--primary)">Iron Kings</b> led at tile 34.</p>
+    </div></div>
+  </figure>
+</div>
+
+<!-- ============================================================ -->
+<h2>6. Data plumbing<span class="of">what shipped</span></h2>
+
+<h3>Where each number comes from</h3>
+<table class="doc">
+  <tr><th>Recap element</th><th>Source table</th><th>Reaches the browser via</th></tr>
+  <tr><td>Event name, dates, winner, finished, path length</td>
+      <td><code>tilerace_events</code></td>
+      <td><code>recap.event</code>, filtered through <code>PUBLIC_SUMMARY_KEYS</code></td></tr>
+  <tr><td>Final + furthest position, team colour, standings order</td>
+      <td><code>tilerace_teams</code></td><td><code>recap.teams[]</code></td></tr>
+  <tr><td>Position history over time</td>
+      <td><code>tilerace_rolls</code></td><td><code>teams[].position_series</code></td></tr>
+  <tr><td>Tiles cleared per team</td>
+      <td><code>tilerace_tile_completions</code> (claimed or approved)</td>
+      <td><code>teams[].tiles_cleared</code></td></tr>
+  <tr><td>Submission counts, per team and per racer</td>
+      <td><code>tilerace_submissions</code></td>
+      <td><code>teams[].approved/rejected</code>, <code>teams[].roster[]</code>,
+          <code>teams[].submission_series</code></td></tr>
+  <tr><td>Which racers survived to close</td>
+      <td><code>tilerace_signups</code> rows still present</td>
+      <td>never sent - the filter runs server-side, only the count of dropped
+          authors ships as <code>totals.removed_racers</code></td></tr>
+</table>
+
+<div class="note">
+  <b>Why it is aggregated server-side.</b> The rows behind these numbers carry proof URLs, review
+  notes, thread ids and Discord ids. Shipping counts and series instead means none of that can leak,
+  the same discipline <code>_public_view.py</code> applies to the board - and it keeps the
+  "removed racer" filter in one place, next to the roster it filters against.
+</div>
+
+<pre><code><span class="cmt"># api-backend/app/routers/tilerace/recap.py - unauthenticated</span>
+GET /tilerace/events/{event_id}/recap
+
+{
+  "event": { <span class="cmt">... PUBLIC_SUMMARY_KEYS subset ...</span>, "path_length": 40 },
+  "next_event": null,                      <span class="cmt"># drives the section-1 gate</span>
+  "totals": {
+    "teams": 4, "racers": 17, "removed_racers": 3,
+    "tiles_cleared": 80, "rolls": 86,
+    "submitted": 118, "approved": 92, "rejected": 21, "unreviewed": 5
+  },
+  "teams": [{                              <span class="cmt"># already in standings order</span>
+    "id": "3", "name": "Iron Kings", "slug": "iron-kings",
+    "icon_type": "npc", "icon_url": "...", "color": "#ef4444",
+    "position": 40, "furthest_position": 40,
+    "tiles_cleared": 24, "rolls": 23,
+    "submitted": 34, "approved": 28, "rejected": 6, "unreviewed": 0,
+    "roster": [{ "rsn": "Zezima Jr", "is_captain": true,
+                 "approved": 12, "rejected": 2, "tiles_proved": 9 }],
+    "position_series": [{ "at": "2026-07-02T18:04:11Z", "position": 3 }],
+    "submission_series": [{ "day": "2026-07-02",
+                            "approved": 2, "rejected": 0, "unreviewed": 0 }]
+  }]
+}
+</code></pre>
+
+<h3>Web side</h3>
+<table class="doc">
+  <tr><th>File</th><th>What it holds</th></tr>
+  <tr><td><code>src/types/tilerace.ts</code></td>
+      <td><code>TileRaceRecap</code>, <code>TileRaceRecapEvent</code>, <code>TileRaceNextEvent</code>,
+          <code>TileRaceRecapTotals</code>, <code>TileRaceRecapTeam</code>,
+          <code>TileRaceRecapRacer</code>, <code>TileRaceRecapPoint</code>,
+          <code>TileRaceRecapDay</code></td></tr>
+  <tr><td><code>src/api/tilerace.ts</code> + <code>src/hooks/useTilerace.ts</code></td>
+      <td><code>getRecap()</code> / <code>useTileraceRecap()</code></td></tr>
+  <tr><td><code>src/lib/tilerace-recap.ts</code></td>
+      <td>the pure transforms: <code>buildPositionRows</code> (carry-forward merge),
+          <code>buildCumulativeRows</code>, <code>buildDailyRows</code>,
+          <code>buildContributors</code>, <code>approvalRate</code>,
+          <code>formatRecapDay</code>. Tested in
+          <code>tests/lib/tileraceRecap.test.ts</code></td></tr>
+  <tr><td><code>src/components/tilerace/recap/</code></td>
+      <td><code>EventRecap</code>, <code>CollapsedRecap</code>, <code>RecapCard</code>,
+          <code>RecapStats</code>, <code>RecapTooltip</code>, <code>PositionChart</code>,
+          <code>CumulativeChart</code>, <code>DailySubmissionsChart</code>,
+          <code>StandingsTable</code>, <code>ContributorsTable</code>,
+          <code>RosterGrid</code></td></tr>
+  <tr><td><code>src/routes/activities/tilerace.tsx</code></td>
+      <td>the gate: ended and no <code>next_event</code> &rarr; recap replaces the board;
+          ended with one &rarr; board stays and the recap collapses under it</td></tr>
+  <tr><td>charts</td><td>recharts via <code>ChartContainer</code>, stepped <code>Line</code> like
+          <code>FrenzyRankChart.tsx</code>; series keyed by team <code>slug</code> (unique per event
+          where the name is not) and coloured by the API's own <code>color</code></td></tr>
+</table>
+
+</div>
+
+<script>
+/* ---------------- mock data ---------------- */
+const DAYS = 14;
+const TEAMS = [
+  { name:"Iron Kings",    color:"var(--t0)", hex:"#ef4444",
+    pos:[0,3,7,7,12,15,19,22,22,27,31,34,38,40],
+    cum:[0,2,4,6,9,11,13,16,18,20,23,25,27,28],
+    tiles:24, rolls:23, approved:28, rejected:6,
+    roster:[["Zezima Jr",true,12,2,9],["Ironbjorn",false,9,3,7],["Kaelith",false,7,1,6]],
+    removed:[["Muffin Man",5,"day 6"]] },
+  { name:"Blue Vipers",   color:"var(--t1)", hex:"#3b82f6",
+    pos:[0,2,5,9,11,14,16,20,24,26,29,31,34,36],
+    cum:[0,1,3,5,7,9,11,13,15,17,19,21,23,25],
+    tiles:21, rolls:22, approved:25, rejected:5,
+    roster:[["Sirsuds",true,11,2,8],["Frostbyte",false,8,2,7],["Vex",false,6,1,5]],
+    removed:[["Lurker99",2,"day 9"]] },
+  { name:"Green Wardens", color:"var(--t2)", hex:"#22c55e",
+    pos:[0,4,6,8,10,13,17,18,21,23,26,30,32,33],
+    cum:[0,2,3,5,6,8,10,12,14,15,17,19,20,21],
+    tiles:19, rolls:21, approved:21, rejected:6,
+    roster:[["Thalorien",true,10,3,8],["Grubbins",false,7,2,6],["Nimue",false,4,1,4]],
+    removed:[] },
+  { name:"Gold Krakens",  color:"var(--t3)", hex:"#eab308",
+    pos:[0,1,4,6,9,10,12,15,18,19,22,24,27,29],
+    cum:[0,1,2,3,5,6,8,9,11,12,14,15,17,18],
+    tiles:16, rolls:20, approved:18, rejected:4,
+    roster:[["Krakenhead",true,9,1,7],["Salty Sam",false,6,2,5],["Bram",false,3,1,3]],
+    removed:[["Afkanon",1,"day 4"]] },
+];
+const DAILY = [
+  [6,1,0],[5,2,0],[7,1,0],[8,2,0],[6,1,0],[7,3,0],[8,1,0],
+  [7,2,0],[6,2,0],[8,1,0],[7,2,0],[7,1,0],[6,1,2],[4,1,3],
+]; /* approved, rejected, unreviewed */
+const DAY_LABEL = i => `${2 + i} Jul`;
+
+/* ---------------- svg helpers ---------------- */
+const NS = "http://www.w3.org/2000/svg";
+const el = (n, a = {}) => { const e = document.createElementNS(NS, n);
+  for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+function frame(w, h, pad) {
+  const svg = el("svg", { viewBox:`0 0 ${w} ${h}`, width:"100%", role:"img" });
+  return { svg, x0:pad.l, x1:w - pad.r, y0:h - pad.b, y1:pad.t };
+}
+function yAxis(f, max, ticks, fmt = v => v) {
+  for (let i = 0; i <= ticks; i++) {
+    const v = (max / ticks) * i, y = f.y0 - (f.y0 - f.y1) * (i / ticks);
+    f.svg.appendChild(el("line", { x1:f.x0, x2:f.x1, y1:y, y2:y, class:"grid-l",
+      "stroke-dasharray": i ? "3 3" : "" }));
+    const t = el("text", { x:f.x0 - 8, y:y + 3.5, class:"tick", "text-anchor":"end" });
+    t.textContent = fmt(Math.round(v)); f.svg.appendChild(t);
+  }
+}
+function xLabels(f, n, every, label) {
+  for (let i = 0; i < n; i++) {
+    if (i % every) continue;
+    const x = f.x0 + ((f.x1 - f.x0) * i) / (n - 1);
+    const t = el("text", { x, y:f.y0 + 16, class:"tick", "text-anchor":"middle" });
+    t.textContent = label(i); f.svg.appendChild(t);
+  }
+}
+const px = (f, i, n) => f.x0 + ((f.x1 - f.x0) * i) / (n - 1);
+const py = (f, v, max) => f.y0 - (f.y0 - f.y1) * (v / max);
+
+function stepPath(f, series, max) {
+  const n = series.length; let d = "";
+  series.forEach((v, i) => {
+    const x = px(f, i, n), y = py(f, v, max);
+    if (!i) { d += `M${x},${y}`; return; }
+    d += `L${x},${py(f, series[i - 1], max)}L${x},${y}`;
+  });
+  return d;
+}
+function linePath(f, series, max) {
+  const n = series.length;
+  return series.map((v, i) => `${i ? "L" : "M"}${px(f, i, n)},${py(f, v, max)}`).join("");
+}
+
+function lineChart(mount, series, max, { step = true, area = false, h = 260 } = {}) {
+  const f = frame(920, h, { l:34, r:10, t:10, b:26 });
+  yAxis(f, max, 4);
+  xLabels(f, DAYS, 2, DAY_LABEL);
+  series.forEach(s => {
+    const d = step ? stepPath(f, s.data, max) : linePath(f, s.data, max);
+    if (area) {
+      f.svg.appendChild(el("path", { d:`${d}L${f.x1},${f.y0}L${f.x0},${f.y0}Z`,
+        fill:s.hex, opacity:.16, stroke:"none" }));
+    }
+    f.svg.appendChild(el("path", { d, fill:"none", stroke:s.hex, "stroke-width":2,
+      "stroke-linejoin":"round" }));
+    const last = s.data[s.data.length - 1];
+    f.svg.appendChild(el("circle", { cx:px(f, s.data.length - 1, s.data.length),
+      cy:py(f, last, max), r:3.5, fill:s.hex }));
+  });
+  mount.appendChild(f.svg);
+}
+
+function stackedBars(mount, rows, colors) {
+  const max = Math.max(...rows.map(r => r.reduce((a, b) => a + b, 0)));
+  const f = frame(920, 260, { l:34, r:10, t:10, b:26 });
+  yAxis(f, max, 4);
+  xLabels(f, DAYS, 2, DAY_LABEL);
+  const slot = (f.x1 - f.x0) / rows.length, bw = slot * 0.6;
+  rows.forEach((r, i) => {
+    let acc = 0;
+    r.forEach((v, k) => {
+      const y = py(f, acc + v, max), hgt = f.y0 - py(f, v, max);
+      f.svg.appendChild(el("rect", { x:f.x0 + slot * i + (slot - bw) / 2, y,
+        width:bw, height:Math.max(hgt, 0), fill:colors[k], rx:2 }));
+      acc += v;
+    });
+  });
+  mount.appendChild(f.svg);
+}
+
+function legend(mount, series) {
+  mount.innerHTML = series.map(s =>
+    `<span><span class="d" style="background:${s.hex}"></span>${s.name}</span>`).join("");
+}
+
+/* ---------------- render charts ---------------- */
+const posSeries = TEAMS.map(t => ({ name:t.name, hex:t.hex, data:t.pos }));
+const cumSeries = TEAMS.map(t => ({ name:t.name, hex:t.hex, data:t.cum }));
+
+lineChart(document.getElementById("chart-positions"), posSeries, 40);
+legend(document.getElementById("legend-positions"), posSeries);
+
+lineChart(document.getElementById("chart-cumulative"), cumSeries, 30, { h:230 });
+legend(document.getElementById("legend-cumulative"), cumSeries);
+
+stackedBars(document.getElementById("chart-daily"), DAILY,
+  ["#22c55e", "#ef4444", "#6b7280"]);
+
+lineChart(document.getElementById("chart-positions-area"), posSeries, 40,
+  { step:false, area:true, h:230 });
+
+/* ---------------- render tables ---------------- */
+const teamRows = document.getElementById("team-rows");
+TEAMS.forEach((t, i) => {
+  const rate = Math.round((t.approved / (t.approved + t.rejected)) * 100);
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td class="${i ? "" : "pos1"}">${i + 1}</td>
+    <td><div class="tname"><span class="swatch" style="background:${t.hex}"></span>${t.name}</div></td>
+    <td class="num">${t.pos[DAYS - 1]}</td>
+    <td class="num">${t.pos[DAYS - 1]}</td>
+    <td class="num">${t.tiles}</td>
+    <td class="num">${t.approved}</td>
+    <td class="num">${t.rejected}</td>
+    <td><div class="bar"><i style="width:${rate}%; background:${t.hex}"></i></div>
+        <span style="font-size:.68rem; color:var(--muted-foreground)">${rate}%</span></td>
+    <td class="num">${t.rolls}</td>
+    <td class="num">${t.roster.length}</td>`;
+  teamRows.appendChild(tr);
+});
+
+const players = TEAMS.flatMap(t => t.roster.map(([rsn, cap, ap, rj, tp]) =>
+  ({ rsn, cap, ap, rj, tp, team:t })));
+players.sort((a, b) => b.ap - a.ap);
+const playerRows = document.getElementById("player-rows");
+players.forEach((p, i) => {
+  const share = Math.round((p.ap / p.team.approved) * 100);
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td class="${i ? "" : "pos1"}">${i + 1}</td>
+    <td><div class="tname"><span class="avatar">${p.rsn[0]}</span>${p.rsn}
+        ${p.cap ? '<span class="badge dim" style="font-size:.6rem">captain</span>' : ""}</div></td>
+    <td><div class="tname" style="font-weight:400">
+        <span class="swatch" style="background:${p.team.hex}"></span>${p.team.name}</div></td>
+    <td class="num">${p.ap}</td>
+    <td class="num">${p.rj}</td>
+    <td class="num">${p.tp}</td>
+    <td><div class="bar"><i style="width:${share}%; background:${p.team.hex}"></i></div>
+        <span style="font-size:.68rem; color:var(--muted-foreground)">${share}%</span></td>`;
+  playerRows.appendChild(tr);
+});
+
+const rosterCards = document.getElementById("roster-cards");
+TEAMS.forEach(t => {
+  const d = document.createElement("div");
+  d.style.cssText = "border:1px solid var(--border); border-radius:10px; padding:.75rem .85rem;";
+  d.innerHTML = `
+    <div class="tname" style="margin-bottom:.5rem">
+      <span class="swatch" style="background:${t.hex}"></span>${t.name}
+      <span style="margin-left:auto; font-size:.68rem; color:var(--muted-foreground)">
+        tile ${t.pos[DAYS - 1]}</span></div>
+    ${t.roster.map(([rsn, cap]) => `
+      <div style="display:flex; align-items:center; gap:.45rem; font-size:.76rem; padding:.15rem 0;">
+        <span class="avatar" style="width:17px;height:17px;font-size:.55rem">${rsn[0]}</span>${rsn}
+        ${cap ? '<span class="badge dim" style="font-size:.58rem; margin-left:auto">captain</span>' : ""}
+      </div>`).join("")}
+    ${t.removed.length ? `<div style="margin-top:.5rem; font-size:.66rem; color:var(--muted-foreground)">
+        ${t.removed.length} removed during the event, excluded</div>` : ""}`;
+  rosterCards.appendChild(d);
+});
+</script>
+</body>
+</html>
