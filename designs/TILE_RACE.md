@@ -128,13 +128,13 @@ The only unauthenticated tile race surface, and the only one that is masked. `pu
 Staff read the unmasked shape through `GET /tilerace/events/:id`.
 
 ### How an event concludes
-Three states are easy to confuse:
+**Stopping an event ends it.** The Square button in the events list (`POST /events/:id/deactivate`) clears `is_active` and stamps `updated_at`; `GET /tilerace/active` then falls back to it and the public page shows its recap. The board state is irrelevant - no team need have reached the finish, and no end date need have passed.
 
-- **Deactivated** (`is_active: false`, the Square button in the events list) - the event is no longer the live one. This is how staff switch between events, so it is a visibility flag and nothing more. A deactivated event does **not** surface on `/tilerace/active`.
-- **Finished** (`is_finished: true`) - rolls are locked and the recap is the page. Set automatically when a team lands on the end pad, but only if that pad's `ends_game` trigger is on; otherwise staff set it from the Controls tab's "End the event" card, which also names `winner_team_id`.
-- **Past its end date** (`ends_at` in the past) - treated as concluded by `/tilerace/active`'s fallback and by the web gate, even without `is_finished`.
+The fallback returns the most recently updated event that is finished, past its `ends_at`, **or has at least one roll**. That last arm is what makes stopping sufficient, and the reason it is rolls rather than "not active" is that a draft nobody has rolled on must never take the page.
 
-`GET /tilerace/active` returns the live event, else the most recently updated event that is finished or past its `ends_at`.
+`is_finished` is a narrower thing: rolls locked and a winner credited. An end pad sets it, but only when that pad's `ends_game` trigger is on, and it credits whichever team stepped on it first. Staff set it from the Controls tab's `EndEventCard`, which also names `winner_team_id`. An event can therefore be over (stopped, recap showing) without being finished (rolls still technically open, no winner recorded).
+
+The web gate mirrors the endpoint rather than re-deriving it: `/tilerace/active` returns the live event whenever there is one, so the page treats `!is_active` as "this is the fallback, the race is over".
 
 ### The event recap (`GET /tilerace/events/:id/recap`)
 The second unauthenticated surface. Every number a recap needs lives behind auth in its raw form - rolls and completions want a signed-in caller, submissions want `tilerace.admin` - so `recap_payload` (`app/routers/tilerace/_recap.py`) reduces all five tables to counts and time series before they leave the API. No proof URL, review note, thread id or Discord id is in the shape at all.
