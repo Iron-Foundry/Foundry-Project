@@ -115,7 +115,7 @@ Base prefix: `/tilerace/`
 | Sabotage | `/tilerace/events/:id/teams/:teamId/sabotage` | POST `{ action, target_team_id, amount }` (staff) |
 | OSRS ref | `/frenzy/osrs/items?q=` \| `/tilerace/osrs/npcs?q=` | GET |
 
-`PATCH /tilerace/events/:id` accepts `grid_cols, grid_rows, dice_count, dice_sides, background_url, fog_of_war, is_finished, cells[], start_pad, end_pad, name, dates`. It uses `model_fields_set` server-side so an explicit `null` on `background_url` / `start_pad` / `end_pad` clears the field.
+`PATCH /tilerace/events/:id` accepts `grid_cols, grid_rows, dice_count, dice_sides, background_url, fog_of_war, is_finished, winner_team_id, cells[], start_pad, end_pad, name, dates`. `winner_team_id` must name a team of that event (404 otherwise); `is_finished: false` clears it. It uses `model_fields_set` server-side so an explicit `null` on `background_url` / `start_pad` / `end_pad` clears the field.
 
 ### The public board (`GET /tilerace/active`)
 The only unauthenticated tile race surface, and the only one that is masked. `public_event` (`app/routers/tilerace/_public_view.py`) builds `TileRacePublicEvent` from a `PUBLIC_SUMMARY_KEYS` allowlist, so a field added to `_serialize_summary` stays private until it is listed:
@@ -126,6 +126,15 @@ The only unauthenticated tile race surface, and the only one that is masked. `pu
 - `signups[]` is replaced by `signup_count` plus the caller's own row: `my_signup` and `my_team_id`, resolved from the optional bearer token (`get_optional_user`). Anonymous callers get `null` for both. `my_team_id` is what gates the `DiceRoller`.
 
 Staff read the unmasked shape through `GET /tilerace/events/:id`.
+
+### How an event concludes
+Three states are easy to confuse:
+
+- **Deactivated** (`is_active: false`, the Square button in the events list) - the event is no longer the live one. This is how staff switch between events, so it is a visibility flag and nothing more. A deactivated event does **not** surface on `/tilerace/active`.
+- **Finished** (`is_finished: true`) - rolls are locked and the recap is the page. Set automatically when a team lands on the end pad, but only if that pad's `ends_game` trigger is on; otherwise staff set it from the Controls tab's "End the event" card, which also names `winner_team_id`.
+- **Past its end date** (`ends_at` in the past) - treated as concluded by `/tilerace/active`'s fallback and by the web gate, even without `is_finished`.
+
+`GET /tilerace/active` returns the live event, else the most recently updated event that is finished or past its `ends_at`.
 
 ### The event recap (`GET /tilerace/events/:id/recap`)
 The second unauthenticated surface. Every number a recap needs lives behind auth in its raw form - rolls and completions want a signed-in caller, submissions want `tilerace.admin` - so `recap_payload` (`app/routers/tilerace/_recap.py`) reduces all five tables to counts and time series before they leave the API. No proof URL, review note, thread id or Discord id is in the shape at all.
@@ -167,7 +176,8 @@ StaffTileracePage (/members/config/tilerace)
                   PadConfig (place/size pads + optional trigger editor)
   [Teams tab]   TeamManager
   [Controls tab] ControlsTab
-                  fog toggle, dice config, Reset Game (when finished)
+                  fog toggle, dice config
+                  EndEventCard (End the event + winner, or Reset Game)
                   CompletionsPanel (per-team tile completion toggles)
                   team position overrides
 
