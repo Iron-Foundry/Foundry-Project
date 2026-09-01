@@ -99,6 +99,16 @@ def _npc_row(cache_build_id: int, d: Any) -> dict[str, Any]:
         "category": d.category,
         "interactable": d.interactable,
         "minimap_visible": d.minimap_visible,
+        "model_ids": d.model_ids,
+        "chathead_model_ids": d.chathead_model_ids,
+        "actions": d.actions,
+        "color_find": d.color_find,
+        "color_replace": d.color_replace,
+        "texture_find": d.texture_find,
+        "texture_replace": d.texture_replace,
+        "varbit_id": d.varbit_id,
+        "varp_index": d.varp_index,
+        "configs": d.configs,
     }
 
 

@@ -10,6 +10,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from app.definitions.base import DefinitionReader
+from app.definitions.npc_ops import (
+    read_action_slots,
+    read_find_replace_pairs,
+    read_model_ids,
+    read_transform,
+    skip_head_icons,
+)
 
 
 class NpcDecodeError(RuntimeError):
@@ -25,6 +32,16 @@ class NpcDefinition:
     category: int | None = None
     interactable: bool = True
     minimap_visible: bool = True
+    model_ids: list[int] | None = None
+    chathead_model_ids: list[int] | None = None
+    actions: list[str | None] | None = None
+    color_find: list[int] | None = None
+    color_replace: list[int] | None = None
+    texture_find: list[int] | None = None
+    texture_replace: list[int] | None = None
+    varbit_id: int | None = None
+    varp_index: int | None = None
+    configs: list[int | None] | None = None
 
 
 def decode_npc(npc_id: int, data: bytes) -> NpcDefinition:
@@ -42,8 +59,7 @@ def decode_npc(npc_id: int, data: bytes) -> NpcDefinition:
 
 def _decode_opcode(opcode: int, d: NpcDefinition, r: DefinitionReader) -> None:
     if opcode == 1:
-        count = r.u1()
-        r.skip(count * 2)  # model ids
+        d.model_ids = read_model_ids(r, wide=False)
     elif opcode == 2:
         d.name = r.jstring()
     elif opcode == 12:
@@ -55,19 +71,17 @@ def _decode_opcode(opcode: int, d: NpcDefinition, r: DefinitionReader) -> None:
     elif opcode == 18:
         d.category = r.u2()
     elif 30 <= opcode < 35:
-        r.jstring()  # action op
-    elif opcode in (40, 41):
-        count = r.u1()
-        r.skip(count * 4)  # recolour / retexture pairs
+        d.actions = read_action_slots(r, d.actions, opcode - 30)
+    elif opcode == 40:
+        d.color_find, d.color_replace = read_find_replace_pairs(r)
+    elif opcode == 41:
+        d.texture_find, d.texture_replace = read_find_replace_pairs(r)
     elif opcode == 60:
-        count = r.u1()
-        r.skip(count * 2)  # chathead model ids
+        d.chathead_model_ids = read_model_ids(r, wide=False)
     elif opcode == 61:
-        count = r.u1()
-        r.skip(count * 4)  # model ids (extended)
+        d.model_ids = read_model_ids(r, wide=True)
     elif opcode == 62:
-        count = r.u1()
-        r.skip(count * 4)  # chathead model ids (extended)
+        d.chathead_model_ids = read_model_ids(r, wide=True)
     elif 74 <= opcode <= 79:
         r.u2()  # combat stat
     elif opcode == 93:
@@ -81,11 +95,13 @@ def _decode_opcode(opcode: int, d: NpcDefinition, r: DefinitionReader) -> None:
     elif opcode in (100, 101):
         r.s1()  # ambient / contrast
     elif opcode == 102:
-        _skip_head_icons(r)
+        skip_head_icons(r)
     elif opcode == 103:
         r.u2()  # rotation speed
     elif opcode in (106, 118):
-        _skip_varbit_configs(r, extra_trailing_short=opcode == 118)
+        d.varbit_id, d.varp_index, d.configs = read_transform(
+            r, has_default=opcode == 118
+        )
     elif opcode == 107:
         d.interactable = False
     elif opcode == 109:
@@ -115,7 +131,7 @@ def _decode_opcode(opcode: int, d: NpcDefinition, r: DefinitionReader) -> None:
     elif opcode == 147:
         pass  # zbuf flag
     elif opcode == 249:
-        _skip_params(r)
+        r.params()
     elif opcode == 251:
         r.u1()
         r.u1()
@@ -131,34 +147,3 @@ def _decode_opcode(opcode: int, d: NpcDefinition, r: DefinitionReader) -> None:
         r.jstring()  # conditional (sub) op
     else:
         raise NpcDecodeError(f"unknown npc opcode {opcode} at pos {r.pos - 1}")
-
-
-def _skip_head_icons(r: DefinitionReader) -> None:
-    bitfield = r.u1()
-    length = bitfield.bit_length()
-    for i in range(length):
-        if bitfield & (1 << i):
-            r.big_smart2()
-            r.ushort_smart_minus_one()
-
-
-def _skip_varbit_configs(r: DefinitionReader, extra_trailing_short: bool) -> None:
-    r.u2()  # varbit id
-    r.u2()  # varp index
-    if extra_trailing_short:
-        r.u2()
-    count = r.u1()
-    r.skip((count + 1) * 2)  # configs
-
-
-def _skip_params(r: DefinitionReader) -> None:
-    count = r.u1()
-    for _ in range(count):
-        kind = r.u1()
-        r.u3()  # param key
-        if kind == 1:
-            r.jstring()
-        elif kind == 2:
-            r.skip(8)  # long
-        else:
-            r.u4()

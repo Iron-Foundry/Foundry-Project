@@ -196,6 +196,22 @@ noted/placeholder/currency items with no visual model at all) into the `ICONS_DI
 volume (`/data/icons` in Docker), indexed in the `item_icons` table, same
 single-current-build retention as everything else.
 
+### NPC rendering (roadmap, not built)
+
+Deliberately deferred, not overlooked. Everything upstream of it is in place: `npcs`
+carries `model_ids` and `chathead_model_ids`, archive 7 is in `raw_groups` for the
+current build, and `loader.py` + `rasterizer.py` + `triangle_fill.py` already render
+those bytes. What is missing is the camera. An item carries its own 2D recipe
+(`xan2d`/`yan2d`/`zan2d`, `resize_*`) and an NPC carries none, so a full-body render
+needs an angle we invent, plus `width_scale`/`height_scale` (opcodes 97/98, still
+consumed and dropped) and the recolour table applied. The chathead is the honest
+first target: the client draws those with a fixed camera in dialogue, so the
+convention is borrowed rather than invented, and not every NPC has one. Landing it
+means an `npc_icons` table, an ingest pass, and registration in
+`retention._BUILD_SCOPED_MODELS` - the omission `ItemIconRender` leaked from. It also
+retires the `permitted_exception_npc_art` clause in
+`.claude/rules/osrs-item-sources.md`, which asserts there is no NPC renderer.
+
 ## Maps (`app/maps/`)
 
 Decodes archive 5 (maps) and renders a slippy-tile map, owning it instead of proxying

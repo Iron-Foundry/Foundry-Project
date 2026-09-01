@@ -26,6 +26,8 @@ def test_decode_real_npc() -> None:
     npc = decode_npc(8, data)
     assert npc.name == "Nechryael"
     assert npc.combat_level == 115
+    assert npc.model_ids == [5074]
+    assert npc.actions == [None, "Attack", None, None, None]
 
 
 def test_decode_real_object() -> None:

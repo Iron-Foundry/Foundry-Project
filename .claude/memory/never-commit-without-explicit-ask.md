@@ -24,6 +24,14 @@ same session - each commit/push needs its own explicit ask.
 unprompted commit or push. User reaffirmed this after I pushed a Dockerfile
 fix + root pointer bump on my own initiative to restore the live site.
 
+**No exception for a run of commit turns.** Two or more consecutive turns of
+"commit and push" establish no rhythm to continue. User corrected this ("I don't
+recall asking you to push nor commit anything") after I committed, bumped and
+pushed three repos at the end of a turn whose instruction was only a list of UI
+copy changes. Read each turn's instruction on its own; the previous turn's is
+spent. This also covers the version bump, which is a push-time action - no push
+asked for means no bump either.
+
 **Do not even hand over git commands.** The user manages the worktree; they will
 say when it is to be committed and/or pushed. Make the edit, verify it locally,
 then stop - say nothing about committing or pushing (no ready-to-run

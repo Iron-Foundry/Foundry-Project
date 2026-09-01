@@ -1,74 +1,16 @@
-"""Every entry the launcher offers, in menu order."""
+"""Every entry the launcher offers, in menu order.
+
+Declarations only: an entry names its options, what it needs on the machine, and
+what it will change. The commands themselves are built in `jobs.py` (dispatch to a
+script in `scripts/`) or `stack.py` (infisical + docker compose).
+"""
 
 from __future__ import annotations
 
-from . import stack
-from .actions import Action, ActionError, Choice, Flag, Options, Step, extra_args
-from .context import IS_WINDOWS, ROOT, bash, powershell
+from . import jobs, stack
+from .actions import Action, Choice, Flag
 
 ENVIRONMENTS = ("dev", "staging", "prod")
-
-
-def sh(relative: str, *args: str) -> Step:
-    interpreter = bash()
-    if not interpreter:
-        raise ActionError(
-            "bash not found. Install Git for Windows, or run this action from WSL."
-        )
-    return Step([interpreter, relative, *args], cwd=ROOT)
-
-
-def ps(relative: str, *args: str) -> Step:
-    interpreter = powershell()
-    if not interpreter:
-        raise ActionError("PowerShell not found.")
-    return Step(
-        [interpreter, "-NoProfile", "-File", str(ROOT / relative), *args], cwd=ROOT
-    )
-
-
-def prefer_powershell() -> bool:
-    return IS_WINDOWS and powershell() is not None
-
-
-def tests(options: Options) -> list[Step]:
-    lane = str(options["lane"])
-    if prefer_powershell():
-        return [ps("scripts/run-tests.ps1", lane)]
-    return [sh("run-tests.sh", lane)]
-
-
-def sync_db(_: Options) -> list[Step]:
-    if prefer_powershell():
-        return [ps("scripts/sync-db.ps1")]
-    return [sh("scripts/sync-db.sh")]
-
-
-def export_secrets(options: Options) -> list[Step]:
-    environment = str(options["env"])
-    if prefer_powershell():
-        return [ps("scripts/export-secrets.ps1", environment)]
-    return [sh("scripts/export-secrets.sh", environment)]
-
-
-def backfill_events(options: Options) -> list[Step]:
-    environment = str(options["env"])
-    apply = bool(options["apply"])
-    if prefer_powershell():
-        args = ["-Env", environment] + (["-Apply"] if apply else [])
-        return [ps("scripts/backfill-events.ps1", *args)]
-    args = [f"--env={environment}"] + (["--apply"] if apply else [])
-    return [sh("scripts/backfill-events.sh", *args)]
-
-
-def docker_cleanup(options: Options) -> list[Step]:
-    args = ["--dry-run"] if options["dry_run"] else []
-    return [sh("scripts/docker-cleanup.sh", *args)]
-
-
-def migrate_clan_rank(options: Options) -> list[Step]:
-    return [sh("scripts/migrate-clan-rank-to-lowercase.sh", *extra_args(options))]
-
 
 EXTRA_SERVICES = "extra compose services, e.g. cache-tiles"
 
@@ -109,7 +51,7 @@ CATALOG: tuple[Action, ...] = (
             "lint: ruff + pyright + tsc. fast: no-Docker suites. "
             "integration: shared Postgres/Valkey. e2e: full compose stack. all: everything."
         ),
-        build=tests,
+        build=jobs.tests,
         choices=(
             Choice("lane", "Lane", ("lint", "fast", "integration", "e2e", "all")),
         ),
@@ -119,7 +61,7 @@ CATALOG: tuple[Action, ...] = (
         section="Maintenance",
         label="sync prod DB to dev",
         summary="Dumps prod Postgres over an SSH tunnel and restores it into the local dev DB.",
-        build=sync_db,
+        build=jobs.sync_db,
         requires=("infisical", "docker", "ssh"),
         warning="Drops and recreates the local dev database.",
     ),
@@ -128,7 +70,7 @@ CATALOG: tuple[Action, ...] = (
         section="Maintenance",
         label="export secrets to .env",
         summary="Writes the selected Infisical environment to the repo-root .env file.",
-        build=export_secrets,
+        build=jobs.export_secrets,
         choices=(Choice("env", "Environment", ENVIRONMENTS),),
         requires=("infisical",),
         warning="Overwrites .env.",
@@ -138,7 +80,7 @@ CATALOG: tuple[Action, ...] = (
         section="Maintenance",
         label="backfill events",
         summary="Populates user_accounts from users.rsn, then reparses historical events.",
-        build=backfill_events,
+        build=jobs.backfill_events,
         choices=(Choice("env", "Environment", ("dev", "prod")),),
         flags=(Flag("apply", "Apply (off = dry run)"),),
         requires=("infisical",),
@@ -148,16 +90,34 @@ CATALOG: tuple[Action, ...] = (
         section="Maintenance",
         label="docker cleanup",
         summary="Prunes dangling image layers and trims the BuildKit cache. Never touches volumes.",
-        build=docker_cleanup,
+        build=jobs.docker_cleanup,
         flags=(Flag("dry_run", "Dry run (list only)", default=True),),
         requires=("bash", "docker"),
+    ),
+    Action(
+        slug="reingest-cache",
+        section="Maintenance",
+        label="force cache re-ingest",
+        summary=(
+            "Makes osrs-cache-service re-download and re-decode the current OSRS build, "
+            "so new decoder fields are backfilled without waiting for Jagex to ship one."
+        ),
+        build=stack.reingest_cache,
+        choices=(Choice("env", "Environment", ENVIRONMENTS),),
+        flags=(Flag("apply", "Apply (off = show the ingested build)"),),
+        requires=("infisical", "docker"),
+        warning=(
+            "Restarts osrs-cache-service and re-runs the whole ingest "
+            "(download, icons, map tiles - minutes, and double the volume use "
+            "until it finishes)."
+        ),
     ),
     Action(
         slug="migrate-clan-rank",
         section="Maintenance",
         label="migrate clan_rank to lowercase",
         summary="One-off: rewrites users.clan_rank into the lowercase WOM role format.",
-        build=migrate_clan_rank,
+        build=jobs.migrate_clan_rank,
         requires=("bash", "docker"),
         warning="Writes to the running stack's database.",
     ),

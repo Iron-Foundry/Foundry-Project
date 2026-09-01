@@ -43,6 +43,16 @@ class NpcOut(BaseModel):
     category: int | None
     interactable: bool
     minimap_visible: bool
+    model_ids: list[int] | None
+    chathead_model_ids: list[int] | None
+    actions: list[str | None] | None
+    color_find: list[int] | None
+    color_replace: list[int] | None
+    texture_find: list[int] | None
+    texture_replace: list[int] | None
+    varbit_id: int | None
+    varp_index: int | None
+    configs: list[int | None] | None
 
 
 class ObjectOut(BaseModel):

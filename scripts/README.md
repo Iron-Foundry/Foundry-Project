@@ -39,15 +39,20 @@ Windows uses `.\run.ps1` with the same arguments.
 Picking an entry closes the menu before the command starts, so the job owns a real
 terminal: colours, prompts, Ctrl-C and long-running output all behave normally.
 
-The dev, staging and prod stacks are built in Python (`launcher/stack.py`) - they
-replaced the `rundev`/`runprod`/`runstaging` `.sh`/`.ps1` pairs that used to sit in
-the repo root. Everything else shells out to the scripts documented above, choosing
-the `.ps1` twin on Windows and the `.sh` elsewhere.
+`launcher/catalog.py` is declarations only - each entry names its options, what it
+needs on the machine and what it will change. The commands come from one of two
+builder modules. `launcher/stack.py` builds in Python the invocations trivial enough
+to express directly: the dev, staging and prod stacks (which replaced the
+`rundev`/`runprod`/`runstaging` `.sh`/`.ps1` pairs that used to sit in the repo root)
+and `reingest-cache`. `launcher/jobs.py` dispatches everything else to the scripts
+documented above, choosing the `.ps1` twin on Windows and the `.sh` elsewhere - a
+script with real logic of its own is never reimplemented in the launcher.
 
 | Module | Role |
 |---|---|
 | `launcher/catalog.py` | Every menu entry: its options, requirements and warnings |
-| `launcher/stack.py` | The infisical + docker compose stacks |
+| `launcher/jobs.py` | The builders that dispatch to a script in `scripts/` |
+| `launcher/stack.py` | The builders built in Python: the stacks, and `reingest-cache` |
 | `launcher/actions.py` | The action/step model |
 | `launcher/cli.py` | Argument parsing and the launch flow |
 | `launcher/app.py`, `panel.py` | The Textual menu |
@@ -56,6 +61,27 @@ the `.ps1` twin on Windows and the `.sh` elsewhere.
 
 CI does not go through the launcher; `.github/workflows/e2e.yml` still calls
 `bash run-tests.sh e2e` directly.
+
+### reingest-cache
+
+`osrs-cache-service` ingests a build only when OpenRS2's latest id differs from the
+one in its `cache_builds` row, so a decoder that gains a field has nothing to
+backfill it until Jagex ships a new cache. This action points that column away from
+any real id and restarts the service, which fires the sync immediately and re-ingests
+the same build from scratch.
+
+```bash
+./run reingest-cache prod            # show the ingested build, change nothing
+./run reingest-cache prod --apply    # reopen the gate and restart the service
+```
+
+Clearing `is_current` instead does not work: `openrs2_cache_id` is unique, so
+re-ingesting the same build collides on insert, and every read returns 503 while no
+build is current. Nudging the id keeps the old build serving until the new one cuts
+over. The run costs a full download, icon pass and tile bake - minutes, and roughly
+double the volume use until it finishes, which retention then reclaims. If it fails
+partway the old build stays current with the sentinel in place, so it retries every
+`CACHE_SYNC_INTERVAL_HOURS`; put the real id back to stop that.
 
 ## docker-cleanup.sh
 

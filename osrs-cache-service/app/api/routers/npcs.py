@@ -28,6 +28,19 @@ async def list_npcs(
     return [NpcOut.model_validate(row) for row in result.scalars().all()]
 
 
+@router.get("/names")
+async def list_npc_names(
+    session: SessionDep,
+    build_id: CurrentBuildDep,
+) -> dict[int, str]:
+    result = await session.execute(
+        select(Npc.npc_id, Npc.name).where(
+            Npc.cache_build_id == build_id, Npc.name != ""
+        )
+    )
+    return dict(result.tuples().all())
+
+
 @router.get("/{npc_id}")
 async def get_npc(
     npc_id: Annotated[int, Path(ge=0)],

@@ -7,6 +7,7 @@
 - [Root launcher](root-launcher.md) — `./run` (menu or `./run <action>`) is the one root entry point; the run*.sh/ps1 pairs are gone, new jobs go in `scripts/launcher/catalog.py`
 - [Secrets & startup](secrets-and-startup.md) — Infisical-managed secrets; started via `./run dev|staging|prod`; bare docker compose recreates with blank env; both services auto-migrate (`alembic upgrade head`) on container start
 - [Cache icon coverage](cache-icon-coverage.md) — cache serves item icons + UI sprites only (no NPC/boss art); how web-app sources item icons/names/skill icons off the Wiki
+- [NPC rendering roadmap](npc-rendering-roadmap.md) — deferred by choice, not missing: every dependency is built, the blocker is that an NPC carries no camera
 - [Cache image CORS](cache-image-cors.md) — proxied cache image endpoints must send Access-Control-Allow-Origin:* or cross-origin fetch/canvas loads break
 - [Check refs before asking](check-refs-before-asking.md) — ls D:\claude-git-references before asking to clone a reference repo; runelite-repo etc already present
 - [Icon render debugging](icon-render-debugging.md) — inspect actual rendered pixels via the fast in-container loop before rebuilding; render camera is clansocket auto-fit, NOT zoom2d
@@ -14,7 +15,7 @@
 - [No artifacts](no-artifacts.md) — Artifact tool is banned; deliver HTML mockups/previews as a standalone file in the repo's `previews/` and give the path
 - [No commit co-author](no-commit-coauthor.md) — never add a Claude/Anthropic Co-Authored-By trailer to commits or PRs; user rejects anything that does
 - [Consult before layout changes](consult-before-layout-changes.md) — present plan and get approval before editing any layout/design/styling code; diagnosis is not a license to edit
-- [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push or even offer to; standing permission doesn't carry to unrelated files noticed later
+- [Never commit without explicit ask](never-commit-without-explicit-ask.md) — never commit/push/bump or even offer to; permission doesn't carry to unrelated files, to urgent fixes, or to the turn after a run of "commit and push" turns
 - [Commit scope means all uncommitted](commit-scope-means-all-uncommitted.md) — "commit ... including prior ones" means every dirty file in root + submodules, not just this session's edits
 - [Mirror add/remove features](mirror-add-remove-features.md) — any add-shaped feature needs a matching remove counterpart in the same change, and vice versa
 - [Integration testing](integration-testing.md) — layered cross-service tests: api real-infra (`-m integration`), openapi/schema contract, root E2E compose in `integration/`; run via `./run-tests.sh`
