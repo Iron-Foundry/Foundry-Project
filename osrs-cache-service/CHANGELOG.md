@@ -9,6 +9,19 @@ Bump with `uv version --bump patch|minor` (or `alpha|beta|rc` for a
 prerelease, `stable` to drop the tag). A MAJOR bump is the maintainer's call
 and is never made automatically.
 
+## [0.2.1] - 2026-09-02
+
+### Fixed
+
+- Ingestion could no longer complete: `map_locations.id` was an int4 serial and its
+  sequence hit `nextval: reached maximum value of sequence "map_locations_id_seq"
+  (2147483647)`. Retention keeps one build's rows, but a sequence is not
+  transactional and never rewinds - each ingest spends ~5M values whether it commits
+  or rolls back, so the ceiling was a lifetime total and every ingest after it was
+  going to fail, not just the one that reached it. The column and its sequence are
+  now bigint. The failed run rolled back cleanly and the previously ingested build
+  kept serving throughout, as designed.
+
 ## [0.2.0] - 2026-09-01
 
 ### Added

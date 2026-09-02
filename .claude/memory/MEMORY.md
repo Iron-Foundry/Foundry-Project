@@ -8,6 +8,7 @@
 - [Secrets & startup](secrets-and-startup.md) — Infisical-managed secrets; started via `./run dev|staging|prod`; bare docker compose recreates with blank env; both services auto-migrate (`alembic upgrade head`) on container start
 - [Cache icon coverage](cache-icon-coverage.md) — cache serves item icons + UI sprites only (no NPC/boss art); how web-app sources item icons/names/skill icons off the Wiki
 - [NPC rendering roadmap](npc-rendering-roadmap.md) — deferred by choice, not missing: every dependency is built, the blocker is that an NPC carries no camera
+- [Sequences outlive retention](sequences-outlive-retention.md) — single-build retention doesn't bound a sequence; map_locations exhausted its int4 serial and broke every future ingest
 - [Wiki cargo is gone](wiki-cargo-is-gone.md) — OSRS Wiki dropped `action=cargoquery` and answers 200 with an error body; use `action=query&prop=pageimages`, names from our cache
 - [Cache image CORS](cache-image-cors.md) — proxied cache image endpoints must send Access-Control-Allow-Origin:* or cross-origin fetch/canvas loads break
 - [Check refs before asking](check-refs-before-asking.md) — ls D:\claude-git-references before asking to clone a reference repo; runelite-repo etc already present

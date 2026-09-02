@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Index, Integer, SmallInteger
+from sqlalchemy import BigInteger, Index, Integer, SmallInteger
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -12,6 +12,11 @@ class MapLocation(Base):
     World coordinates are denormalised from (region, local) at ingest so a bbox
     query needs no arithmetic on the index. Rows are written with asyncpg's COPY,
     not the ORM; at this volume ``session.add()`` is not viable.
+
+    ``id`` must stay BIGINT. Retention keeps one build's rows, but the sequence is
+    not transactional and never rewinds: every ingest consumes ~5M values whether
+    it commits or rolls back, so an int4 sequence is a countdown to a permanent
+    ingest failure - one this table reached in production.
     """
 
     __tablename__ = "map_locations"
@@ -22,7 +27,7 @@ class MapLocation(Base):
         ),
     )
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     cache_build_id: Mapped[int] = mapped_column(Integer, nullable=False)
     region_id: Mapped[int] = mapped_column(Integer, nullable=False)
     object_id: Mapped[int] = mapped_column(Integer, nullable=False)
