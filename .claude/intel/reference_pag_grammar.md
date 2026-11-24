@@ -17,6 +17,8 @@ supersedes:
 BNF Grammar
 ===========
 
+> PAG (Pattern Abstract Grammar) is Bane's Lab IP, used under CC BY-SA.
+
 PAG is defined by a formal **Context-Free Grammar**(CFG) expressed in BNF notation. The complete grammar is organized into **five rule categories**.
 
 Planning Rules

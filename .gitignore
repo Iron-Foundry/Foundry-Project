@@ -9,3 +9,9 @@ FRENZY_DESIGN.md
 METRIC_REPORTS.md
 skills-lock.json
 .agents
+collaboration-surface/node_modules/
+collaboration-surface/_generated/
+collaboration-surface/collab.comms.active
+collaboration-surface/_agent-index.md
+collaboration-surface/roles/*
+!collaboration-surface/roles/.gitkeep

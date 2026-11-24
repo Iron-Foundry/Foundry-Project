@@ -1,45 +1,32 @@
-# Claude Work-Discipline Layer — setup guide
+# Claude behaviour layer
 
-For the user's own Claude Code instance. This describes a **behavior-only** discipline layer that cuts token cost — chiefly by banning subagent/`Task`/skill spawns unless the user explicitly asks. It does not touch the codebase's architecture or vision; those stay in CLAUDE.md's `# PROJECT` section.
+This folder holds how Claude works in this repository. What the code is (stacks, per-service architecture, style) lives in CLAUDE.md `# PROJECT`, and this layer does not touch it.
 
-This folder is a staging copy. The steps below install the layer into the **real Iron Foundry repo**.
+## Two layers
 
-## Why
+- **The repository's own rules** — CLAUDE.md `# AXIOM`, `# STARTUP`, `# BEHAVIORAL RULES` and `# VERIFYING WORK`, with their PAG expressions in `.claude/rules/behavioral.md`, `testing.md`, `versioning.md`, `launcher-actions.md`, and the prose digests `agent-invocation.md` and `memory.md`.
+- **The operator's personal layer** — the marked block at the end of CLAUDE.md and the digests it cites: `work-discipline.md`, `standing-exceptions.md`, `wording.md`, `ste100.md`, `look-and-feel.md`, `code-shape.md`, `testing.md`, `backend-standards.md`. The workspace kit installs and refreshes this layer with `npm run kit:install -- --target <this repo> --layer harness --merge` from the kit's root. Where the two layers disagree, the personal layer wins and the repository's rule is rewritten to match.
 
-Token cost was dominated by agent spawns. The fix is a small, committed set of behavior rules that make inline `Grep`/`Glob`/`Read`/`Bash` the default, keep responses short, keep searches targeted, and give Claude a durable memory + index so it stops re-discovering the same things.
+## File manifest
 
-## Two separate concerns (keep them separate)
+- **`.claude/rules/`** — one digest per concern, as listed above.
+- **`.claude/agents/`** — `crew-*` agents, routed by `.claude/reference/agent-routing.md`, plus `agent-creator-agent.md` and `forensic-context-verifier.md`.
+- **`.claude/intel/`** — the PAG grammar, guides, keywords and templates. `.claude/intel/INDEX.md` lists them.
+- **`.claude/INDEX.md`** — a search index (concern → location), consulted before a search.
+- **`.claude/settings.json`** — the deny-list for destructive git, `sed` and `awk`, and the run-lock hook from `collaboration-surface/`.
+- **`collaboration-surface/`** — the run lock and the board. Every suite a session runs is a row in `collaboration-surface/config/join.config.ts`, run as `npm --prefix collaboration-surface run join -- --suite <id>`.
+- **`previews/`** — the preview bench for looks decisions.
+- **Memory** — the harness memory store on this machine (`~/.claude/projects/<repo-hash>/memory/`), out of the repository. Format: `.claude/rules/memory.md`.
 
-- **Behavior** — how Claude works. Lives in CLAUDE.md `# WORK DISCIPLINE` + `.claude/rules/*` + `.claude/memory/` + `.claude/INDEX.md`. This is the layer this guide installs.
-- **Project** — what the code is (stacks, per-service architecture, style). Lives in CLAUDE.md `# PROJECT`. Untouched by this layer.
+## Enforce and verify
 
-## What this layer is (file manifest)
+- No agent, `Task`, skill or slash-command spawns unless the user names it in the current message, or a row of `.claude/rules/standing-exceptions.md` permits it.
+- Responses answer first, with no preamble, filler or self-recap.
+- Searches name a specific path and pattern, and `.claude/INDEX.md` is consulted first.
+- The harness memory store's `MEMORY.md` is read at session start.
 
-- **CLAUDE.md → `# WORK DISCIPLINE`** — the SSOT for behavior: the token-discipline AXIOM (no agent spawns without an explicit trigger; short responses) + one-line `Always`/`Situational` rules. Sits above `# PROJECT`.
-- **`.claude/rules/agent-invocation.md`** — the primary control: when an agent/skill/command may spawn (only on explicit user trigger), what counts as activation, the inline-first default.
-- **`.claude/rules/memory.md`** — the durable memory approach: format, what to store, auto-update.
-- **`.claude/memory/MEMORY.md`** — the memory index (one line per fact), read at session start; `.claude/memory/<slug>.md` holds each fact.
-- **`.claude/INDEX.md`** — a search index (concern → location) so Claude searches targeted instead of scanning the tree or spawning a search agent; seeded from CLAUDE.md.
-- **`.claude/settings.json`** — already carries the destructive-git / `sed`/`awk` / verify-pipe deny-list; leave it. (Agent spawns are governed by the CLAUDE.md rule, not a permission.)
+## Maintain
 
-## Install into the real repo (Claude-actionable steps)
-
-1. Copy the CLAUDE.md `# WORK DISCIPLINE` section into the real repo's CLAUDE.md, directly under the intro line and **above** the architecture, and wrap the existing architecture under `# PROJECT (architecture & codebase — reference, not behavior)`. Do not edit the architecture content.
-2. Copy `.claude/rules/agent-invocation.md` and `.claude/rules/memory.md`.
-3. Create `.claude/memory/MEMORY.md` (empty index) and `.claude/INDEX.md`.
-4. Re-seed `.claude/INDEX.md` from the real repo: list each submodule's entry points and the paths you actually search often (routers, features, migrations, tests). Keep it short; grow it as you work.
-5. Confirm `.claude/settings.json` has the destructive-git deny-list (copy from here if missing).
-6. Commit the `.claude/` behavior files + the CLAUDE.md change.
-
-## Enforce / verify
-
-- No agent, `Task`, skill, or slash-command is spawned unless the user names it in the current message — otherwise the work is done inline.
-- Responses answer first, no preamble/filler/self-recap.
-- Searches name a specific path + pattern; `.claude/INDEX.md` is consulted first.
-- `.claude/memory/MEMORY.md` is read at session start.
-
-## Maintain (auto-update)
-
-- Learn a durable, non-obvious fact, or get corrected → write/update a `.claude/memory/<slug>.md` file and its `MEMORY.md` pointer in the same turn. Don't store what CLAUDE.md/code already say.
-- A user correction also becomes one new one-line rule in CLAUDE.md `# WORK DISCIPLINE`.
-- Discover a stable file location → append it to `.claude/INDEX.md`.
+- A durable, non-obvious fact or a correction → write or update its `<slug>.md` in the harness memory store and its `MEMORY.md` pointer in the same turn.
+- A user correction also becomes one new one-line rule in CLAUDE.md `# BEHAVIORAL RULES`.
+- A stable file location → append it to `.claude/INDEX.md`.

@@ -6,8 +6,8 @@ domain: [ai-governance]
 keywords: [axiom, behavioural-rules, efficiency, correctness, memory, situational, agent-invocation, tokens]
 owner: IronFoundry
 created: 2026-07-23
-last-verified: 2026-07-23
-version: 1
+last-verified: 2026-11-20
+version: 2
 staleness-days: -1
 depends-on: [reference_pag_grammar.md, reference_pag_guide.md]
 supersedes:
@@ -35,13 +35,15 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
             NEVER SPAWN it on own initiative
             ALWAYS DO the work inline WITH Grep / Glob / Read / Bash
             SPAWN only WHEN the user invokes it IN the current message
+        EXCEPT a row of ".claude/rules/standing-exceptions.md":
+            # "use agents" starts a routed agent for its row's work; `crew-explorer` starts unasked for a multi-file sweep
 
     RULE short_responses:
         ALWAYS ANSWER first IN the fewest complete words
         NEVER EMIT preamble, filler, restated question, or self-recap
 
     VALIDATION GATE:
-        ✅ no agent/Task/skill/command spawned without an in-message trigger
+        ✅ no agent/Task/skill/command spawned without an in-message trigger or a standing-exception row
         ✅ response leads with the answer, no preamble or recap
         ✅ inline tools chosen over any fan-out that lacked a trigger
 
@@ -65,7 +67,7 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
         ALWAYS READ or GREP the actual file BEFORE asserting a fact
         NEVER ANSWER from assumption
     RULE single_verify_run:
-        ALWAYS RUN a check/verify command once per repo state AND READ its output whole (tail)
+        ALWAYS RUN a check/verify command once per repo state THROUGH the run lock AND READ its output whole
         NEVER GREP/pipe-filter that output, NEVER re-run it in a loop
     RULE caught_means_fixed:
         WHEN a relevant issue is caught:
@@ -77,10 +79,10 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
 
     # -- Memory and process --
     RULE memory_at_start:
-        ALWAYS READ ".claude/memory/MEMORY.md" AT session start
+        ALWAYS READ the harness memory store's "MEMORY.md" AT session start
     RULE memory_location:
-        ALWAYS WRITE project memory TO the repo ".claude/memory/" (index MEMORY.md, one fact per <slug>.md)
-        NEVER WRITE TO the harness auto-memory path (read-only background)
+        ALWAYS WRITE project memory TO the on-device harness memory store (index MEMORY.md, one fact per <slug>.md)
+        NEVER WRITE a repo-local memory folder
     RULE process_adherence:
         ALWAYS FOLLOW the agreed plan/process exactly
         NEVER ADD steps, scope, or "while I'm here" work
@@ -91,17 +93,18 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
 
     VALIDATION GATE:
         ✅ every asserted fact traces to a Read/Grep, not assumption
-        ✅ verify commands run once per state and read whole
+        ✅ verify commands run once per state, through the run lock, and read whole
         ✅ caught issues fixed this pass, no deferral or shim
-        ✅ durable facts + corrections written to .claude/memory/ same turn
+        ✅ durable facts + corrections written to the harness memory store the same turn
 
 # PHASE 3: SITUATIONAL  (fire on the matching task)
     @purpose: "Rules that bind only when their trigger condition is present"
 
     RULE explicit_activation_only:
         WHEN an agent/skill/command would run:
-            RUN only IF the user named it or said "use the X" IN this turn
-            NEVER CARRY standing permission across turns
+            RUN only IF the user named it, said "use the X", OR said "use agents" FOR work IN a row of ".claude/reference/agent-routing.md", IN this turn
+            NEVER CARRY permission across turns
+        EXCEPT `crew-explorer` (".claude/rules/standing-exceptions.md")
     RULE ask_dont_guess:
         WHEN intent, placement, or a decisive fact is genuinely ambiguous:
             ASK_USER ONE precise question (recommended option first)
@@ -132,23 +135,30 @@ SET precedence_chain = ["AXIOM", "BEHAVIORAL_RULES(CLAUDE.md)", ".claude/rules/*
             NEVER DISABLE, exclude, or "--no-verify" around it WITHOUT user approval
     RULE no_background_processes:
         NEVER START a dev server, start, preview, watcher, or any continuous process
-        ALWAYS ASK the user to run it AND report back
+        EXCEPT the preview server row of ".claude/rules/standing-exceptions.md"
+        ELSE ASK the user to run it AND report back
     RULE no_git_on_own_initiative:
-        RUN a git command only WHEN the user asks IN this turn
+        RUN a git command only WHEN the user asks IN this turn, OR under a git row of ".claude/rules/standing-exceptions.md"
         ELSE HAND the user the command
     RULE never_propose_commit:
         NEVER OFFER or propose a commit
         COMMIT only WHEN the user explicitly instructs it
     RULE no_commit_coauthor:
         NEVER ADD a Claude/Anthropic Co-Authored-By trailer or any Claude attribution TO commits or PRs
+    RULE no_artifacts_for_product_work:
+        WHEN a mockup, preview, or visual comparison of a product surface is asked for:
+            ALWAYS WRITE a bench page UNDER "previews/" AND HAND over its address
+            NEVER PUBLISH it AS a hosted artifact
+            # full ruleset: .claude/rules/look-and-feel.md
     RULE consult_before_layout:
         WHEN a change touches layout/design/styling (structure, breakpoints, spacing, Tailwind, visual styling):
-            ALWAYS PRESENT the plan AND get approval FIRST
+            ALWAYS PUT candidates ON the preview bench AND WAIT FOR the operator's pick
+            CHANGE product code only ON the operator's build word
             NEVER EDIT on own initiative (diagnosis is not a license to edit)
     RULE tests_follow_code:
         WHEN a new/changed endpoint, router, repository, or interconnect ships:
             ALWAYS INCLUDE its tests IN the same change
-            ALWAYS RUN "./run-tests.sh" FOR every touched module BEFORE done
+            ALWAYS RUN the touched lanes THROUGH the run lock ("foundry-<lane>") BEFORE done
             # full ruleset: .claude/rules/testing.md
     RULE feedback_capture:
         WHEN the user corrects you:

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bench - live</title>
+<script>
+  fetch("../live.json", { cache: "no-store" })
+    .then((r) => r.json())
+    .then((live) => location.replace("../" + live.path));
+</script>
+</head>
+<body></body>
+</html>

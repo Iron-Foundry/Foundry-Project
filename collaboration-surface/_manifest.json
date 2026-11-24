@@ -1,0 +1,354 @@
+{
+    "label": "Coordination Surface",
+    "summary": "A drop-in multi-agent coordination package: a fenced board where concurrent agents claim scope and address each other, a permanent letter-to-role index, prioritised discussion venues that hold the build until they converge, and a self-registering governance pipeline that makes each of its own protocol rules a check rather than a discipline.",
+    "maturity": "experimental",
+    "licence": { "distribution": "build-time", "cryptography": false },
+    "domains": [
+        { "meta": "ai", "sub": "agents-orchestration" },
+        { "meta": "developer-tooling", "sub": "linting-quality" }
+    ],
+    "ecosystem": "typescript",
+    "visibility": { "private": true, "hidden": false },
+    "repoMetrics": true,
+    "capabilities": [
+        "multi-agent-coordination-board",
+        "fenced-record-and-item-addressing",
+        "seat-identity-allocation-and-reissue",
+        "role-declaration-per-concern",
+        "blocking-venue-convergence-and-archival",
+        "history-accumulation-before-removal",
+        "self-registering-governance-pipeline",
+        "placement-and-naming-taxonomy",
+        "slot-based-host-adaptation",
+        "projection-channel-for-bounded-invocations"
+    ],
+    "governedBy": [
+        "rule-as-code",
+        "central-config",
+        "single-owner",
+        "explicit-retention",
+        "enforced-feedback",
+        "regex-usage"
+    ],
+    "governance": { "principles": ["single-source-of-truth", "separation-of-concerns", "open-closed", "fail-fast"] },
+    "docs": {
+        "overview": "A coordination workspace: the board routes, and this workspace holds what it routes to. Coordination is a dependency graph and this package governs it as one — documents are NODES, citations are EDGES, and states are DERIVED by traversal rather than written by an agent. It carries the surfaces concurrent agents coordinate through — a board at `collab.comms.active` where each seat owns exactly one fenced record, a letter-to-role index at `_agent-index.md` that reissues a departed seat's letter, one role document per concern under `roles`, planning rows under `checklists`, prioritised discussion venues that hold the build until they converge, an archive at `_archive/venues` for the ones that have, and a single history accumulator at `_changelogs.txt` that every removal extracts into first. Around those surfaces sits a governance pipeline under `tools`, where a rule becomes active by dropping a file into `tools/rules` that declares a contract the registry discovers, so adding, removing or reordering governance touches no core file. The premise the whole package rests on is that a coordination surface is software — it has state, invariants, a schema, and it decays without a validator — so an accumulation, a lost write, a stale item or a missed message is a defect report against the protocol rather than a call for more care, and a rule without a gate is discipline wearing a rule's clothes. It is a DROP-IN: every host fact resolves through one parameter surface at `config/surface.config.ts`, setting `{project.root}` there is the whole install, nothing else in this tree names a host, and `npm run govern` is the verdict. A slot resolves RESOLVED, ABSENT or DEFERRED; a consumer naming one that resolves ABSENT declares the absence and does not run the branch depending on it, and an adapter that resolves everything is lying about something.",
+        "whenToUse": [
+            "More than one reasoning agent writes one tree concurrently, and two of them editing near each other must not silently destroy each other's work — every record is fenced to exactly one writer, so an anchored edit always has a span to match and the whole-file write that reports success to the overwriter is never the only mechanism on offer.",
+            "Coordination state is accumulating faster than anyone drains it, and the surface has grown past what a reader can consume whole — the board is current-truth-only, an absorbed item extracts to the history accumulator and is then deleted, and the field-size and projection-size checks fail the surface before it stops being readable.",
+            "A protocol exists and decays anyway, because every one of its rules is conduct — this package's premise is that each rule either names the check enforcing it or declares in writing that no construct in any artifact observes it, and the coverage check fails a rule that does neither.",
+            "A decision must hold the build until it converges rather than being worked around — a blocking venue accumulates positions until every active seat's needs are empty, and its red gate is the intended state rather than a defect to repair.",
+            "A host wants the coordination knowledge without adopting the reasoning protocols: the paste block and the reasoning-template layer are two layers adopted separately, and every rule states which one it belongs to by the gate it names."
+        ],
+        "whenNotToUse": [
+            "One worker writes the tree — resolve the board slot ABSENT and the deployment is single-worker by declaration, which is what derives whether a reader is a seat or a bounded invocation; running a board for one writer buys fences against a concurrent party that cannot exist.",
+            "A host wants a task tracker or an issue queue — the planning surfaces here carry what is current and future only, a closed row is deleted rather than annotated, and nothing in the package records what was done.",
+            "A host wants its own code linted — the checks read structure, protocol and governance and none of them reads a TYPE, so a host elects its own toolchain through the quality slots and gets one chain rather than two.",
+            "A host wants project history kept alongside the work — history has exactly two homes here, the accumulator and a message to the operator, and every other surface states what is true now."
+        ],
+        "install": "Four steps, and only the second is a decision.\n\n1. Copy this tree anywhere inside the host. Its own folder name carries no meaning — nothing here cites a sibling by it.\n2. Set `{project.root}` in `config/surface.config.ts` to where the host root sits **relative to this package**. That is the whole install, and it is the one value a walk cannot derive: a submodule boundary, a nested package and a real root are indistinguishable by marker, so which ancestor is the project is a judgement about the host rather than a fact in it.\n3. Install, then run the gate **twice**. Repair is on by default, so the first run reports what it healed — the binding renders, stale reports are pruned — and the second is the verdict.\n4. Resolve any further slot the host actually has: its behaviour document, its architecture axis, its principle catalog, its planning roots, its history file. **Every one of them may stay ABSENT**, and an absent slot means the branch reading it declines to run rather than substituting the nearest thing available.\n\nThe install is finished when every slot the host genuinely has is resolved and every slot it does not have says so.",
+        "quickStart": [
+            {
+                "intent": "Run the whole pipeline over the whole scope with healing on — the verdict",
+                "lang": "bash",
+                "code": "npm run govern"
+            },
+            {
+                "intent": "Write into your own fenced record and wait for a peer write, declaring the calling seat",
+                "lang": "bash",
+                "code": "npm run await -- --agent <LETTER>"
+            },
+            {
+                "intent": "Post a position into an open venue rather than into the board, naming the surface",
+                "lang": "bash",
+                "code": "npm run await -- --agent <LETTER> --file <the venue> --item \"the position\""
+            },
+            {
+                "intent": "Walk a venue's convergence orderings and move it whole into the archive once all of them hold",
+                "lang": "bash",
+                "code": "npm run converge"
+            }
+        ],
+        "api": "The package exposes a COMMAND surface rather than an importable barrel. `npm run govern` runs every registered stage over the whole scope with healing on and writes every derivation under `_generated`; its arguments narrow the run and never widen it, and a bypassed run never satisfies a completion claim. `npm run await` is the board write-and-wait tool, and the calling seat is mandatory on every invocation because the snapshot, the fence, the reader set and the closure check all key on it. `npm run converge` walks a venue's convergence orderings and moves it into the archive once every one of them holds. `npm run gates` certifies each registered kind against its proving fixtures, `npm run clean` runs the source cleaner, and `npm run govern:segment` derives the reference graph the rename post-condition reads. The typed parameter surface `config/surface.config.ts` exports the slot accessors every consumer resolves a host fact through.",
+        "configuration": [
+            {
+                "option": "_manifest.json",
+                "note": "The authored source of the entry document and of the identity a host's governance resolves this tree by — label, summary, maturity, capabilities, domains, licence, visibility, the quality concepts and architecture principles it declares itself governed by, and one `docs` field per protocol section. The entry document is RENDERED from it by this package's own `npm run govern`, which heals drift on every run, and is never hand-edited."
+            },
+            {
+                "option": "config/surface.config.ts",
+                "note": "The one parameter surface. Every host fact is a slot resolving RESOLVED, ABSENT or DEFERRED, and the prose face of it is generated rather than written. `{project.root}` is the single value an adopter sets."
+            },
+            {
+                "option": "{project.governance_policy}",
+                "note": "The host's behaviour document, where the projection line is written. ABSENT until a host ADOPTS the package rather than merely containing it — a resolved value directs every projection refresh into a document the package does not own, which is the host reach-in arriving through the one slot that looks like configuration."
+            },
+            {
+                "option": "{project.projection_marker}",
+                "note": "The token identifying this package's projection line inside the host document. A slot rather than a constant, because a host may run more than one coordination surface and a shared token makes each board refresh a channel it does not own."
+            },
+            {
+                "option": "{surface.board} and {project.coordination_board}",
+                "note": "Two different questions: one locates the board file, the other states WHETHER this deployment runs a board at all. ABSENT on the second is a single-worker deployment, which is what derives whether a reader is a seat or a bounded invocation."
+            },
+            {
+                "option": "{execution.quality_command} and {execution.quality_concerns}",
+                "note": "The host's own quality toolchain and which of its concerns the pipeline hands it, so a consumer has ONE chain rather than two. A formatter is elected deliberately rather than by default, because this package declares no formatting of its own and that absence is a property."
+            },
+            {
+                "option": "config/taxonomy.config.ts",
+                "note": "The closed naming and placement vocabulary — containers, concerns, subjects and variants — with its cross-slot agreement asserted at compile time, so the vocabulary cannot go inconsistent without failing to compile."
+            },
+            {
+                "option": "{convention.read_token_budget} and {convention.chars_per_token}",
+                "note": "The reader's cap and the measured character ratio the field-size check derives from. The ratio is measured rather than assumed, because dense markup runs far denser than prose and a generous guess produces a gate that passes exactly when it is most needed."
+            }
+        ],
+        "graph": [
+            "A **node** is a record carrying an `id`, a `subject` and edges.",
+            "An **edge** is a citation — an id in a field. `blocks`, `answers`, `refutes`, `supersedes` and `satisfied-by` are one construct resolved by one check, never five relations.",
+            "**State is derived by traversal, never written.** Open is an unresolved outbound edge; blocked is an inbound edge from an unresolved node; absorbed is every edge resolved. No agent writes a state.",
+            "A cycle is a finding, an orphan is a finding, and a citation resolving to nothing is a finding."
+        ],
+        "identity": [
+            "An id is `<surface-key>-<ordinal>`, allocated once, never recomputed and never reused; a subject is a declared subject key, re-derived every run and compared against its declaration.",
+            "**The surface allocates, not the agent.** A surface has one writer, so the ordinal needs no allocator, registry or coordination step — at four agents or four hundred.",
+            "The id survives every rename: of the surface, the subject, the agent and the parent.",
+            "**Two nodes carrying one subject key is a FINDING rather than a collision**, and that is what the re-derivation check decides.",
+            "**An agent letter is bound to a role while its seat runs, and a departed seat's letter is reissued.** Every board invocation binds the caller's letter to its session process and probes the other ACTIVE seats, moving one whose process is gone INACTIVE; `--index` then issues the shortest letter no ACTIVE or INVOKED row holds, so seats do not drift down the alphabet. A new agent is indexed BEFORE its first write, and a letter is claimed by adding or reissuing the row rather than by using it. A citation of a letter resolves to its current holder.",
+            "A role is a declaration within a surface, and letters recur at every depth as local addresses; the agent index is the one place a letter is a durable project identity, and the two never mix because one is scoped to a surface and the other to the project."
+        ],
+        "surfaces": [
+            { "surface": "board", "holds": "each seat's Owns, Status, Flags and Refs", "lifetime": "current truth" },
+            { "surface": "workspace", "holds": "rounds, findings, rulings, repairs", "lifetime": "until absorbed" },
+            { "surface": "planning surfaces", "holds": "plan rows", "lifetime": "until the row retires" },
+            { "surface": "the durable-record tree", "holds": "durable findings", "lifetime": "permanent" },
+            { "surface": "the history accumulator", "holds": "project history", "lifetime": "append" },
+            {
+                "surface": "`_agenda.md`",
+                "holds": "the operator's originating questions, then the live agenda — every planned invariant, what it must establish, and its state",
+                "lifetime": "accumulating; a planned invariant is never deleted because a different one was raised ahead of it"
+            }
+        ],
+        "surface-rules": [
+            "**Each surface names a ROLE and the configuration resolves it to a path.** A surface named by location would be a second declaration competing with the one the gates read, and the copy nobody maintains is the one a reader takes.",
+            "**A surface declares its scope, and overlap is a FINDING.** Scope is claimed by concern, never by location — claiming a directory is scope by location, and two agents then write one folder from two claims that never mentioned each other.",
+            "**BLOCKED means two different things on two surfaces, and conflating them promises a query nothing computes.** A document record carries an `Edges` field, so its blocked state is genuinely derived by traversal. The board's agent record carries no such edge, so it has no blocked field at all and what waits on whom is carried by an item's ADDRESSING.",
+            "`Refs` carries the ARRIVAL of a new surface — its existence, never its content.",
+            "**A planning surface moves only if the checklist gate's root binding moves in the SAME change.** The condition is the binding rather than the location: a surface in a directory no gate reads is ungoverned wherever it sits.",
+            "Conversion between surfaces is a MOVE, never a copy.",
+            "A finding is falsifiable against the tree as it stands; a plan row is not falsifiable until something is built.",
+            "The `_` prefix marks an accumulator, and everything else is current-truth-only with the tense rules binding it.",
+            "**A root carries its entry document and its accumulators; everything else lives in a concern folder.** Those two are the spine rather than content, and the placement gate matches the construct — the `_` marker and the entry-document role — rather than either filename.",
+            "**AN ACCUMULATOR'S NAME STATES ITS FUNCTION, BECAUSE THE NAME IS A CONTRACT WITH ITS READER AND A PARSER HOLDS A SECOND ONE.** A file called notes promises a reader they may annotate it, reorder it and append to it freely; a file a mechanism reads POSITIONALLY can admit none of those. Where the two disagree, every defect found on that surface is what a reader following the name produces — measured on the live agenda, which was named for notes while an order walk took row position as an operand, and whose label column, insertion position and state vocabulary each drifted in exactly that way. The surface is named for what the mechanism does with it.",
+            "**NO SUMMARY LINE STANDS OVER AN ENUMERATION.** A count, a total or an all-of-these-are-placed sentence beside a list is a DERIVED FACT maintained by hand, so it disagrees with its own list the moment the list moves — and nothing reports the disagreement, because the two sit in the same paragraph and only a reader comparing them would notice. **The enumeration is the fact; nothing restates it.** Instances measured on this workspace, each caught by a reader comparing a sentence with the list beneath it: a list of ten described as nine; a set distributed into groups totalling eight under a sentence claiming all were placed; a gate count that outlived the collapse reducing it; a list of four introduced as five, authored **after** this rule was written; and this clause's own first draft, which summarised its own examples and undercounted them. This is derive-before-declare inside a single document, and it is the same construct the checklist gate refuses in a planning surface — so a surface arguing for derivation while transcribing its own totals is the failure arriving in the document that names it. **The last two instances are the argument for gating it: the rule was in force, in the same file, and did not prevent either.** An ungated rule is discipline, and discipline decays inside a single document."
+        ],
+        "item-kinds": [
+            { "kind": "round", "home": "workspace", "closes when": "its acknowledger closes it" },
+            { "kind": "claim", "home": "a checklist row", "closes when": "the row retires" },
+            { "kind": "finding", "home": "the durable-record tree", "closes when": "never — it is referenced" },
+            {
+                "kind": "ruling",
+                "home": "the surface owning the axis it binds",
+                "closes when": "never — it is cited by id"
+            },
+            { "kind": "repair", "home": "the tree it fixes", "closes when": "the change is on disk" }
+        ],
+        "item-rules": [
+            "**Destination follows from kind.** It is derived, never chosen.",
+            "**Nothing is raised without a destination.** Deletion is then lossless by construction.",
+            "**A ruling has no register of its own, and creating one would give every ruling two homes.** The axis a ruling binds selects its surface, so the destination stays derived and a generic register would be a fourth home competing with three existing owners.",
+            "A repair states defect, construct and change, and it is addressed rather than asked. It exists because fix-on-sight and foreign-scope-is-untouchable collide on every defect found in a tree its finder does not own.",
+            "**FRICTION IS A MISSING MECHANISM, NEVER A CALL FOR MORE CARE. The first response to coordination friction is: WHAT IS THIS SURFACE MISSING TO TREAT COLLABORATION LIKE A SOFTWARE SYSTEM?** Not *who should have been more careful*, and not *let us all remember to*. **A coordination surface is software: it has state, invariants, a schema, and it decays without a validator** — so an accumulation, a lost write, a stale item or a missed message is a DEFECT REPORT against this protocol, and the repair is a mechanism that makes the failure impossible or loud. Measured here: every drain rule this workspace has is conduct, and the board reached 255,807 bytes across 216 lines carrying 194 directed items while every one of those rules was in force and agreed by everyone. **Discipline held and the surface still failed, which is the evidence rather than the excuse.** The corollary binds the repair too — a rule added without a gate is more care wearing a rule's clothes.",
+            "**BEFORE REPORTING AN ABSENCE, RE-RUN THE MEASUREMENT ONE SCOPE WIDER. If the answer changes, the finding was about the query.** A negative result inherits the scope of the query and nothing on the page says what that scope was — a positive result carries its own evidence, while a zero carries only the boundary the searcher happened to draw. **This is the most expensive shape a finding can take**, because a claim that something does not exist is acted on by deleting, building or re-planning, and it spends the recipient's verification budget before it spends the author's. Measured on this workspace: absence read off an aggregate twice, agreement read off a shared name once, and a check returning clean over the very construct it keyed on — one class, four arrivals, and the cheapest probe catches it before the finding leaves the agent who made it.",
+            "**A matched token is cited by naming the RULE that matches it, never by reproducing the token.** Reporting a marker by quoting it makes the report carry the marker, so the finding moves from the reported record to the reporting one and the reporter manufactures the defect by describing it. **This is the use-versus-mention separation arriving in PROSE, where no scanner can perform it** — a gate distinguishes a token in a string literal from a token in code, and nothing distinguishes a token quoted in a flag from a token meant as a label. Measured: a marker crossed between two records in one round by exactly this route.",
+            "**The general form: A SURFACE THAT MUST CONTAIN A CONSTRUCT IN ORDER TO DESCRIBE OR TEST IT IS MATCHED BY THE DETECTOR FOR THAT CONSTRUCT.** A report quoting a marker, a document explaining a forbidden shape, and a fixture holding the very construct its check exists to catch are one class in three media, and the fixture case is a certainty rather than an accident. Excluding such a surface by path installs a blind spot shaped exactly like the thing being hidden; fixing the scanner to separate use from mention strengthens the check for every future reader."
+        ],
+        "closing": [
+            "Satisfied by an **artifact** closes by DERIVATION when the citation resolves. Nobody marks it.",
+            "**`Satisfied-by` names a FALSIFIABLE CONDITION, never a path.** A file path resolves the moment the file exists, so the item reads as closed while the defect is open — the stale-marker failure wearing derivation's face. Cite something whose state can be WRONG.",
+            "**And it must be MONOTONE with the work — true when the work is done, false when it is not.** Falsifiable is necessary and not sufficient: a citation pointing at the findings themselves is satisfied by a broken tree and falsified the moment the findings are repaired, so the item reads open exactly when its work is complete.",
+            "Satisfied by a **judgement** closes by its declared acknowledger, and carries no reference because there is nothing for one to point at. An acknowledger who is not ACTIVE strands the item, so it is re-addressed rather than left.",
+            "**That binding is GATED rather than stated.** The declared set is derived from the board's own ACTIVE records through the same peer computation the wait cap counts from, so a record going inactive re-points the gate on the next run with no file to edit. Leaving a binding unclaimed is legal; binding it to an absent agent is not, because that row can be built and never retired.",
+            "**Absorbed is a transition rather than a state**: extract to the history accumulator, then delete in the same change. There is ONE history home, so a second changelog inside this surface is a second place project history may live.",
+            "An item unacknowledged past the declared stall bound is a finding, escalating to the board. A round is a surface write, and a record can stall while its agent is ACTIVE."
+        ],
+        "item-shape": "An item addressed from one agent to another is a **fenced span with an allocated id**, not a sentence in a field.\n\n```\n┌─── AGENT <letter>-<ordinal> · <artifact | judgement> ───\nTo <letter>[, <letter>][ AND <letter>] — the argument, across as many lines as it needs.\n└─── END AGENT <letter>-<ordinal>\n```",
+        "board-items": [
+            "**THE KIND SELECTS THE CLOSURE AND SITS ON THE OPEN MARKER.** An artifact item asks for something that can exist and closes with a typed reference that resolves; a judgement item asks for a reading and closes by acknowledger with no reference. A closure tool demanding a reference unconditionally cannot close a judgement item, and the only way to satisfy it is to cite something the closer wrote — a reference falsifiable by nobody but its author.",
+            "**THE ID AND THE FENCE ARE ONE MECHANISM.** The id makes a fence addressable and the fence makes an id's span removable. A span resolves only when exactly one open and one close carry its key, so at item level the key cannot be the agent letter, because one agent writes many items.",
+            "**The field opens with an em dash and the fences follow.** A marker sharing the field's label line is never recognised, so the item reads as an open with no close.",
+            "**A fenced item may span as many lines as its argument needs.** Nobody compresses a multi-sentence finding into one line — that is the half most likely to be quietly abandoned, and the fence removes the need for it.",
+            "**A well-formedness check on the fences is not optional.** A single unclosed marker makes its item permanently unremovable by tool, and the repair is manual on the one surface this mechanism exists to stop repairing manually.",
+            "**Removal takes the SPAN, never a matched line.** Draining an item by matching its text strands its markers, and an orphaned fence is a span no later operation can interpret.",
+            "**REMOVAL REQUIRES EXTRACTION FIRST.** A drain names a typed reference that resolves; the check decides presence and explicitly not fidelity, because the faithfulness of a compression is judgement. Deleting to make room is data loss wearing the drain as a costume.",
+            "**THE AGENT WHO HANDLED AN ITEM REMOVES IT, NEVER THE AUTHOR.** Handling and removing are one operation by one agent, so an item cannot sit handled-but-standing waiting for its author to notice — which is the residue every drain obligation on an author produces, because nothing forces it.",
+            "**ONE WRITER PER RECORD BINDS HAND EDITING RATHER THAN THE TOOL.** A tool dropping exactly one addressable span by id, under a witness read and a compare-and-swap, is the mechanism the fence and the id were built for, and cross-record removal is the use that pays for both.",
+            "**REMOVAL IS GATED ON THE READER SET RATHER THAN ON AUTHORSHIP**, so nobody clears traffic aimed at somebody else and an author addressing themselves is covered by the same test rather than by an exception. An item's removal is therefore evidence that its reader acted on it, which is a stronger signal than a self-declared marker and needs no field."
+        ],
+        "the-owners-named-list-is-checked-against-rows": [
+            "**Every capability the owner named aloud is grepped against ROWS, never against mentions, and a wave or pack row counts as a MISS.** A pack row satisfies ordering and never satisfies naming.",
+            "**A MENTION COUNT MEASURES MENTIONS.** A capability appearing in five paragraphs of prose and in no task is indistinguishable from a rowed one by any count, and the prose is usually where it appears most — because prose is where the reasoning that decided it was covered is written down.",
+            "**THE SHAPE THAT HIDES ONE IS A CORRECT SIMPLIFICATION WITH A CHEAP REMAINDER.** A ruling that four named modes reduce to one mechanism settles HOW they are built and says nothing about WHETHER they exist; a decomposition reading *two existing mechanisms plus a small policy* spends its weight on what EXISTS, so the remainder inherits the sentence's tone rather than its status. The remainder's cheapness is why nobody rows it — if it were expensive the simplification would be wrong — so the argument that makes the ruling right is the argument that makes the row look unnecessary.",
+            "**AND IT ARRIVES ONE LEVEL UP AS A GRANULARITY CHOICE.** A wave row naming six packs reads as covering everything inside them, and it does cover the build order while covering no individual capability.",
+            "**THE DISCRIMINATOR IS PROVENANCE RATHER THAN SIZE.** Pack granularity is right for a catalog of hundreds and wrong for the handful with a stated origin: rowing everything individually produces a surface nobody can read, rowing nothing individually loses exactly the capabilities whose absence somebody will notice. An owner-named capability is the only class checkable against the owner's own words.",
+            "**IT IS NOT GATED AND THE REASON IS STRUCTURAL.** A gate would have to decide that a capability named in prose has no row, which is prose-to-row resolution and therefore judgement — a checklist gate scoring it would be scoring taste while claiming to score structure. The method is the mechanism available, and it is written down rather than remembered."
+        ],
+        "declaration-surfaces": [
+            {
+                "surface": "the platform index",
+                "what it declares": "a primitive the engine provides",
+                "what it hides from": "nothing, but it carries only primitives"
+            },
+            {
+                "surface": "declaration tables",
+                "what it declares": "a capability applied through a registry",
+                "what it hides from": "a search for the primitive it ends in"
+            },
+            {
+                "surface": "**what the composition root TICKS**",
+                "what it declares": "a plain function, exported and scheduled",
+                "what it hides from": "**both of the above**"
+            }
+        ],
+        "an-absence-is-measured-never-inferred-from-a-consumer": [
+            "**A capability nobody calls and a capability that does not exist read identically from inside a tree**, so a consumer search is never evidence of absence. **The measurement is taken over every surface where a capability can be DECLARED**, and there are three.",
+            "**THE THIRD SURFACE IS THE ONE THAT KEEPS BEING MISSED, AND IT HIDES THE MOST COMPLETE CAPABILITIES.** A function that is written, exported and ticked on its own budget every second is fully live and appears in neither the index nor any table — it is not a primitive and not a declaration. **Two capabilities priced as builds were each a declaration**, already running with zero consumers.",
+            "**THE ROOT'S SCHEDULE IS SMALL AND ENUMERABLE FROM ONE FILE**, which is what makes this a measurement rather than a survey: every member of it is either consumed or is an inert capability by construction.",
+            "**AND THE SUFFICIENT PROBE IS THE ONE THE DOMINANT DEFECT CLASS ALREADY STATES**: for any capability, ask what would differ if it never ran. Where the answer is *nothing*, the capability is present and inert — which costs a declaration, never a build.",
+            "**PRICING AN EXISTING CAPABILITY AS A BUILD IS THE EXPENSIVE DIRECTION OF THIS ERROR.** It schedules work that is already done, and the work then lands as a second implementation of a mechanism the tree already carries."
+        ],
+        "derive-from-the-surface-never-propose-and-check": [
+            "**Reading what a platform DECLARES yields several times what proposing ideas and testing whether they resolve does**, on the same surface, and the difference is not effort — one subject goes from ten entries to forty with no new idea required.",
+            "**THE TWO DIRECTIONS ARE NOT SYMMETRIC.** Proposing is bounded by what the proposer already imagined, so its yield measures the author rather than the platform; deriving is bounded by the surface, which is the thing actually being inventoried. A proposal that fails to resolve costs the whole check for nothing, while a derived entry is resolved before it is written.",
+            "**AND IT INVERTS WHAT THE WORK IS.** Where the platform already ships a mechanism, the design survives and the implementation becomes CONSUMPTION — so a surface built by proposing tends to hand-build what the engine provides, and nobody notices because the hand-built version works.",
+            "**A CANDIDATE HELD PENDING A DECLARATION IS A QUEUE, AND THE QUEUE IS THE DEFECT.** Where five candidates recorded as blocked-pending-declaration all resolved in the index on being checked, **five for five is not caution — it is premature filing**, and the mechanism is retired rather than maintained.",
+            "**The cost is asymmetric in the direction that hides it.** Filing a candidate is cheap and checking one is cheap; what is expensive is that a filed candidate reads as *known unavailable* to everyone who passes it afterwards, so the cheap check never gets run.",
+            "**The repair is ordering rather than diligence**: resolve against the surface BEFORE recording a candidate, which makes the blocked state unreachable rather than unpopular."
+        ],
+        "citation-forms-on-a-planning-surface": [
+            {
+                "the citation is": "a live dependency",
+                "then": "**the row is not closed.** The dependent is what keeps it open, so deleting it was premature rather than correct"
+            },
+            {
+                "the citation is": "provenance",
+                "then": "it is history sitting on a checklist, which the two-homes rule already sends to the changelog"
+            }
+        ],
+        "retiring-a-built-row": [
+            "**A built row is deleted, and it is deleted only after its citers are.** Keeping it with a marker is not available, because a planning surface carries what is current and future only and a marked closed row is precisely what that forbids.",
+            "**THE TWO RULES DO NOT COLLIDE, AND THE APPEARANCE THAT THEY DO COMES FROM READING ONE CITATION FORM AS TWO.** A citation is either a live DEPENDENCY or it is PROVENANCE, and only the first belongs on a planning surface. Neither branch relaxes a rule, and neither needs a new one.",
+            "**THE PROVENANCE CASE IS REWRITTEN TO NAME THE MECHANISM RATHER THAN THE ID.** A row is a unit of WORK and a mechanism is a unit of TRUTH; a citation that outlives its row is always citing the second while spelling the first.",
+            "**WHAT THAT TRADES IS REAL AND IS STATED RATHER THAN GLOSSED**: a mechanism name resolves against nothing, so permanence is bought by leaving the gate blind on that reference.",
+            "**THE GATEABLE RESIDUE IS THE DELETION ORDER, AND IT ALREADY FIRES — AT THE CITER.** A dangling citation is reported where it is read rather than where it is created, so nothing names which of the two moved. That half is conduct and belongs to whoever curates the surface, because no artifact records a deletion."
+        ],
+        "the-seats-own-declaration": [
+            "A letter carries a role document at `roles/<concern>.<letter>.role.md`, read before its first edit and written before its first write. Seven sections, fixed — Name, Role, Objective, Behavior, Consideration, Work Method, Principles — plus `name:`, `type: ROLE`, `letter:`, `concern:` and `summary:` in frontmatter.",
+            "**THE SUBJECT IS THE CONCERN AND THE LETTER TAKES THE VARIANT SLOT**, because a seat changes hands and a concern does not. The letter resolves from the index that allocates it, so a new seat needs no vocabulary edit — a naming grammar requiring one would make every new agent an approved change to the one truth.",
+            "**IT IS WHAT A RESUMING SESSION RECOVERS ITS SCOPE FROM.** Without one, a seat infers its scope from whatever happens to be under edit, which is exactly the inference the claim-rather-than-assume rule refuses — and the board states what a seat OWNS while stating nothing about how it works or what it refuses.",
+            "**THE FAILURE MODES BELONG IN IT.** A role document listing only virtues is decoration: the sections that change behaviour are the ones naming what this seat actually gets wrong, because a seat reading its own document is looking for the trap it fell into last time.",
+            "**The role check FAILS an active letter with no document and any document missing a section**, so neither half depends on anyone remembering.",
+            "**A VACATED SEAT KEEPS ITS DOCUMENT UNTIL ITS LETTER IS REISSUED.** The concern outlives the seat, so whoever next claims the concern reads it before their first edit — recovering what the seat owns and refuses instead of re-deriving it from whatever the tree happens to look like. When `--index` reissues the letter to a new seat, the previous holder's document is deleted, because a document still carrying that letter would satisfy the coverage check for a seat whose concern it does not describe.",
+            "**A HANDOVER TOUCHES ONE FIELD, `letter:`.** The incoming seat takes a letter from the index and writes it there; every other section describes the CONCERN and is inherited unchanged. What changes is who holds it, never what it is — and where the incoming seat disagrees with a section, that is a change to the concern and is made deliberately rather than by omission.",
+            "**THE FILENAME IS NOT TOUCHED, AND THAT IS THE WHOLE REASON THE LETTER ALSO LIVES IN A FIELD.** The variant slot records which seat FIRST holds the concern and is a name rather than a lookup, while the field is what a tool reads and what a handover updates. Renaming on every handover would reintroduce exactly the breakage the concern-first naming prevents, and a rename is a create at its destination — the most dangerous operation available in a tree with no version control, performed for cosmetic agreement between two places that already agree through the field.",
+            "**A CONCERN MAY BE HELD BY A SEAT THAT OWNS ANOTHER**, and where it is, the document says so and states the cost. A seat holding both the rules and the gates that check them is auditing its own drafts; recording that in the role document rather than in a message is what makes it inheritable, because a claim whose cost is unrecorded reads to the next holder as a clean inheritance.",
+            "**THE SECTION SET IS DERIVED FROM THE ROLE TEMPLATE**, which `--role` raises a document from and the role check reads, so the raise and the check answer to one contract. A seat that builds its document by reading its peers instead gets the sections they happen to share — **and a population is not a contract.**"
+        ],
+        "the-projection": [
+            "The projection is **ONE LINE, overwritten and never appended to**, carrying the open blocker, who owns what, and a pointer to the board. Never a finding, a ruling, a measurement or a narrative. It lives in the host's behaviour document under the marker the configuration declares — a slot, because a host may run more than one coordination surface and a shared token makes each board refresh a channel it does not own.",
+            "**IT IS THE ONLY BOARD CHANNEL A SPAWNED AGENT HAS**, measured by spawning one and asking what it received: the host's standing context arrives injected and the board does not. So for every bounded invocation that line IS the board, and nothing else tells them a blocker exists.",
+            "**A stale cache beside a readable source is untidy; a stale projection is a false statement delivered as the only statement**, with no second source available to disagree with it. Raising or deleting a blocker refreshes it in the SAME change, because a blocker is precisely the fact it exists to carry.",
+            "**IT GREW PAST THIRTY THOUSAND CHARACTERS BY PERFECT COMPLIANCE WITH THE RULE BESIDE IT.** The refresh rule states an OBLIGATION and not a SHAPE, so four agents each appended a true and current paragraph every round and nobody removed anything. **A rule stating an obligation with no shape has written half a contract, and the omitted half is the one that decays.**",
+            "**A field named a one-liner is making a claim about its size.** Where a name asserts a shape and no check reads it, the name is documentation and the shape is a hope."
+        ],
+        "scale": [
+            "A surface **reduces before it writes upward**: a parent publishes the fused result of its children, never their raw records.",
+            "**Read-whole binds to the surface an agent owns and its inbox**, both bounded by construction. The global view is derived rather than read.",
+            "Branching is fractal — workers into an orchestrator into an orchestrator into a composer — and every tier is a surface with one writer, so identity and reduction hold unchanged at any depth.",
+            "**DECLARED-UNTESTED**: the reduction step is unbuilt and unmeasured at any headcount."
+        ],
+        "placement-and-enforcement": [
+            "A document declares its **type**, and the type selects its schema, its legal placement and its rules.",
+            "**Every field in a record schema declares its shape, and PAG's loop is refused** (C10, U7, B11). Declaration-before-use and a declared shape per decision are the transferable constructs; the ten-node loop belongs to an EXECUTED artifact and forcing it onto a read surface is the Procrustean failure. **A typed field with no validator is decoration** — the typing lands with the rule that reads it, or it is a convention wearing a contract's clothes.",
+            "**The adapter indirection transfers before the typing does** (A7, C11). A coordination document naming a concrete path is unportable by construction; measured, the PAG templates carry 88 slot-bearing lines and these documents carry none.",
+            "**What is RESIDENT is partitioned by orienting-precedence, not by firing frequency** (C9). A rule that must be in force BEFORE the domain is identified is resident; a rule that presupposes a known domain is referenced and loads on entry. The test: *if it tells you how to find out what you are doing, it is resident; if it tells you what to do once you know, it is referenced.* Frequency is a proxy — a frequently-fired situational rule is still safely lazy, and a rarely-fired orienting rule is not.",
+            "Placement reuses the concern grammar in `config/taxonomy.config.ts`, and admitting a new document kind costs three approved edits to that one file — declare the container, admit the kind to the closed concern array, create the folders in the same change.",
+            "**No hand-written index.** It is generated every run and checked in both directions: an entry with no file, and a file with no entry.",
+            "Rules register in `tools/rules` and run through the single entry point. No local runner, no second entry point.",
+            "**Every scan is depth-agnostic**, because a scan that stops short reads PASS over what it cannot see.",
+            "A convergence venue and its outcome are two files: the venue leaves the active tree and the protocol survives."
+        ],
+        "blocking": [
+            "A blocking venue at any depth holds the build until it converges.",
+            "It states its own **exit condition**, or it is an indefinite halt.",
+            "**Its red gate is the intended state, never a defect to repair.**",
+            "Every active agent marks it read, the discussion converges, and the outcome is written.",
+            "**Every outcome clause cites the position it came from; an uncited clause is not agreed.** The audit is run by someone other than the drafter, because the failure it catches is the drafter's own preferences entering as consensus.",
+            "**Before the venue is deleted, each participant walks its OWN records against the outcome and lands what is missing.** Deletion is the one irreversible step, and *its durable half is already there* is a claim until someone checks it. Measured: three participants ran this walk separately, each found gaps, and no two found the same one."
+        ],
+        "concurrent-writes": [
+            "**Read the target immediately before writing it.** A path not read this turn has unknown contents whatever the intent, and a create and a rename are writes to their destination.",
+            "**Exclusive access is a barrier rather than a discipline**, and it exits HELD only when parked peers reach active-minus-one.",
+            "Any authored tool that rewrites a whole file it does not exclusively own must compare-and-swap. **A whole-file rewriter that reports its own success is the one writer no downstream gate can catch.**",
+            "**Barrier and compare-and-swap are complementary**: the barrier covers parked peers and the swap covers the busy one."
+        ],
+        "schemas": "```\nAgent X — ACTIVE | INACTIVE | INVOKED\n  Owns:    <paths and concerns claimed exclusively>\n  Status:  <current unit and state>\n  Refs:    <pointers, including arrival of any new surface>\n```\n\n```\nItem <Key>-<ordinal> — <one-line claim>\n  Subject:      <declared subject key>\n  Kind:         round | claim | finding | ruling | repair\n  Acknowledger: <required for judgement, forbidden otherwise>\n  Satisfied-by: <citation for an artifact item; absent for judgement>\n  Evidence:     <reproducible observation>\n  Edges:        <ids — blocks · answers · refutes · supersedes>\n```\n\n```\nType:   <declared type — selects the record schema, legal placement and rules>\nOwner:  <the single writer>\nKey:    <surface key — the id namespace, declared, never derived from the path>\nParent: <surface key this reduces upward into, or — at the root>\n```\n\nThese are the shapes the templates instantiate; they agree by construction or one of them is wrong. `Edges` carries the graph the traversal reads and `Parent` carries the reduction tree, so a schema omitting either states a model the protocol does not have.",
+        "what-transfers": [
+            "A template carries **SCHEMA plus LIFETIME plus FAILURE MODE plus GATE** — never schema alone, because a stated but unperformable rule is worse than a missing one, since the surface then reads as governed.",
+            "**The bootstrap document is the FAILURE CATALOGUE rather than the protocol**, because a rule without its reason is re-litigated.",
+            "**A template ships CLASSES, never instances.** The catalogue carries shapes — a mechanism with no effect, a green reading over a set that excluded its own subject, a hand-kept index drifting, a search used as a proxy for a graph, a finding with no destination — and never which file or which agent, or the next project inherits another's incidents as laws it cannot test."
+        ],
+        "agents": [
+            "**THE ANSWER TO WHICH AGENTS SHOULD BE BUILT IS THE EMPTY SET, and it is reached by ranking rather than by caution.** Two proposals were weighed and both died: one because the capability already existed among the persisted agents, and one because its precondition was a write protocol rather than a capability at all. **Route by where the input lives** — an input the tree already holds is a rule extension or a pipeline stage, however well an agent would perform it; only an input that exists in no file is agent-shaped. Applied to three measured failure classes, that test retires two of them from the agent question outright, leaving one: a claim that was true when written and false when read, because whether the world still matches the record is carried by no file.",
+            "**An agent RUN is a surface; the DEFINITION is a surface generator** (C1, B3). A run has one writer, a Parent that invoked it, records with edges, and a derived terminal state; the definition is the factory that produces such runs.",
+            "**A run's Key is UNALLOCATED and that is stated rather than asserted** (V6). The surface allocates rather than the agent, no run-scoped surface exists on disk, no id namespace is declared for one, and no gate checks it — a definition's `name:` is its identity on the behaviour axis and cannot be a coordination Key, because the definition is not a coordination surface. **Until an allocator exists, a run is a surface without a citable id**, and declaring one would be a stated-but-unperformable rule.",
+            "**A run publishes its trust anchor, its declined escalations and its audit trail, or it states that its reasoning is not recoverable** (V6, V7). Reduction discards the nodes, so without a trail a wrong artifact cannot be audited back to the node that produced it. **The requirement sits on the RUN rather than being assumed from the shape**, because a spec can make persisting a trail a commit-gate condition and still persist nothing — and a count of which specs comply is a transcription that is wrong from the next spec onward.",
+            "**The definition lives on the behaviour axis, its OUTPUT on the coordination axis.** A definition is a behavioural capability rather than a coordination record, and placing it under two axes is what orthogonality exists to prevent; the link is declared by the surface's `Owner` naming the agent (B3).",
+            "**A run reduces before it writes upward.** It emits ONE TYPED ARTIFACT and never its raw node outputs, which is the reduction clause already implemented rather than proposed, and the artifact becomes an item with a `Subject` and a falsifiable `Satisfied-by` (C1).",
+            "**An input that exists in a file belongs to a STAGE; an input that exists in no file belongs to an AGENT** (G). That is the converse of the pipeline clause and it is the admissibility test a factory applies before it runs. A capability whose input is a graph already in the tree is a rule, however agent-shaped it looks.",
+            "**Route on the INPUT, never on the expected answer** (V7, superseding C4). A claim set is admissible when it is enumerable and every claim names the observation that would settle it — a property decidable BEFORE the run. Classifying on the answer is unknowable beforehand, and it would have forbidden the run that produced this surface's sharpest finding: noticing that a gate's positive control differed in one dimension from the incident it was built for is judgement, and no procedure enumerates it.",
+            "**`unverified` is a verdict with a destination, never a silent gap** (V7). A run emits verified, contradicted or unverified, and the closing rule closes on a binary — so an unverified claim is neither closed nor a defect and has nowhere to go. It is a finding kind with an acknowledger, because it is where the boundary of the verification lives. **A verifier with nowhere to put *I could not settle this* reports *verified* instead**, and silence then reads as checked.",
+            "**An agent is not a pipeline stage.** Its input is a CLAIM SET that exists in no file, and a stage with an input the tree cannot supply is not a stage. The pipeline gates that the invocation HAPPENED before the decision it guards — a decidable artifact check that keeps the verdict binary — and the agent does the verifying (Q1).",
+            "**There are two legitimate decision points and they answer different questions** (V4). A **PHASE BOUNDARY** gate asks whether the phase's work is sound before the next phase builds on it; that is what the checklist protocol emits, as an execution gate shipping unchecked at generation. A **RETIREMENT** gate asks whether a row's claim is still true before the row is deleted; deletion is what breaks citations, and the measured rate is roughly one collateral defect per retirement, none of them in the row being retired.",
+            "**Neither subsumes the other**: a phase can close with no retirement in it, and a row can retire mid-phase. A drain and acting on another agent's findings are retirement-shaped — they consume claims — so they take the retirement gate (B1, Q2).",
+            "**A claim is re-verified against the tree when written AND again when read**, with the item's `Subject` and `Satisfied-by` as the claim set. The claim set therefore already exists in the schema, and the verification inherits its quality from the falsifiable-citation rule rather than from the tree — an item citing a bare path is invisible to it and reads as fresh (B1, C2).",
+            "**A repair against a tree its finder does not own is produced in an analysis-only phase**, where mutation is forbidden by the op-set rather than by the finder's restraint; only the tree's owner acts on it. That resolves the fix-on-sight versus foreign-scope collision structurally (B2).",
+            "**A row whose evidence clause is falsifiable against the tree is closable by a run; a row needing a running world is not, and routes to the owner.** The clause a row already carries is what decides it, so orchestration is not a third mechanism beside the checklist and the agent (C3)."
+        ],
+        "standing-directions": [
+            "Protocols are noted without fluff and prose — this package's entry document is that direction applied to itself.",
+            "The reasoning templates stay re-usable and clear, and each inlines its whole structure so it remains independently executable.",
+            "The behaviour block, the rules, the skills, the gates, the agents and the board documents are kept in step with the protocol rather than behind it.",
+            "Coordination and collaboration are treated as a dependency graph — nodes, edges, cohesion, and a central meta factory.",
+            "Branching and coordination at large agent counts are carried by the fractal reduction clause.",
+            "**A signature is not carried in a protocol document.** Agreement is an event, and an event is history with two homes neither of which is a protocol document; what was agreed is the clauses, which are checkable where a roster of signatories is not — and a signature list dangles the moment the roster moves."
+        ],
+        "what-ships": [
+            "**A template ships classes and never instances**, so the package carries the board template, the role template, the allocation scheme with its own invoked capabilities, an empty roles folder, and both accumulators holding nothing accumulated. A board carrying records, an index binding seat letters and a role document per seat are a deployment's own state.",
+            "**The board IS its template, copied**, which is what makes the shape checkable at birth: the checks derive their record schema from the template, so a raised board conforms by construction rather than by its raiser getting it right. Claiming a seat is adding the index row and unfencing a copy of the specimen.",
+            "**Nothing here is a slot the adopter must find.** The one value the install sets is where the host root sits; everything else the host genuinely has is declared as it is discovered, and everything it does not have says so."
+        ],
+        "aiContext": [
+            "**THE ENTRY DOCUMENT IS GENERATED FROM `_manifest.json` AND IS NEVER EDITED.** A clause is added, corrected or removed in the manifest's `docs` block and the document is re-rendered by this package's own `npm run govern`, whose manifest rule reports and heals drift; editing the rendered file directly is overwritten by the next run, and the edit is lost rather than kept. Every protocol section is its own manifest field, so the field is the surface a change lands on.",
+            "A blocker outranks everything and is checked BEFORE the board: a blocking venue at any depth holds the build until it converges, so a red verdict there is the intended state rather than a defect to repair.",
+            "The board is read WHOLE, every time — never an offset, never a limit, never a search for the part that seems relevant. It carries items addressed to a seat by name, so a slice is a missed instruction and a search answers only the question already thought of.",
+            "A letter is claimed by adding its row to the index BEFORE the first write to any other surface, and a seat writes its role document before its first edit. Writing under an unindexed letter reads as governed and resolves to nothing.",
+            "Scope is declared by CONCERN rather than by directory, and another seat's declared ownership is never edited — a conflict is raised as a directed item rather than resolved unilaterally.",
+            "Every write lands inside the calling seat's own fenced span through the board tool; where the tool is unavailable an anchored edit inside those delimiters is the fallback, and a whole-file write is never one.",
+            "A turn never ends because work is blocked on a peer: ending it IS the wait, and the wait has a command. A quiet window states that no peer wrote rather than that the queue is empty.",
+            "Findings are written to the other seats on the board rather than to the operator — a report addressed to the operator reads as an ending and stops the turn, so the seats who needed it never receive it and the work halts while looking finished.",
+            "Every append to a coordination surface is paired with a drain, and the durable half of whatever is removed reaches the history accumulator FIRST. Deleting to make room destroys the only record of a finding, because the board carries no past by construction.",
+            "An item is removed by the seat that HANDLED it rather than by the one who wrote it, and only a seat in the item's reader set may close it.",
+            "Every host fact is a slot: one resolving ABSENT means the branch depending on it does not run and that absence is declared, while DEFERRED blocks the branch rather than skipping it. Reading an ABSENT slot as though it resolved manufactures a demand nothing can satisfy."
+        ],
+        "disposal": [
+            "**Standing a board down runs in REVERSE DERIVATION ORDER, and the order is the whole of it.** A seat letter is derived from the index that allocates it, and the letter occupies the variant slot of its role document's filename — so the index is the ROOT of a chain, and editing it is never a local edit.",
+            "Each seat removes ITS OWN role document and stands ITS OWN record down, so no step reaches across a declared scope.",
+            "The letter index goes LAST, once nothing derives from it.",
+            "**Done in that order every step lands green. Done index-first the tree has no reversible midpoint** — it cannot return to a clean verdict until the teardown finishes, so the option to stop and verify partway is gone from the first step onward, and a gate failing mid-teardown is indistinguishable from a gate failing on a defect.",
+            "**The general rule for any destructive sequence here: walk the derivation graph backwards, and remove whatever computes its identity from a surface before removing that surface.**",
+            "Removing the package itself is deleting this tree. It declares no runtime dependency, writes only inside its own root while the host's behaviour-document slot resolves ABSENT, and leaves nothing behind in the host but the projection line an adopting host resolved for it."
+        ]
+    }
+}

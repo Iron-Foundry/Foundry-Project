@@ -17,6 +17,8 @@ supersedes:
 Getting Started with PAG
 ========================
 
+> PAG (Pattern Abstract Grammar) is Bane's Lab IP, used under CC BY-SA.
+
 Learn to write PAG documents through **practical patterns**.
 
 Planning, Structure & Variables

@@ -17,6 +17,8 @@ supersedes:
 Keyword Ontology
 ================
 
+> PAG (Pattern Abstract Grammar) is Bane's Lab IP, used under CC BY-SA.
+
 PAG keywords are organized into semantic categories that reflect their function in instructions. All keywords are uppercase to leverage token patterns common in code training data. Hover over keywords for details.
 
 Action Keywords

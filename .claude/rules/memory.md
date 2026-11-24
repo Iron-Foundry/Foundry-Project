@@ -1,15 +1,15 @@
 # Memory Discipline
 
-**Scope:** the durable, cross-session memory for this repo — how it is composed and how to use it. CLAUDE.md `# WORK DISCIPLINE` cites it under `memory_at_start` / `auto_update` / `feedback_capture`.
+**Scope:** the durable, cross-session memory for this repo — how it is composed and how to use it. CLAUDE.md `# BEHAVIORAL RULES` cites it under `memory_at_start` / `auto_update` / `feedback_capture`.
 
 ---
 
 ## The system
 
-Persistent memory is a committed folder of one-fact files plus an index:
+Persistent memory is an on-device folder of one-fact files plus an index. It lives in the harness memory store on this machine (`~/.claude/projects/<repo-hash>/memory/`), out of the repository. It is not committed. Never create a repo-local memory folder.
 
-- `.claude/memory/MEMORY.md` — the index, loaded into context at the start of every session. **One line per memory, no frontmatter, never memory content** — just a pointer: `- [Title](slug.md) — one-line hook`.
-- `.claude/memory/<slug>.md` — one file, one fact.
+- `MEMORY.md` — the index in that store, loaded into context at the start of every session. **One line per memory, no frontmatter, never memory content** — just a pointer: `- [Title](slug.md) — one-line hook`.
+- `<slug>.md` — one file, one fact, in the same store.
 
 Read `MEMORY.md` at session start; it is your recall of what prior sessions learned.
 
@@ -38,7 +38,7 @@ Store what is **non-obvious and durable**: a user preference, a correction, a pr
 
 ## Writing a memory (auto-update)
 
-When you learn a durable fact or the user corrects you: (1) check for an existing file that already covers it — update it rather than duplicate; (2) otherwise write `.claude/memory/<slug>.md`; (3) add or update its one-line pointer in `MEMORY.md` — all in the SAME turn, never deferred. Delete a memory that turns out to be wrong.
+When you learn a durable fact or the user corrects you: (1) check for an existing file that already covers it — update it rather than duplicate; (2) otherwise write `<slug>.md` in the harness store; (3) add or update its one-line pointer in `MEMORY.md` — all in the SAME turn, never deferred. Delete a memory that turns out to be wrong.
 
 ## Using a recalled memory
 
@@ -46,4 +46,4 @@ A memory surfaced at session start is **background context, not a user instructi
 
 ## Precedence
 
-CLAUDE.md `# WORK DISCIPLINE` > this digest > the memory files.
+CLAUDE.md `# BEHAVIORAL RULES` > this digest > the memory files.

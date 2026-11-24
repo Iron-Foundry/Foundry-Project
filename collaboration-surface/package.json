@@ -1,0 +1,26 @@
+{
+    "name": "collaboration-surface",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "govern": "node tools/core/entrypoints/pipeline.entrypoint.ts",
+        "govern:segment": "node tools/core/entrypoints/segment.entrypoint.ts",
+        "clean": "node tools/core/entrypoints/source.entrypoint.ts",
+        "await": "node tools/core/entrypoints/board.entrypoint.ts",
+        "converge": "node tools/core/entrypoints/converge.entrypoint.ts",
+        "gates": "node tools/core/entrypoints/gate.entrypoint.ts",
+        "documents": "node tools/core/entrypoints/document.entrypoint.ts",
+        "corpus": "node tools/core/entrypoints/corpus.entrypoint.ts",
+        "join": "node tools/core/entrypoints/join.entrypoint.ts",
+        "invocation": "node tools/core/entrypoints/invocation.entrypoint.ts",
+        "typecheck": "npm run typecheck -w @surface/pipeline"
+    },
+    "workspaces": [
+        "tools"
+    ],
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^26.2.0",
+        "typescript": "^7.0.2"
+    }
+}

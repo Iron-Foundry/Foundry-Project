@@ -1,14 +1,14 @@
 > PAG (Pattern Abstract Grammar) is Bane's Lab IP, used under CC BY-SA.
 
-THIS POLICY ENFORCES that every module's version moves exactly once per push, at a level Claude is allowed to choose, through the module's own tooling, with the changelog and every derived artifact carried along.
+THIS POLICY ENFORCES that a module's version moves only when the user asks, exactly once per push, through the module's own tooling, with the changelog and every derived artifact carried along.
 
 %% META %%:
-    intent: "One version move per push, never a MAJOR without the maintainer, never a move for work that ships no behaviour"
+    intent: "No version move the user did not ask for, one move per push, never a MAJOR without the maintainer, never a move for work that ships no behaviour"
     objective: "The number in the manifest, the CHANGELOG heading, and every generated artifact that embeds the version agree at all times"
     context: "Monorepo of independently versioned submodules; each manifest is the single source its runtime and CI read"
     criteria: "A reviewer can tell from the diff alone which level was chosen and why, and no second bump appears in the same push"
     priority: high
-    trust: manifest = AUTHORITATIVE, hand_edited_version = FORBIDDEN, maintainer = SOLE_MAJOR_AUTHORITY
+    trust: manifest = AUTHORITATIVE, hand_edited_version = FORBIDDEN, user = SOLE_BUMP_AUTHORITY, maintainer = SOLE_MAJOR_AUTHORITY
 
 DECLARE change_kinds: array
 DECLARE bump_level: string
@@ -42,10 +42,14 @@ SET derived_artifacts = []
         ✅ any skipped bump still left its "## [Unreleased]" entry
 
 # PHASE 2: PICK THE LEVEL
-    @purpose: "Which levels Claude may choose alone, and which belong to the maintainer"
+    @purpose: "A bump happens only on the user's word, and the level follows that word"
 
-    RULE claude_picks_up_to_minor:
-        ALWAYS CHOOSE among PATCH, MINOR, and the prerelease tags (alpha, beta, rc) WITHOUT asking
+    RULE the_user_asks_for_the_bump:
+        NEVER BUMP a version UNLESS the user asks FOR a bump OR FOR a push that carries one IN this turn
+        WHEN the user asks AND names a level:
+            USE that level
+        WHEN the user asks AND names no level:
+            USE PATCH, OR a prerelease tag WHEN the module is already on one
         NEVER CHOOSE MAJOR
         WHEN the change looks genuinely breaking:
             MAKE the change
@@ -57,12 +61,13 @@ SET derived_artifacts = []
         WHEN deciding whether a surface change is breaking:
             ANALYZE who actually calls it, NOT whether it appears IN a generated schema
         WHEN the only consumer is our own frontend AND both sides ship together:
-            TREAT it AS MINOR
+            TREAT it AS not breaking, AND RAISE no major-bump flag
         WHEN the consumer is unauthenticated, an external client, or a pinned cross-service contract:
             RAISE the major-bump flag TO the user
 
     VALIDATION GATE:
-        ✅ the chosen level is PATCH, MINOR, or a prerelease tag
+        ✅ the user asked for this bump in this turn
+        ✅ the level is the one the user named, or PATCH or the current prerelease tag
         ✅ no MAJOR bump was made without the user saying so in this turn
         ✅ a suspected breaking change was reported rather than silently bumped
 
@@ -99,7 +104,7 @@ SET derived_artifacts = []
     @purpose: "One move per push, and one heading the accumulated work lands under"
 
     RULE bump_once_at_push:
-        BUMP exactly once, WHEN the accumulated work is about TO be pushed
+        WHEN the user asks for the bump: BUMP exactly once, WHEN the accumulated work is about TO be pushed
         NEVER BUMP per component, per feature, or per stage
         NEVER OPEN a new version heading per addition
 
@@ -123,8 +128,9 @@ SET derived_artifacts = []
     @purpose: "Prove it in the diff and against the gate that will judge it"
 
     STEP 1:
-        EXECUTE "git status --short" IN the module
-        VERIFY the manifest, its lockfile, CHANGELOG.md, and derived_artifacts moved together
+        READ the manifest, its lockfile, CHANGELOG.md, and every derived artifact
+        VERIFY they carry the same version
+        # git runs only on the user's literal request (`no_git_on_own_initiative`)
     STEP 2:
         VERIFY the CHANGELOG's top version heading EQUALS the manifest version
     STEP 3:
@@ -149,13 +155,14 @@ SET derived_artifacts = []
         ✅ no gate was disabled or bypassed
 
 ALWAYS:
-    - CHOOSE the level yourself up to MINOR, and prerelease tags freely
+    - WAIT for the user to ask for a bump; PATCH is the default level when they name none
     - MOVE the version through `uv version` / `npm version`, never by hand
     - REGENERATE every artifact that embeds the version
     - BUMP once, at push, with the accumulated entries under one heading
     - LEAVE the version untouched WHEN only tests, docs, or CI changed
 
 NEVER:
+    - BUMP a version the user did not ask for
     - BUMP MAJOR on your own initiative - report that one is due and stop there
     - BUMP for a change no consumer can observe
     - EDIT `version` in pyproject.toml or package.json directly

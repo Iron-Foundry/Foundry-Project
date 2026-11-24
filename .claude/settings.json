@@ -1,7 +1,11 @@
 {
     "permissions": {
-        "additionalDirectories": ["\\tmp"],
+        "additionalDirectories": [
+            "\\tmp"
+        ],
         "allow": [
+            "Bash(python -m http.server:*)",
+            "Bash(node:*)"
         ],
         "deny": [
             "Bash(*--no-verify*)",
@@ -53,7 +57,28 @@
             "Bash(git worktree remove *)",
             "Bash(git worktree prune *)",
             "Bash(git tag -d *)",
-            "Bash(git tag --delete *)"
+            "Bash(git tag --delete *)",
+            "Bash(perl:*)",
+            "Bash(sed:*)",
+            "Bash(awk:*)",
+            "Bash(*'PY'*)",
+            "Bash(*'PYEOF'*)",
+            "Bash(cat:*)",
+            "Bash(*--no-fix*)"
+        ]
+    },
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node \"$CLAUDE_PROJECT_DIR/collaboration-surface/tools/core/entrypoints/invocation.entrypoint.ts\"",
+                        "timeout": 10
+                    }
+                ]
+            }
         ]
     }
 }
