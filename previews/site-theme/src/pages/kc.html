@@ -1,0 +1,46 @@
+    <h1 class="ui-h1 ui-h1--page">Leaderboards</h1>
+    <nav class="ui-tabs" aria-label="Leaderboard">
+      <a class="ui-tab" href="#">Personal Bests</a><a class="ui-tab" href="#">Collection Logs</a><a class="ui-tab is-active" href="#">Killcounts</a><a class="ui-tab" href="#">Cluescrolls</a><a class="ui-tab" href="#">Ranking</a>
+    </nav>
+    <div class="ui-toolbar">
+      <label class="ui-search">{{icon:search}}<input type="search" placeholder="Search boss or player..." aria-label="Search boss or player" value="hammer time"></label>
+      <button type="button" class="ui-select">{{icon:filter}}Filter{{icon:chevron-down}}</button>
+      <button type="button" class="ui-select">{{icon:list}}Compact</button>
+    </div>
+    <div class="ui-boards">
+      <section class="ui-board">
+        <div class="ui-board-head"><h3 class="ui-board-title">Vorkath</h3></div>
+        <ol class="ui-board-rows">
+          <li class="ui-board-colhead"><span>Rank</span><span>Player</span><span>CC Rank</span><span>KC</span></li>
+          <li><span class="ui-pos" title="First place">{{icon:trophy}}</span><span class="ui-name">Mossy Ingot</span><span class="ui-cc ui-cc--ruby">Ruby</span><span class="ui-val">4,812</span></li>
+          <li><span class="ui-pos">2</span><span class="ui-name">Slag Heap</span><span class="ui-cc ui-cc--zenyte">Zenyte</span><span class="ui-val">3,977</span></li>
+          <li><span class="ui-pos">3</span><span class="ui-name">Quench</span><span class="ui-cc ui-cc--sapphire">Sapphire</span><span class="ui-val">2,640</span></li>
+          <li class="is-own is-match"><span class="ui-pos">14</span><span class="ui-name">Hammer Time</span><span class="ui-cc ui-cc--onyx">Onyx</span><span class="ui-val">1,102</span></li>
+        </ol>
+        <button type="button" class="ui-more">View all 86 records</button>
+      </section>
+      <section class="ui-board">
+        <div class="ui-board-head"><h3 class="ui-board-title">Zulrah</h3></div>
+        <ol class="ui-board-rows">
+          <li class="ui-board-colhead"><span>Rank</span><span>Player</span><span>CC Rank</span><span>KC</span></li>
+          <li class="is-own is-match"><span class="ui-pos" title="First place">{{icon:trophy}}</span><span class="ui-name">Hammer Time</span><span class="ui-cc ui-cc--onyx">Onyx</span><span class="ui-val">5,320</span></li>
+          <li><span class="ui-pos">2</span><span class="ui-name">Ferrous Fen</span><span class="ui-cc ui-cc--dragonstone">Dragonstone</span><span class="ui-val">3,415</span></li>
+          <li><span class="ui-pos">3</span><span class="ui-name">Bellows Bob</span><span class="ui-cc ui-cc--emerald">Emerald</span><span class="ui-val">2,008</span></li>
+          <li class="ui-board-empty"><span>-</span><span>-</span><span></span><span></span></li>
+        </ol>
+        <button type="button" class="ui-more">View all 74 records</button>
+      </section>
+    </div>
+    <div class="ui-overlay ui-overlay--sheet">
+      <aside class="ui-sheet" role="dialog" aria-label="Vorkath records">
+        <header class="ui-dialog-head"><h2 class="ui-h3">Vorkath <small>86 records</small></h2><button type="button" class="ui-icon-btn" aria-label="Close">{{icon:x}}</button></header>
+        <ol class="ui-board-rows">
+          <li class="ui-board-colhead"><span>Rank</span><span>Player</span><span>CC Rank</span><span>KC</span></li>
+          <li><span class="ui-pos" title="First place">{{icon:trophy}}</span><span class="ui-name">Mossy Ingot</span><span class="ui-cc ui-cc--ruby">Ruby</span><span class="ui-val">4,812</span></li>
+          <li><span class="ui-pos">2</span><span class="ui-name">Slag Heap</span><span class="ui-cc ui-cc--zenyte">Zenyte</span><span class="ui-val">3,977</span></li>
+          <li><span class="ui-pos">3</span><span class="ui-name">Quench</span><span class="ui-cc ui-cc--sapphire">Sapphire</span><span class="ui-val">2,640</span></li>
+          <li><span class="ui-pos">4</span><span class="ui-name">Cinder Pile</span><span class="ui-cc ui-cc--diamond">Diamond</span><span class="ui-val">2,311</span></li>
+          <li class="is-own"><span class="ui-pos">14</span><span class="ui-name">Hammer Time</span><span class="ui-cc ui-cc--onyx">Onyx</span><span class="ui-val">1,102</span></li>
+        </ol>
+      </aside>
+    </div>

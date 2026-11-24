@@ -1,0 +1,61 @@
+    <section class="ui-panel ui-eventhead">
+      <div>
+        <p class="ui-kicker">Active Event</p>
+        <h1 class="ui-h1 ui-h1--page">Winter Tile Race</h1>
+        <p class="ui-meta"><span>15 Nov 2026 - 29 Nov 2026</span></p>
+      </div>
+      <div class="ui-tools">
+        <span class="ui-status ui-status--closed">Rolls paused</span>
+        <span class="ui-status">7d remaining</span>
+        <button type="button" class="ui-tool">Manage Signup</button>
+        <button type="button" class="ui-tool">{{icon:settings}}Manage</button>
+      </div>
+    </section>
+
+    <div class="ui-raceprogress" aria-label="Board progress">
+      <div class="ui-raceprogress-track"></div>
+      <button type="button" class="ui-racemarker ui-team-bg1" style="left: 62%" aria-label="Anvil Enjoyers, 62 percent complete">A</button>
+      <button type="button" class="ui-racemarker ui-team-bg2" style="left: 48%" aria-label="Smelt Gang, 48 percent complete">S</button>
+      <button type="button" class="ui-racemarker ui-team-bg3" style="left: 30%" aria-label="Slag Squad, 30 percent complete">S</button>
+    </div>
+
+    <div class="ui-tileboard" role="img" aria-label="Tile race board with 32 tiles, fog of war past tile 20">
+      <span class="ui-cell ui-cell--start">Start</span>
+      <span class="ui-cell"><small>1</small><img src="art/Ruby256.png" alt="Tile 1 icon"><em>Any Ruby drop</em></span>
+      <span class="ui-cell"><small>2</small><img src="art/Sapphire256.png" alt="Tile 2 icon"><em>10 Sapphire bolts</em><i class="ui-mod" title="Jump">J</i></span>
+      <span class="ui-cell"><small>3</small><img src="art/Emerald256.png" alt="Tile 3 icon"><em>Emerald ring</em></span>
+      <span class="ui-cell"><small>4</small><img src="art/Diamond256.png" alt="Tile 4 icon"><em>Diamond amulet</em><b class="ui-cell-teams"><i class="ui-team-bg3"></i></b></span>
+      <span class="ui-cell"><small>5</small><img src="art/Onyx256.png" alt="Tile 5 icon"><em>Onyx bolt tips</em><i class="ui-mod" title="Trap">T</i></span>
+      <span class="ui-cell"><small>6</small><img src="art/Dragonstone256.png" alt="Tile 6 icon"><em>Dragonstone</em></span>
+      <span class="ui-cell"><small>7</small><img src="art/Zenyte256.png" alt="Tile 7 icon"><em>Zenyte shard</em><b class="ui-cell-teams"><i class="ui-team-bg2"></i></b></span>
+      <span class="ui-cell"><small>8</small><img src="art/Ruby256.png" alt="Tile 8 icon"><em>Ruby necklace</em></span>
+      <span class="ui-cell"><small>9</small><img src="art/Sapphire256.png" alt="Tile 9 icon"><em>Clue: hard</em><b class="ui-cell-teams"><i class="ui-team-bg1"></i></b></span>
+      <span class="ui-cell ui-cell--fog">?</span><span class="ui-cell ui-cell--fog">?</span><span class="ui-cell ui-cell--fog">?</span><span class="ui-cell ui-cell--fog">?</span><span class="ui-cell ui-cell--fog">?</span>
+      <span class="ui-cell ui-cell--finish">Finish</span>
+      <button type="button" class="ui-icon-btn ui-fit" aria-label="Fit to screen">{{icon:maximize}}</button>
+    </div>
+
+    <div class="ui-racegrid">
+      <div class="ui-cards">
+        <article class="ui-card">
+          <header class="ui-card-head"><div class="ui-teamhead"><img src="art/IF_YELLOW.png" alt="Anvil Enjoyers icon"><div><b class="ui-card-title">Anvil Enjoyers</b><p class="ui-byline">Step 9 <span class="ui-status ui-status--live">{{icon:dice}}Rolling</span></p></div></div></header>
+          <p class="ui-meta"><span><img class="ui-inline-icon" src="art/Sapphire256.png" alt="Current tile icon">Current: Clue: hard</span></p>
+          <div class="ui-dice"><span class="ui-dice-face">4</span><button type="button" class="ui-btn ui-btn--small" disabled title="Rolling is paused by staff">{{icon:dice}}Roll 1d6</button></div>
+          <button type="button" class="ui-tool">5 members{{icon:chevron-down}}</button>
+        </article>
+        <article class="ui-card">
+          <header class="ui-card-head"><div class="ui-teamhead"><img src="art/IF_GREEN.png" alt="Smelt Gang icon"><div><b class="ui-card-title">Smelt Gang</b><p class="ui-byline">Step 7 <span class="ui-status ui-status--closed">{{icon:undo}}Rolled back</span></p></div></div></header>
+          <p class="ui-meta"><span>Current: Zenyte shard</span></p>
+          <button type="button" class="ui-tool">5 members{{icon:chevron-up}}</button>
+          <ul class="ui-roster"><li>{{icon:crown}}<b>Cinder Pile</b></li><li>Mossy Ingot</li><li>Bellows Bob</li><li>Ferrous Fen</li><li>Quench</li></ul>
+        </article>
+      </div>
+      <section class="ui-panel ui-rolls">
+        <h3 class="ui-h3">Recent Rolls</h3>
+        <ul>
+          <li><i class="ui-team-bg1"></i><span><b>Anvil Enjoyers</b> rolled 4 &rarr; step 9</span><time>2m ago</time></li>
+          <li><i class="ui-team-bg2"></i><span><b>Smelt Gang</b> {{icon:skip}}skipped a turn</span><time>14m ago</time></li>
+          <li><i class="ui-team-bg3"></i><span><b>Slag Squad</b> rolled 3 + 2 = 5 &rarr; step 4</span><time>1h ago</time></li>
+        </ul>
+      </section>
+    </div>

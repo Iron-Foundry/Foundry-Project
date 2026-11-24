@@ -1,0 +1,69 @@
+    <section class="ui-intro">
+      <h1 class="ui-h1 ui-h1--page">Feedback Board</h1>
+      <p class="ui-lede">Community suggestions and bug reports.</p>
+    </section>
+    <div class="ui-toolbar ui-toolbar--split">
+      <nav class="ui-tabs" aria-label="Feedback type">
+        <a class="ui-tab is-active" href="#">Suggestions</a>
+        <a class="ui-tab" href="#">Bug Reports</a>
+      </nav>
+      <div class="ui-tools">
+        <button type="button" class="ui-btn ui-btn--small">{{icon:plus}}Submit Suggestion</button>
+        <button type="button" class="ui-tool">{{icon:archive}}Resolved (14)</button>
+      </div>
+    </div>
+
+    <div class="ui-cards">
+      <article class="ui-card">
+        <header class="ui-card-head">
+          <h3 class="ui-card-title">Show raid team size on the PB cards</h3>
+          <label class="ui-select ui-select--small" aria-label="Status">Needs Triage{{icon:chevron-down}}</label>
+        </header>
+        <p class="ui-byline">Mossy Ingot &middot; 2h ago</p>
+        <p class="ui-text">The PB board shows the time but not how many people were in the raid. A small label per row would help.</p>
+        <div class="ui-card-actions">
+          <button type="button" class="ui-tool ui-tool--react" aria-pressed="true">{{icon:heart}}12</button>
+          <button type="button" class="ui-tool">{{icon:message}}3 replies{{icon:chevron-down}}</button>
+        </div>
+      </article>
+
+      <article class="ui-card">
+        <header class="ui-card-head">
+          <h3 class="ui-card-title">Calendar reminders in Discord</h3>
+          <label class="ui-select ui-select--small" aria-label="Status">Planned{{icon:chevron-down}}</label>
+        </header>
+        <p class="ui-byline">Anonymous &middot; 1d ago</p>
+        <p class="ui-text">A DM an hour before a calendar event I marked as going.</p>
+        <div class="ui-attachments">
+          <button type="button" class="ui-thumb" aria-label="Open image"><img src="art/clan-photo.png" alt="calendar-mockup.png"></button>
+          <button type="button" class="ui-thumb" aria-label="Open image"><img src="https://oldschool.runescape.wiki/images/thumb/Chambers_of_Xeric_artwork.jpg/640px-Chambers_of_Xeric_artwork.jpg?090e1" alt="reminder-example.png"></button>
+        </div>
+        <div class="ui-pinned">{{icon:pin}}<span class="ui-rank-label ui-cc--zenyte">Moderator</span><b>Hammer Time</b><p>On the list for the December update.</p></div>
+        <div class="ui-card-actions">
+          <button type="button" class="ui-tool">{{icon:heart}}31</button>
+          <button type="button" class="ui-tool">{{icon:message}}Hide replies{{icon:chevron-up}}</button>
+        </div>
+        <div class="ui-thread">
+          <div class="ui-reply is-pinned"><span class="ui-reply-head">{{icon:pin}}<span class="ui-rank-label ui-cc--zenyte">Moderator</span><b>Hammer Time</b><time>6h ago</time><button type="button" class="ui-icon-btn" aria-label="Unpin">{{icon:x}}</button></span><p>On the list for the December update.</p></div>
+          <div class="ui-reply"><span class="ui-reply-head"><b>Slag Heap</b><time>20h ago</time><button type="button" class="ui-icon-btn" aria-label="Pin reply">{{icon:pin}}</button></span><p>Would use this every week.</p></div>
+          <div class="ui-reply"><span class="ui-reply-head"><span class="ui-rank-label">Staff</span><b>Cinder Pile</b><time>22h ago</time><button type="button" class="ui-icon-btn" aria-label="Pin reply">{{icon:pin}}</button></span><p>Teamup can send email reminders today, if that helps in the meantime.</p></div>
+          <form class="ui-reply-form">
+            <textarea class="ui-input" rows="2" placeholder="Write a comment..."></textarea>
+            <button type="button" class="ui-btn ui-btn--small">{{icon:send}}Post</button>
+          </form>
+        </div>
+      </article>
+
+      <article class="ui-card">
+        <header class="ui-card-head">
+          <h3 class="ui-card-title">Dark mode for the bingo board</h3>
+          <label class="ui-select ui-select--small" aria-label="Status">Open{{icon:chevron-down}}</label>
+        </header>
+        <p class="ui-byline">Ferrous Fen &middot; 3d ago</p>
+        <p class="ui-text">The bingo board is very bright at night.</p>
+        <div class="ui-card-actions">
+          <button type="button" class="ui-tool">{{icon:heart}}4</button>
+          <button type="button" class="ui-tool">{{icon:message}}Reply{{icon:chevron-down}}</button>
+        </div>
+      </article>
+    </div>

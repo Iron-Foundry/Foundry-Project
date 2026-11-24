@@ -1,0 +1,19 @@
+.bench-main { margin: 0 auto; max-width: 96rem; padding: 1.5rem 1rem; }
+.bench-title { font-size: 2.25rem; }
+.bench-intro { margin: 0.5rem 0 1rem; max-width: 60rem; }
+.bench-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.bench-tab { border: 1px solid var(--border); border-radius: var(--radius); padding: 0.4rem 1rem; color: var(--muted-foreground); background: var(--card); }
+.bench-tab.is-active { color: var(--primary-foreground); background: var(--primary); border-color: var(--primary); }
+.bench-table { border-collapse: collapse; }
+.bench-table th, .bench-table td { border-top: 1px solid var(--border); padding: 1.5rem 1rem; vertical-align: top; text-align: left; }
+.bench-label { width: 14rem; position: sticky; left: 0; }
+.bench-name { font-size: 1.5rem; }
+.bench-widths { display: grid; gap: 1rem; }
+.bench-narrow { display: flex; gap: 1rem; align-items: flex-start; }
+.bench-shot { margin: 0; display: grid; gap: 0.25rem; }
+.bench-subtitle { font-size: 1.75rem; margin: 2.5rem 0 1rem; }
+.bench-coverage { border-collapse: collapse; max-width: 72rem; font-size: 0.875rem; }
+.bench-coverage th, .bench-coverage td { border-top: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
+.bench-coverage th { color: var(--muted-foreground); font-weight: 600; }
+.bench-coverage td:first-child { white-space: nowrap; color: var(--primary); }
+.bench-shot iframe { border: 1px solid var(--border); display: block; background: var(--card); }

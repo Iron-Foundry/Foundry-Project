@@ -1,0 +1,77 @@
+    <h1 class="ui-h1 ui-h1--page">Competitions</h1>
+    <aside class="ui-callout ui-callout--note">{{icon:plug}}<div><p><b>XP Updater Plugin Required</b></p><ul class="ui-list"><li>Install and enable the XP Updater plugin in RuneLite, with the WiseOldMan option ticked.</li><li>Log out once the competition has started to set your baseline snapshot.</li><li>Log out before the competition ends to set an accurate final snapshot.</li></ul></div></aside>
+
+    <section class="ui-picker">
+      <h2 class="ui-kicker ui-status ui-status--live">Ongoing</h2>
+      <div class="ui-picks">
+        <button type="button" class="ui-pick is-active"><b>November Slayer Sprint</b><span>1 Nov 2026 - 30 Nov 2026</span><span class="ui-pick-meta">Classic &middot; 64 participants</span></button>
+        <button type="button" class="ui-pick"><b>Raids Week: team edition</b><span>18 Nov 2026 - 25 Nov 2026</span><span class="ui-pick-meta">Team &middot; 40 participants</span></button>
+      </div>
+      <h2 class="ui-kicker ui-status ui-status--soon">Upcoming</h2>
+      <div class="ui-picks">
+        <button type="button" class="ui-pick"><b>Winter Skiller's Cup</b><span>1 Dec 2026 - 14 Dec 2026</span><span class="ui-pick-meta">Classic &middot; 22 participants</span></button>
+      </div>
+      <h2 class="ui-kicker">Ended</h2>
+      <div class="ui-picks">
+        <button type="button" class="ui-pick"><b>October Bossing Blitz</b><span>1 Oct 2026 - 31 Oct 2026</span><span class="ui-pick-meta">Classic &middot; 71 participants</span></button>
+        <button type="button" class="ui-pick"><b>Spooky Clue Hunt</b><span>20 Oct 2026 - 27 Oct 2026</span><span class="ui-pick-meta">Team &middot; 36 participants</span></button>
+      </div>
+      <button type="button" class="ui-more ui-more--inline">Show 3 more&hellip;</button>
+    </section>
+
+    <section class="ui-panel ui-comp-head">
+      <div>
+        <h2 class="ui-h2">November Slayer Sprint</h2>
+        <p class="ui-meta"><span>1 Nov 2026 - 30 Nov 2026</span><span class="ui-status ui-status--live">Ongoing</span><span>Classic</span><span>{{icon:users}}64 participants</span></p>
+      </div>
+      <button type="button" class="ui-icon-btn" aria-label="Copy share link">{{icon:link}}</button>
+      <p class="ui-countdown">{{icon:clock}}Ending in: <b>7d 14h 32m 10s</b></p>
+    </section>
+
+    <section class="ui-metrics">
+      <div class="ui-metric-group"><h3 class="ui-kicker">Skills</h3><nav class="ui-tabs"><a class="ui-tab is-active" href="#">Slayer</a><a class="ui-tab" href="#">Overall</a></nav></div>
+      <div class="ui-metric-group"><h3 class="ui-kicker">Bosses</h3><nav class="ui-tabs"><a class="ui-tab" href="#">Abyssal Sire</a><a class="ui-tab" href="#">Cerberus</a><a class="ui-tab" href="#">Thermonuclear Smoke Devil</a></nav></div>
+      <div class="ui-toolbar">
+        <button type="button" class="ui-select">{{icon:eye}}Preview metric...{{icon:chevron-down}}</button>
+        <button type="button" class="ui-tool">{{icon:download}}Export Top 5</button>
+      </div>
+    </section>
+
+    <div class="ui-cols">
+      <section class="ui-panel">
+        <h3 class="ui-h3">Top 10 by Gained</h3>
+        <svg class="ui-chart" viewBox="0 0 400 200" role="img" aria-label="Bar chart of the top 10 players by Slayer xp gained">
+          <g class="ui-chart-bars"><rect x="10" y="20" width="28" height="160"/><rect x="48" y="44" width="28" height="136"/><rect x="86" y="60" width="28" height="120"/><rect x="124" y="78" width="28" height="102"/><rect x="162" y="96" width="28" height="84"/><rect x="200" y="108" width="28" height="72"/><rect x="238" y="120" width="28" height="60"/><rect x="276" y="130" width="28" height="50"/><rect x="314" y="140" width="28" height="40"/><rect x="352" y="150" width="28" height="30"/></g>
+          <line class="ui-chart-axis" x1="0" y1="180" x2="400" y2="180"/>
+        </svg>
+      </section>
+      <section class="ui-panel">
+        <h3 class="ui-h3">Progress Over Time (Top 10)</h3>
+        <div class="ui-legend">
+          <label><input type="checkbox" checked><i class="ui-swatch ui-swatch--1"></i>xTinyAnvil</label>
+          <label><input type="checkbox" checked><i class="ui-swatch ui-swatch--2"></i><span class="is-own-text">Hammer Time</span></label>
+          <label><input type="checkbox" checked><i class="ui-swatch ui-swatch--3"></i>Ferrous Fen</label>
+          <label class="is-off"><input type="checkbox"><i class="ui-swatch ui-swatch--4"></i>Slag Heap</label>
+        </div>
+        <svg class="ui-chart" viewBox="0 0 400 200" role="img" aria-label="Line chart of Slayer xp over time for the top players">
+          <polyline class="ui-line ui-line--1" points="0,180 60,150 120,120 180,95 240,70 300,50 400,30"/>
+          <polyline class="ui-line ui-line--2" points="0,180 60,160 120,135 180,120 240,90 300,75 400,55"/>
+          <polyline class="ui-line ui-line--3" points="0,180 60,170 120,150 180,140 240,120 300,100 400,85"/>
+          <line class="ui-chart-axis" x1="0" y1="180" x2="400" y2="180"/>
+        </svg>
+      </section>
+    </div>
+
+    <section class="ui-panel">
+      <h3 class="ui-h3">All Participants (64)</h3>
+      <div class="ui-scroll"><table class="ui-table ui-table--data">
+        <thead><tr><th>Rank</th><th>Player</th><th>Start</th><th>End</th><th>Gained</th><th>Diff</th></tr></thead>
+        <tbody>
+          <tr><td>{{icon:trophy}}</td><td>xTinyAnvil</td><td>48.2M xp</td><td>52.9M xp</td><td class="ui-gain ui-gain--1">+4.71M xp</td><td class="ui-diff--ahead">+1.25M xp</td></tr>
+          <tr class="is-own"><td>2</td><td>Hammer Time</td><td>31.0M xp</td><td>34.5M xp</td><td class="ui-gain ui-gain--2">+3.46M xp</td><td>-</td></tr>
+          <tr><td>3</td><td>Ferrous Fen</td><td>22.4M xp</td><td>25.4M xp</td><td class="ui-gain ui-gain--3">+3.01M xp</td><td class="ui-diff--behind">-450K xp</td></tr>
+          <tr><td>4</td><td>Slag Heap</td><td>12.1M xp</td><td>14.6M xp</td><td class="ui-gain">+2.55M xp</td><td class="ui-diff--behind">-910K xp</td></tr>
+          <tr><td>5</td><td>Cinder Pile</td><td>8.9M xp</td><td>11.0M xp</td><td class="ui-gain">+2.10M xp</td><td class="ui-diff--behind">-1.36M xp</td></tr>
+        </tbody>
+      </table></div>
+    </section>

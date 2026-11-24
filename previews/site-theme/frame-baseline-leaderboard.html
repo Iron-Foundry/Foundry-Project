@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today - LB: PBs</title>
+<link rel="stylesheet" href="product.css">
+</head>
+<body class="bg-background text-foreground">
+<div class="flex flex-col bg-background text-foreground">
+  <header class="sticky top-0 z-50 w-full border-b border-border bg-card">
+    <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+      <a href="#" class="text-sm font-semibold tracking-wide text-primary hover:text-primary/80 transition-colors">Iron Foundry</a>
+      <div class="hidden items-center gap-4 md:flex">
+        <nav class="relative z-10 flex max-w-max flex-1 items-center justify-center">
+          <ul class="group flex flex-1 list-none items-center gap-1">
+            <li class="relative"><button class="group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ">Foundry <svg class="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></li>
+            <li class="relative"><button class="group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground text-primary!">Community <svg class="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></li>
+            <li class="relative"><button class="group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ">Resources <svg class="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></li>
+          </ul>
+        </nav>
+        <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all shrink-0 outline-none bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3">Login</button>
+      </div>
+      <div class="flex items-center md:hidden">
+        <button class="inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground h-8 w-8" aria-label="Open navigation">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex flex-col flex-1">
+    <div class="flex flex-col flex-1 px-6 pt-6 pb-6">
+      <div class="mx-auto max-w-7xl w-full space-y-4 py-6">
+        <h1 class="font-rs-bold text-4xl text-primary">Leaderboards</h1>
+        <div class="flex flex-wrap gap-1 justify-start">
+          <a href="#" data-active="true" class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-transparent px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:border-transparent">Personal Bests</a>
+          <a href="#" class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-transparent px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Collection Logs</a>
+          <a href="#" class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-transparent px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Killcounts</a>
+          <a href="#" class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-transparent px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Cluescrolls</a>
+          <a href="#" class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-transparent px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Ranking</a>
+        </div>
+        <div class="bg-border shrink-0 h-px w-full"></div>
+        <div class="min-h-[60vh]">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1 min-w-0">
+                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input placeholder="Search activity or player..." aria-label="Search activity or player" class="placeholder:text-muted-foreground border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs outline-none pl-8 h-8 text-sm">
+              </div>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1.5 shrink-0"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Filter</button>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1.5 text-muted-foreground hover:text-foreground shrink-0"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18"/></svg><span class="text-xs hidden sm:inline">Compact</span></button>
+            </div>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Chambers of Xeric (3)</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">xTinyAnvil</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">14:32.40</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Hammer Time</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">15:08.20</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">Ferrous Fen</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">15:51.60</span></div></div>
+                <button class="w-full text-xs text-muted-foreground hover:text-foreground transition-colors border-t border-border pt-1.5 text-center mt-1">View all 48 records</button>
+              </div></div>
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Theatre of Blood (4)</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">Hammer Time</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">16:44.40</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Slag Heap</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">17:30.00</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">xTinyAnvil</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">18:12.60</span></div></div>
+                <button class="w-full text-xs text-muted-foreground hover:text-foreground transition-colors border-t border-border pt-1.5 text-center mt-1">View all 21 records</button>
+              </div></div>
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Tombs of Amascut: Expert (2)</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">Cinder Pile</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">24:18.00</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Ferrous Fen</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">25:40.20</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">Quench</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">27:11.80</span></div></div>
+              </div></div>
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Vorkath</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">Slag Heap</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">0:58.20</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Mossy Ingot</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">1:01.80</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">Quench</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">1:04.20</span></div></div>
+              </div></div>
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Zulrah</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">Ferrous Fen</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">0:55.80</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Bellows Bob</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">0:59.40</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">Hammer Time</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">1:02.00</span></div></div>
+              </div></div>
+              <div class="rounded-md border border-border bg-card"><div class="font-rs-bold text-primary truncate px-3 pt-2.5 pb-1 text-base">Corrupted Gauntlet</div><div class="px-3 pb-2.5">
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F947;</span><span class="font-medium text-foreground truncate">xTinyAnvil</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">5:41.40</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F948;</span><span class="font-medium text-foreground truncate">Cinder Pile</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">6:02.20</span></div></div>
+                <div class="grid gap-x-3 items-center border-b border-border last:border-0 hover:bg-muted/40 rounded-sm cursor-default grid-cols-[2rem_1fr_auto] py-1.5"><span class="text-xs text-muted-foreground">&#x1F949;</span><span class="font-medium text-foreground truncate">Slag Heap</span><div class="flex items-center justify-end overflow-hidden"><span class="text-sm tabular-nums">6:30.60</span></div></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

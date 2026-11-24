@@ -1,0 +1,15 @@
+<tr data-theme="{{id}}">
+  <th class="bench-label">
+    <p class="font-rs-bold text-primary bench-name">{{name}}</p>
+    <p class="text-muted-foreground text-sm">{{note}}</p>
+  </th>
+  <td>
+    <div class="bench-widths">
+      <figure class="bench-shot"><figcaption class="text-muted-foreground text-xs">1280 px</figcaption><iframe title="{{name}} at 1280 px" src="{{first}}" width="1280" height="900"></iframe></figure>
+      <div class="bench-narrow">
+        <figure class="bench-shot"><figcaption class="text-muted-foreground text-xs">768 px</figcaption><iframe title="{{name}} at 768 px" src="{{first}}" width="768" height="900"></iframe></figure>
+        <figure class="bench-shot"><figcaption class="text-muted-foreground text-xs">390 px</figcaption><iframe title="{{name}} at 390 px" src="{{first}}" width="390" height="900"></iframe></figure>
+      </div>
+    </div>
+  </td>
+</tr>
