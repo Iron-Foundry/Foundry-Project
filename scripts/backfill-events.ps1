@@ -87,6 +87,8 @@ try {
     } else {
         Write-Host "--- Populating user_accounts from users.rsn ---"
         uv run python scripts/populate_user_accounts.py $DryRunArg
+        Write-Host "--- Repairing events with variable tags ---"
+        uv run python scripts/repair_tagged_broadcasts.py $DryRunArg
         Write-Host "--- Reparsing events ---"
         uv run python scripts/reparse_events.py $DryRunArg
     }

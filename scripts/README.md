@@ -9,7 +9,7 @@ prompts for each script's options. See [The launcher](#the-launcher) below.
 
 | Script | Purpose |
 |---|---|
-| `backfill-events.sh` / `.ps1` | Backfill historical event records |
+| `backfill-events.sh` / `.ps1` | Backfill historical event records: `populate_user_accounts.py`, then `repair_tagged_broadcasts.py` (events stored with game variable tags), then `reparse_events.py`, all in `api-backend/scripts/` |
 | `docker-cleanup.sh` | Reclaim Docker build cache and dangling image layers (see below) |
 | `export-secrets.sh` / `.ps1` | Export Infisical secrets to the local environment |
 | `migrate-clan-rank-to-lowercase.sh` | One-off `users.clan_rank` migration to WOM role format |

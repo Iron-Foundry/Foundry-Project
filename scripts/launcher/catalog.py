@@ -79,7 +79,10 @@ CATALOG: tuple[Action, ...] = (
         slug="backfill-events",
         section="Maintenance",
         label="backfill events",
-        summary="Populates user_accounts from users.rsn, then reparses historical events.",
+        summary=(
+            "Populates user_accounts from users.rsn, repairs events stored with "
+            "game variable tags, then reparses historical events."
+        ),
         build=jobs.backfill_events,
         choices=(Choice("env", "Environment", ("dev", "prod")),),
         flags=(Flag("apply", "Apply (off = dry run)"),),
