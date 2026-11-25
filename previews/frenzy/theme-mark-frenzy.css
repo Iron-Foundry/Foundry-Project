@@ -1,0 +1,69 @@
+/* Monogram surfaces for frenzy.css. Team and tier colours come from the mark's colour set. */
+
+.theme-mark { --mk-team-5: var(--mk-teal); }
+.theme-mark .fz-t1 { color: var(--mk-team-1); } .theme-mark .fz-t2 { color: var(--mk-team-2); }
+.theme-mark .fz-t3 { color: var(--mk-team-3); } .theme-mark .fz-t4 { color: var(--mk-team-4); }
+.theme-mark .fz-t5 { color: var(--mk-team-5); }
+.theme-mark .fz-line.fz-t1 { stroke: var(--mk-team-1); } .theme-mark .fz-line.fz-t2 { stroke: var(--mk-team-2); }
+.theme-mark .fz-line.fz-t3 { stroke: var(--mk-team-3); } .theme-mark .fz-line.fz-t4 { stroke: var(--mk-team-4); }
+.theme-mark .fz-line.fz-t5 { stroke: var(--mk-team-5); }
+.theme-mark rect.fz-t1 { fill: var(--mk-team-1); } .theme-mark rect.fz-t2 { fill: var(--mk-team-2); }
+.theme-mark rect.fz-t3 { fill: var(--mk-team-3); } .theme-mark rect.fz-t4 { fill: var(--mk-team-4); }
+.theme-mark rect.fz-t5 { fill: var(--mk-team-5); }
+.theme-mark .fz-bg-t1 { background: var(--mk-team-1); } .theme-mark .fz-bg-t2 { background: var(--mk-team-2); }
+.theme-mark .fz-bg-t3 { background: var(--mk-team-3); } .theme-mark .fz-bg-t4 { background: var(--mk-team-4); }
+.theme-mark .fz-bg-t5 { background: var(--mk-team-5); }
+.theme-mark .fz-tc1 { color: var(--mk-yellow); } .theme-mark .fz-tc2 { color: var(--mk-blue); }
+.theme-mark .fz-tc3 { color: var(--mk-purple); } .theme-mark .fz-tc4 { color: var(--mk-teal); }
+
+.theme-mark .fz-noicon, .theme-mark .fz-bar, .theme-mark .fz-track i { background: var(--ui-surface-2); }
+.theme-mark .fz-track i.on { background: var(--mk-green); }
+.theme-mark .fz-track i.part { background: var(--mk-yellow); }
+.theme-mark .fz-lane, .theme-mark .fz-chip, .theme-mark .fz-tier, .theme-mark .fz-source, .theme-mark .fz-goal,
+.theme-mark .fz-mult, .theme-mark .fz-rail, .theme-mark .fz-tree, .theme-mark .fz-irow, .theme-mark .fz-claim {
+  background: var(--ui-surface); border: 1px solid var(--ui-line); border-radius: 12px;
+}
+.theme-mark .fz-lane:hover, .theme-mark .fz-chip:hover, .theme-mark .fz-tier:hover { background: var(--ui-surface-2); }
+.theme-mark .fz-tier.is-active { background: color-mix(in srgb, var(--ui-accent) 8%, var(--ui-surface)); border-color: color-mix(in srgb, var(--ui-accent) 45%, transparent); }
+.theme-mark .fz-lane-total { color: var(--ui-text); }
+.theme-mark .fz-gap { color: var(--ui-muted); }
+.theme-mark .fz-group td { color: var(--ui-muted); background: var(--ui-bg); }
+.theme-mark .fz-chart text { fill: var(--ui-muted); }
+.theme-mark .fz-chart .fz-grid { stroke: var(--ui-line); }
+.theme-mark .fz-rail a:hover, .theme-mark .fz-tree a:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.theme-mark .fz-rail a.is-active, .theme-mark .fz-tree a.is-active { background: var(--ui-surface-2); color: var(--ui-text); }
+.theme-mark .fz-rail a.is-active small, .theme-mark .fz-tree a.is-active small { color: var(--ui-accent); }
+.theme-mark .fz-itile { background: var(--ui-surface-2); border-radius: 8px; }
+.theme-mark .fz-itile.is-done .ui-icon, .theme-mark .fz-itile.is-done b { color: var(--mk-green); }
+.theme-mark .fz-itile.is-part b { color: var(--mk-yellow); }
+.theme-mark .fz-itile.is-missing { color: var(--ui-muted); }
+.theme-mark .fz-done { color: var(--mk-green); }
+.theme-mark .fz-part { color: var(--mk-yellow); }
+.theme-mark .fz-warn { color: var(--mk-warn); }
+.theme-mark .fz-mult.is-on .fz-mult-head .ui-icon { color: var(--mk-green); }
+.theme-mark .fz-mult .fz-mult-head .ui-icon { color: var(--ui-muted); }
+.theme-mark .fz-mosaic { background: var(--ui-surface-2); }
+.theme-mark .fz-info {color: var(--ui-muted); border: 1px solid var(--ui-line); }
+.theme-mark .fz-info:hover, .theme-mark .fz-info[aria-pressed="true"] { color: var(--ui-accent); background: var(--ui-surface-2); }
+.theme-mark .fz-popover { background: var(--ui-surface); border: 1px solid var(--ui-line); border-radius: 10px; box-shadow: 0 12px 28px rgb(0 0 0 / 0.35); color: var(--mk-body); }
+.theme-mark.light .fz-popover { box-shadow: 0 12px 28px rgb(0 0 0 / 0.12); }
+.theme-mark .fz-source--npc .ui-items li.is-part span, .theme-mark .fz-source--npc .ui-items li.is-part b { color: var(--mk-yellow); }
+.theme-mark .fz-source--npc .ui-items li.is-done span, .theme-mark .fz-source--npc .ui-items li.is-done b { color: var(--mk-green); }
+.theme-mark .fz-in, .theme-mark .fz-pick{ background: var(--ui-surface-2); border: 1px solid var(--ui-line); border-radius: 6px; }
+.theme-mark .fz-in:focus { outline: 2px solid color-mix(in srgb, var(--ui-accent) 60%, transparent); outline-offset: 1px; }
+.theme-mark .fz-pick.is-unrated { color: var(--mk-warn); }
+.theme-mark .fz-locked { color: var(--ui-accent); }
+.theme-mark .fz-steps b { background: var(--ui-surface-2); border: 1px solid var(--ui-line); color: var(--ui-muted); }
+.theme-mark .fz-steps li.is-done b { background: var(--mk-green); border-color: var(--mk-green); color: #0a0b0e; }
+.theme-mark .fz-steps li.is-done, .theme-mark .fz-steps li.is-active { color: var(--ui-text); }
+.theme-mark .fz-steps li.is-active b { border-color: var(--ui-accent); color: var(--ui-accent); }
+.theme-mark .fz-history ol { border-right: 1px solid var(--ui-line); }
+.theme-mark .fz-history li.is-active { background: var(--ui-surface-2); }
+.theme-mark .fz-diff { background: var(--ui-surface-2); color: var(--mk-body); }
+.theme-mark .fz-diff .is-new { background: color-mix(in srgb, var(--mk-green) 16%, transparent); }
+.theme-mark .fz-diff .is-old { background: color-mix(in srgb, var(--mk-red) 16%, transparent); }
+.theme-mark .fz-dialog--wide .ui-dialog-head { border-bottom: 1px solid var(--ui-line); }
+
+@media (max-width: 900px) {
+  .theme-mark .fz-history ol { border-right: 0; border-bottom: 1px solid var(--ui-line); }
+}

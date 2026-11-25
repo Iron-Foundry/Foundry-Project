@@ -1,0 +1,71 @@
+/* Monogram surfaces for data-pages.css. Team, tier and series colours come from the mark's colour set. */
+
+.theme-mark {
+  --mk-team-1: var(--mk-yellow); --mk-team-2: var(--mk-green); --mk-team-3: var(--mk-purple); --mk-team-4: var(--mk-blue);
+  --mk-gold: #f5c542; --mk-silver: #c8ced8; --mk-bronze: #d08a4c;
+}
+.theme-mark.light { --mk-gold: #b7860b; --mk-silver: #6b7280; --mk-bronze: #a0582a; }
+
+.theme-mark .ui-rankstat, .theme-mark .ui-recent-item, .theme-mark .ui-catcard, .theme-mark .ui-popcard, .theme-mark .ui-embedcard,
+.theme-mark .ui-tile, .theme-mark .ui-teamcard, .theme-mark .ui-teamrow, .theme-mark .ui-searchbar {
+  background: var(--ui-surface); border: 1px solid var(--ui-line); border-radius: 12px;
+}
+.theme-mark .ui-recent-item:hover, .theme-mark .ui-teamcard:hover, .theme-mark .ui-teamrow:hover, .theme-mark .ui-catcard-list a:hover, .theme-mark .ui-searchbar:hover { background: var(--ui-surface-2); }
+.theme-mark .ui-popcard { box-shadow: 0 16px 32px rgb(0 0 0 / 0.35); }
+.theme-mark .ui-popcard--wiki a, .theme-mark .ui-wikilink, .theme-mark .ui-entryref { color: var(--ui-accent); }
+.theme-mark .ui-catcard-title .ui-icon, .theme-mark .ui-catcard-list .ui-icon { color: var(--ui-muted); }
+.theme-mark .ui-catcard-title { color: var(--ui-text); }
+.theme-mark .ui-searchbar kbd, .theme-mark .ui-kbd, .theme-mark .ui-pre, .theme-mark .ui-slot, .theme-mark .ui-dice-face {
+  background: var(--ui-surface-2); border: 1px solid var(--ui-line);
+}
+.theme-mark .ui-searchbar kbd { padding: 0.1rem 0.35rem; border-radius: 4px; }
+.theme-mark .ui-pre { border-radius: 8px; color: var(--mk-body); }
+.theme-mark .ui-slot { border-radius: 6px; }
+.theme-mark .ui-quote { border-left: 3px solid var(--ui-line); }
+.theme-mark .ui-healthbar { background: linear-gradient(90deg, var(--mk-red), var(--mk-yellow) 50%, var(--mk-green)); }
+.theme-mark .ui-healthbar i { background: var(--ui-text); }
+.theme-mark .ui-tilemap { background: repeating-linear-gradient(0deg, var(--ui-surface-2) 0 1.25rem, var(--ui-surface) 1.25rem 2.5rem); border: 1px solid var(--ui-line); }
+.theme-mark .ui-tilemap i { background: color-mix(in srgb, var(--mk-teal) 55%, transparent); border: 1px solid var(--mk-teal); }
+
+.theme-mark .ui-stackbar, .theme-mark .ui-distbar, .theme-mark .ui-tierbar, .theme-mark .ui-raceprogress-track { background: var(--ui-surface-2); }
+.theme-mark .ui-donut-ring { stroke: var(--ui-surface-2); }
+.theme-mark .ui-seg--1 { stroke: var(--mk-red); } .theme-mark .ui-seg--2 { stroke: var(--mk-teal); }
+.theme-mark .ui-seg--3 { stroke: var(--mk-onyx); } .theme-mark .ui-seg--4 { stroke: var(--mk-purple); }
+.theme-mark .ui-seg-bg--1 { background: var(--mk-orange); } .theme-mark .ui-seg-bg--2 { background: var(--mk-blue); }
+.theme-mark .ui-seg-bg--3 { background: var(--mk-yellow); } .theme-mark .ui-seg-bg--4 { background: var(--mk-onyx); }
+.theme-mark .ui-bignum { background: var(--mk-glow); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.theme-mark .ui-filterline .ui-kicker { color: var(--ui-muted); }
+
+.theme-mark .ui-team-t1 { color: var(--mk-team-1); } .theme-mark .ui-team-t2 { color: var(--mk-team-2); }
+.theme-mark .ui-team-c1, .theme-mark .ui-team-bg1 { background: var(--mk-team-1); }
+.theme-mark .ui-team-c2, .theme-mark .ui-team-bg2 { background: var(--mk-team-2); }
+.theme-mark .ui-team-c3, .theme-mark .ui-team-bg3 { background: var(--mk-team-3); }
+.theme-mark .ui-team-c4 { background: var(--mk-team-4); }
+.theme-mark .ui-tier-1 { background: var(--mk-yellow); } .theme-mark .ui-tier-2 { background: var(--mk-blue); }
+.theme-mark .ui-tier-3 { background: var(--mk-purple); } .theme-mark .ui-tier-4 { background: var(--mk-teal); }
+.theme-mark .ui-place--1 { color: var(--mk-gold); } .theme-mark .ui-place--2 { color: var(--mk-silver); } .theme-mark .ui-place--3 { color: var(--mk-bronze); }
+.theme-mark .ui-teamcard-pts b { color: var(--ui-text); }
+.theme-mark .ui-pending { color: var(--mk-blue); }
+.theme-mark .ui-mult { color: var(--mk-yellow); }
+.theme-mark .ui-card.is-complete .ui-progress span { background: var(--mk-green); }
+.theme-mark .ui-items li { background: var(--ui-surface-2); }
+.theme-mark .ui-items li.is-done b { color: var(--mk-green); }
+.theme-mark .ui-items li.is-part b { color: var(--mk-yellow); }
+.theme-mark .ui-pips i { background: var(--ui-line); }
+.theme-mark .ui-pips i.on { background: var(--mk-green); }
+
+.theme-mark .ui-tileboard { background: radial-gradient(ellipse at 50% 0%, rgb(255 138 31 / 0.12), transparent 70%), var(--ui-surface); border: 1px solid var(--ui-line); }
+.theme-mark .ui-cell { background: var(--ui-surface-2); color: var(--ui-text); }
+.theme-mark .ui-cell small, .theme-mark .ui-mod { color: var(--ui-muted); }
+.theme-mark .ui-cell--fog { color: var(--ui-muted); background: color-mix(in srgb, var(--ui-bg) 70%, var(--ui-surface-2)); }
+.theme-mark .ui-cell--start { color: var(--mk-green); }
+.theme-mark .ui-cell--finish { color: var(--mk-red); }
+.theme-mark .ui-racemarker { border: 2px solid var(--ui-bg); }
+.theme-mark .ui-racemarker:hover, .theme-mark .ui-racemarker:focus-visible { transform: scale(1.1); transition: transform 150ms; }
+.theme-mark .ui-raceprogress-track { background: linear-gradient(90deg, var(--ui-surface-2), color-mix(in srgb, var(--ui-accent) 35%, var(--ui-surface-2))); }
+.theme-mark .ui-dice-face { color: var(--ui-text); }
+.theme-mark .ui-rolls li span b { color: var(--ui-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-mark .ui-racemarker:hover, .theme-mark .ui-racemarker:focus-visible { transform: none; transition: none; }
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loot rates - frenzy editor and reference page</title>
+<link rel="stylesheet" href="product.css">
+<link rel="stylesheet" href="bench.css">
+</head>
+<body class="bg-background text-foreground">
+<main class="bench-main">
+  <h1 class="font-rs-bold text-primary bench-title">Loot rates on OSRSClans</h1>
+  <p class="text-muted-foreground text-sm bench-intro">FRZ-1 steps 2 and 5. The rows, kill rates, prices and item images are live OSRSClans data from 25 Nov 2026. The frenzy points, the hover texts and the note lines are mock. Today's row of each set sits at the bottom.</p>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Frenzy item editor (step 2)</h2>
+  <p class="text-muted-foreground text-sm bench-intro">Three frenzy source cards: Draconic visage from Vorkath, Twisted bow from the Chambers of Xeric at a deathless trio's 65,000 points, and Ring of endurance from the Grand Hallowed Coffin, which has no kill rate.</p>
+  <table class="bench-table"><tbody>{{editor}}</tbody></table>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Reference page (step 5)</h2>
+  <p class="text-muted-foreground text-sm bench-intro">The staff Reference Data page on /reference/loot-rates/sources and /reference/loot-rates?source=. Vorkath is the open source. The page description is today's line, which names the OSRS Wiki. Its new line is yours to write.</p>
+  <table class="bench-table"><tbody>{{reference}}</tbody></table>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Function coverage</h2>
+  <table class="bench-coverage">
+    <thead><tr><th>Surface</th><th>Function today</th><th>In the candidates</th></tr></thead>
+    <tbody>
+      <tr><td>Editor</td><td>Item picker with item image</td><td>All three keep it. The image comes from OSRSClans.</td></tr>
+      <tr><td>Editor</td><td>Lock points, remove item</td><td>All three keep both buttons.</td></tr>
+      <tr><td>Editor</td><td>Points, Required, Dup required</td><td>All three keep the three fields.</td></tr>
+      <tr><td>Editor</td><td>Drop denom and KPH typed by hand, H/D read-out</td><td>E1 fills the fields from the picked row and keeps them editable. E2 shows them as read values with By hand. E3 fills them from the card's source with a pencil to override.</td></tr>
+      <tr><td>Editor</td><td>A row with no kill rate</td><td>All three show it as unbalanced in the warning colour, with KPH left to fill by hand.</td></tr>
+      <tr><td>Editor</td><td>Raid uniques</td><td>All three use the chance per raid at 65,000 points (CoX) or the ToA default.</td></tr>
+      <tr><td>Editor</td><td>Source card: boss picker, hover text, Add Item, remove</td><td>Unchanged in all three.</td></tr>
+      <tr><td>Reference</td><td>Tabs: Bosses, Activities, Clues, Rates</td><td>R1 and R3 use the six OSRSClans categories plus Rates. R2 uses a category dropdown. The Rates tab (WOM EHP and EHB) is unchanged and not drawn.</td></tr>
+      <tr><td>Reference</td><td>Source table: name, drop count, updated date</td><td>Name with section, kill rate, measurer and row count. The read date moves to the open source.</td></tr>
+      <tr><td>Reference</td><td>Click a source to open its drop table</td><td>R1 and R3 open a dialog. R2 shows the table beside the list.</td></tr>
+      <tr><td>Reference</td><td>Drop table grouped by the Wiki heading: item, quantity, rarity, chance a kill, GE price</td><td>All of it, plus item images and hours a drop.</td></tr>
+      <tr><td>Reference</td><td>"Rarities are per chest roll" note on chest sources</td><td>OSRSClans gives the rolls per line, so the chance column is already per kill. The note goes.</td></tr>
+      <tr><td>Reference</td><td>Loading, error and empty states</td><td>They stay as behaviour, with the same lines.</td></tr>
+      <tr><td>Reference</td><td>Long lists</td><td>The source list and the drop table scroll as a virtual list.</td></tr>
+    </tbody>
+  </table>
+</main>
+<script>
+  document.querySelectorAll(".bench-table iframe").forEach((frame) => frame.addEventListener("load", () => {
+    const doc = frame.contentDocument;
+    if (doc) frame.height = String(Math.max(600, doc.documentElement.scrollHeight));
+  }));
+</script>
+</body>
+</html>

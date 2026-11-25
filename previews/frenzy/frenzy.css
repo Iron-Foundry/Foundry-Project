@@ -1,0 +1,178 @@
+/* Structure of the frenzy overhaul candidates. theme-mark-frenzy.css sets the surfaces. */
+
+.fz-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fz-strong { font-weight: 700; color: var(--ui-text); }
+.fz-team { display: inline-flex; align-items: center; gap: 0.6rem; min-width: 0; text-decoration: none; }
+.fz-team img, .fz-team .fz-noicon { width: 1.75rem; height: 1.75rem; object-fit: contain; flex-shrink: 0; }
+.fz-team b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-noicon { display: inline-block; border-radius: 6px; }
+.fz-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+.fz-section-head .ui-h2 { margin-bottom: 0; }
+.fz-stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; }
+.fz-two { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.fz-group td { padding-top: 1rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.fz-item { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+.fz-item img { width: 1.6rem; height: 1.6rem; object-fit: contain; flex-shrink: 0; }
+.fz-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-sub { display: block; font-size: 0.75rem; color: var(--ui-muted); white-space: nowrap; }
+
+/* Standings and race lanes */
+.fz-bar { display: flex; height: 0.6rem; border-radius: 999px; overflow: hidden; min-width: 4rem; }
+.fz-bar i { display: block; height: 100%; }
+.fz-lanes { display: grid; gap: 0.5rem; }
+.fz-lane { display: grid; grid-template-columns: 2.25rem minmax(9rem, 13rem) minmax(0, 1fr) 6rem 4.5rem; align-items: center; gap: 1rem; padding: 0.85rem 1.1rem; text-decoration: none; }
+.fz-lane .fz-bar { height: 1.1rem; border-radius: 6px; }
+.fz-lane-total { font-family: var(--ui-head-font); font-size: 1.5rem; text-align: right; }
+.fz-gap { font-size: 0.8rem; text-align: right; font-variant-numeric: tabular-nums; }
+.fz-clock { display: grid; justify-items: end; gap: 0.2rem; text-align: right; }
+.fz-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; font-size: 0.8rem; color: var(--ui-muted); }
+.fz-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.fz-dot { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 3px; }
+
+/* Tier leaders and the team strip */
+.fz-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.6rem; }
+.fz-chip { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 0.6rem; padding: 0.75rem 0.9rem; text-decoration: none; min-width: 0; }
+.fz-chip img, .fz-chip .fz-noicon { width: 2rem; height: 2rem; object-fit: contain; }
+.fz-chip-text { display: grid; min-width: 0; }
+.fz-chip-text b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-chip-text span { font-family: var(--ui-head-font); font-size: 1.25rem; line-height: 1.1; }
+.fz-leaders { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+
+/* Charts */
+.fz-chart { display: block; width: 100%; height: auto; }
+.fz-chart text { font-size: 11px; }
+.fz-chart .fz-grid { stroke-width: 1; stroke-dasharray: 3 3; }
+.fz-chart .fz-line { fill: none; stroke-width: 2.5; }
+.fz-gap-top { margin-top: 1.5rem; }
+.fz-pad { padding: 1rem; }
+.fz-chart-tools {display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 0.75rem; }
+
+/* Team page */
+.fz-teamhead { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1.25rem; }
+.fz-teamhead > img, .fz-teamhead > .fz-noicon { width: 4.5rem; height: 4.5rem; object-fit: contain; }
+.fz-teamhead .ui-meta { margin: 0.5rem 0 0; }
+.fz-side { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 2rem; align-items: start; }
+.fz-rail { position: sticky; top: 1rem; display: grid; gap: 0.1rem; padding: 0.5rem; }
+.fz-rail a { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0.6rem; font-size: 0.9rem; text-decoration: none; color: var(--ui-muted); border-radius: 6px; }
+.fz-rail a small { font-variant-numeric: tabular-nums; }
+.fz-rail .ui-kicker { padding: 0.4rem 0.6rem 0; margin: 0; }
+.fz-rail-mobile { display: none; }
+.fz-tiers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+.fz-tier { display: grid; gap: 0.5rem; padding: 1rem 1.1rem; text-align: left; font: inherit; color: inherit; cursor: pointer; min-width: 0; }
+.fz-tier-head { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.85rem; }
+.fz-tier-pts { font-family: var(--ui-head-font); font-size: 1.75rem; line-height: 1; }
+.fz-sources { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; align-items: start; }
+.fz-source { display: grid; gap: 0.75rem; padding: 1rem 1.1rem; min-width: 0; }
+.fz-source-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+.fz-source-head b { font-family: var(--ui-head-font); font-weight: normal; font-size: 1.15rem; }
+.fz-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: 0.5rem; }
+.fz-itile { position: relative; display: grid; justify-items: center; gap: 0.25rem; padding: 0.6rem 0.4rem 0.5rem; text-align: center; font-size: 0.75rem; min-width: 0; }
+.fz-itile img { width: 2.25rem; height: 2.25rem; object-fit: contain; }
+.fz-itile span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-itile b { font-variant-numeric: tabular-nums; }
+.fz-itile .ui-icon { position: absolute; top: 0.35rem; right: 0.35rem; width: 0.9rem; height: 0.9rem; }
+.fz-itile.is-missing img { opacity: 0.35; filter: grayscale(1); }
+.fz-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.2rem; }
+.fz-track i { display: block; height: 0.45rem; border-radius: 999px; }
+.fz-track-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.2rem; font-size: 0.7rem; color: var(--ui-muted); text-align: right; font-variant-numeric: tabular-nums; }
+.fz-goal { display: grid; gap: 0.5rem; padding: 0.9rem 1rem; min-width: 0; }
+.fz-goal-head { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
+.fz-goals { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 0.75rem; }
+.fz-mults { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 0.75rem; }
+.fz-mult { display: grid; gap: 0.5rem; padding: 0.9rem 1rem; font-size: 0.875rem; }
+.fz-mult-head { display: flex; align-items: center; gap: 0.5rem; }
+.fz-mult-head b { flex: 1; }
+.fz-reqs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.8rem; }
+.fz-reqs li { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+/* Source card with the NPC still and the rate figures behind (i) */
+.fz-source--npc { position: relative; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 0.9rem; }
+.fz-source--npc > .ui-progress, .fz-source--npc > .ui-items { grid-column: 1 / -1; }
+.fz-npc { display: block; width: 4.5rem; height: 4.5rem; object-fit: contain; }
+.fz-sprite { image-rendering: pixelated; padding: 0.5rem; }
+.fz-mosaic {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); place-items: center; gap: 0.15rem; padding: 0.3rem; border-radius: 8px; }
+.fz-mosaic img { width: 1.75rem; height: 1.75rem; object-fit: contain; }
+.fz-source-main {display: grid; align-content: space-between; gap: 0.35rem; min-width: 0; }
+.fz-source-title { display: grid; gap: 0.15rem; min-width: 0; }
+.fz-source-title b { font-family: var(--ui-head-font); font-weight: normal; font-size: 1.2rem; line-height: 1.2; }
+.fz-source-title .ui-meta { margin: 0; }
+.fz-info-row { position: relative; display: flex; justify-content: flex-end; }
+.fz-info { display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 50%; font: inherit; cursor: pointer; background: none; }
+.fz-popover { position: absolute; z-index: 20; top: calc(100% + 0.35rem); right: 0; width: 20rem; max-width: calc(100vw - 3rem); display: grid; gap: 0.4rem; padding: 0.75rem 0.85rem; font-size: 0.8rem; }
+.fz-facts-row { display: flex; justify-content: space-between; gap: 0.75rem; }
+.fz-rate-table { margin: 0.25rem 0 0; font-size: 0.8rem; }
+.fz-rate-table th, .fz-rate-table td { padding: 0.3rem 0.4rem; }
+
+/* Staff editor */
+.fz-staffhead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.fz-budget { display: grid; gap: 0.4rem; }
+.fz-budget .fz-bar { height: 0.9rem; border-radius: 6px; }
+.fz-budget-labels { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.8rem; color: var(--ui-muted); }
+.fz-grid-table td, .fz-grid-table th { padding: 0.35rem 0.45rem; vertical-align: middle; }
+.fz-in { width: 100%; min-width: 3.5rem; padding: 0.3rem 0.45rem; font: inherit; font-size: 0.85rem; color: var(--ui-text); text-align: right; }
+.fz-in--text { text-align: left; min-width: 9rem; }
+.fz-pick { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.4rem; width: 100%; min-width: 12rem; padding: 0.3rem 0.5rem; font: inherit; font-size: 0.8rem; color: var(--ui-text); cursor: pointer; text-align: left; }
+.fz-pick span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-rowtools { display: flex; gap: 0.1rem; justify-content: flex-end; }
+.fz-rowtools .ui-icon-btn { width: 1.75rem; height: 1.75rem; }
+.fz-work { display: grid; grid-template-columns: 15rem minmax(0, 1fr) 17rem; gap: 1rem; align-items: start; }
+.fz-tree { display: grid; gap: 0.15rem; padding: 0.6rem; font-size: 0.875rem; }
+.fz-tree p { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.5rem 0.5rem 0.2rem; font-weight: 600; }
+.fz-tree a { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.5rem 0.35rem 1rem; text-decoration: none; color: var(--ui-muted); border-radius: 6px; }
+.fz-tree .ui-tool { margin: 0.25rem 0.5rem; justify-content: center; }
+.fz-tree-mobile { display: none; }
+.fz-irow { display: grid; gap: 0.6rem; padding: 0.85rem 0.95rem; }
+.fz-irow-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; }
+.fz-irow-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.fz-rate { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; font-size: 0.8rem; color: var(--ui-muted); }
+.fz-rate b { color: var(--ui-text); font-weight: 600; }
+.fz-rate .ui-tool { margin-left: auto; padding: 0.2rem 0.55rem; font-size: 0.8rem; }
+.fz-facts { display: grid; gap: 0.6rem; font-size: 0.875rem; }
+.fz-facts p { display: flex; justify-content: space-between; gap: 0.75rem; }
+.fz-steps { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; }
+.fz-steps li { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--ui-muted); }
+.fz-steps b { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; font-size: 0.75rem; }
+.fz-queue { display: grid; gap: 0.6rem; }
+.fz-claim { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: 0.9rem; padding: 0.8rem 1rem; }
+.fz-claim > img { width: 2.5rem; height: 2.5rem; object-fit: contain; }
+.fz-claim-text { display: grid; gap: 0.15rem; min-width: 0; }
+.fz-claim-text b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-claim .ui-input { padding: 0.35rem 0.6rem; font-size: 0.85rem; }
+.fz-claim-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; justify-content: flex-end; }
+.fz-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+.fz-history { display: grid; grid-template-columns: 13rem minmax(0, 1fr); min-height: 24rem; }
+.fz-history ol { list-style: none; margin: 0; padding: 0.5rem; display: grid; align-content: start; gap: 0.15rem; font-size: 0.85rem; }
+.fz-history li { display: grid; gap: 0.1rem; padding: 0.45rem 0.6rem; border-radius: 6px; }
+.fz-history li small { color: var(--ui-muted); }
+.fz-diff { margin: 0; padding: 0.75rem; overflow: auto; font-family: ui-monospace, monospace; font-size: 0.75rem; line-height: 1.6; }
+.fz-diff span { display: block; padding: 0 0.4rem; }
+.fz-dialog--wide { max-width: 56rem; padding: 0; overflow: hidden; }
+.fz-dialog--wide .ui-dialog-head { padding: 1rem 1.25rem; margin: 0; }
+
+@media (max-width: 1100px) {
+  .fz-work { grid-template-columns: 14rem minmax(0, 1fr); }
+  .fz-work > :last-child { grid-column: 1 / -1; }
+  .fz-leaders { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .fz-two, .fz-side, .fz-work { grid-template-columns: minmax(0, 1fr); }
+  .fz-rail, .fz-tree { display: none; }
+  .fz-rail-mobile, .fz-tree-mobile { display: flex; }
+  .fz-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fz-lane { grid-template-columns: 2rem minmax(0, 1fr) 5rem; }
+  .fz-lane .fz-bar { grid-column: 1 / -1; grid-row: 2; }
+  .fz-lane .fz-gap { display: none; }
+  .fz-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fz-history { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .fz-hide-phone { display: none; }
+  .fz-leaders, .fz-tiers { grid-template-columns: minmax(0, 1fr); }
+  .fz-teamhead { grid-template-columns: auto minmax(0, 1fr); }
+  .fz-teamhead > :last-child { grid-column: 1 / -1; }
+  .fz-teamhead > img, .fz-teamhead > .fz-noicon { width: 3rem; height: 3rem; }
+  .fz-claim { grid-template-columns: 2.25rem minmax(0, 1fr); }
+  .fz-claim-actions { grid-column: 1 / -1; justify-content: flex-start; }
+  .fz-irow-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fz-filters { grid-template-columns: minmax(0, 1fr); }
+}
