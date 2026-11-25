@@ -69,6 +69,10 @@ Memory and process
 - `no_ai_look`: a design candidate is simple and clean: plain text navigation, flat panels with neutral borders, icons only where they carry meaning, large readable text; coloured text and gradients are welcome, but never pills everywhere, coloured border strips per card, or glow outlines on cards and images. Digest: [[no-ai-look]].
 - `redesign_keeps_every_function`: a redesign candidate carries every function of the surface today (menus, account states, light mode, mobile access, editor tools, filters); inventory the real components first and put a coverage table on the bench page. Digest: [[redesign-keeps-every-function]].
 - `answer_from_this_repo`: a question about this repo (its todo, its state, its work) is answered from this repo alone; never pull in or name a sibling workspace such as cscolab. The work list is `_TODO.salt.md` at the root. Digest: [[answer-from-this-repo]].
+- `osrsclans_is_the_source`: all OSRS data and art (items, NPCs, sprites, models, names, loot rates) comes from the live OSRSClans API (`https://osrsclans.cc/api/v1`) whenever it serves what is needed. Check its live spec first, because its gaps are being closed. This overrides `/osrs-cache/*` and the Wiki NPC exception in `.claude/rules/osrs-item-sources.md`. Digest: [[osrsclans-api-is-the-art-source]].
+- `run_the_lock_from_git_bash`: run the suite join from the Bash tool, never from PowerShell, where `bash` fails with `0x8007274c`. Digest: [[run-lock-from-git-bash]].
+- `a_gap_exists_in_the_game`: before you report a missing OSRSClans value as a gap, confirm that the game defines that value. A rate the game does not have, or one the caller queries, is not a gap. Digest: [[osrsclans-api-is-the-art-source]].
+- `check_the_live_service`: "check <service>'s docs, routes or data" means fetch the deployed service (`/openapi.json`, `/docs`, one sample request), never its local repo or git log. Digest: [[check-the-live-service]].
 - `feedback_capture`: a user correction becomes one new one-line rule here plus one memory file, so it survives the session.
 
 # VERIFYING WORK
