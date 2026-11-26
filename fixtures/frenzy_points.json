@@ -1,0 +1,39 @@
+{
+  "point_cap": 1000000,
+  "cases": [
+    {
+      "tiers": {
+        "Easy": {"sources": [{"name": "Vorkath", "items": [
+          {"name": "Vorki", "drop_denom": 100, "kph": 50},
+          {"name": "Jar of decay", "drop_denom": null, "kph": 50}
+        ]}]},
+        "Hard": {"sources": [{"name": "Zulrah", "items": [
+          {"name": "Tanzanite mutagen", "drop_denom": 300, "kph": 50}
+        ]}]}
+      },
+      "points": [166667, 0, 500000]
+    },
+    {
+      "tiers": {"Easy": {"sources": [{"name": "Obor", "items": [
+        {"name": "Hill giant club", "drop_denom": 118, "kph": 0}
+      ]}]}},
+      "points": [0]
+    },
+    {
+      "tiers": {"Easy": {"sources": [{"name": "Scurrius", "items": [
+        {"name": "Scurry", "drop_denom": 3000, "kph": 60}
+      ]}]}},
+      "points": [666667]
+    },
+    {
+      "tiers": {"Elite": {"sources": [
+        {"name": "Nex", "items": [{"name": "Torva full helm", "drop_denom": 258, "kph": 6}]},
+        {"name": "Slayer", "items": [
+          {"name": "Abyssal whip", "drop_denom": 512, "kph": 90},
+          {"name": "Kraken tentacle", "drop_denom": 400, "kph": 90}
+        ]}
+      ]}},
+      "points": [539523, 71379, 55765]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ Design and implementation docs for cross-cutting components and systems of The I
 | [BALLOT_TOKENS.md](BALLOT_TOKENS.md) | Ballot Token economy + custom V2 Ballot Booth poll | api-backend, discord-server, web-app |
 | [FRENZY_DRAFT.md](FRENZY_DRAFT.md) | Frenzy captain draft: full snake draft and Top Picks mode with automatic hand-out | api-backend, web-app |
 | [FRENZY_DESIGN.md](FRENZY_DESIGN.md) | Frenzy - competitive team event system | api-backend, discord-server, web-app |
+| [OSRSCLANS_COLLECTION_LOG_FLAG.md](OSRSCLANS_COLLECTION_LOG_FLAG.md) | The OSRSClans collection log flag that frenzy needs to add a source's unique drops (FRZ-6) | api-backend, web-app |
 | [OSRSCLANS_NO_KILL_RATE.md](OSRSCLANS_NO_KILL_RATE.md) | OSRSClans drop sources with no kill rate, and the frenzy scope rules for them | api-backend, web-app |
 | [METRIC_REPORTS.md](METRIC_REPORTS.md) | Distributed metrics reporting | api-backend, discord-server |
 | [MUSIC_BOTS.md](MUSIC_BOTS.md) | Multi-bot music playback (5 leased bots, Lavalink, web control, clan stats) | discord-utils, api-backend, web-app |

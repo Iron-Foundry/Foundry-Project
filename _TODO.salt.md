@@ -10,6 +10,7 @@ Rows are open work only. A row leaves when its gate holds.
 
 | id | item | gate |
 | --- | --- | --- |
+| FRZ-6 | Adding a frenzy card for a boss or NPC that OSRSClans knows adds all its unique drops. Built: leaving the card name field adds the drops of the matching collection log page (`GET /reference/loot-rates/collection-log`). Salt checks it on the dev site | Adding a Vorkath card adds Vorkath's collection log drops and no other rows, a test covers it, and the lanes are green |
 | FRZ-4 | Frenzy automatic intake via clansocket through OSRSClans | A drop that clansocket reports through OSRSClans lands as a frenzy submission for the player's team without staff input, a test covers it, and the lanes are green |
 | FRZ-5 | Frenzy manual submissions on the website: a team member files an item, activity or milestone with proof | A member's submission lands as pending for staff review, an endpoint test covers it, and the lanes are green |
 | OPS-1 | Deploy api-backend `4c99536` and discord-utils `47e13b2` to prod together. api-backend also carries the Ironclad ingest removal and the CORS fix on the cache JSON routes. discord-utils stops relayed chat from pinging, which the decoded `<at>` makes necessary | A new tagged broadcast in prod stores its own event type, with resolved numbers and no `<int_`, `<str_` or `<switch,` text, and an in-game `@everyone` relays without a ping |
