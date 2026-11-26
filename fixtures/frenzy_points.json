@@ -34,6 +34,17 @@
         ]}
       ]}},
       "points": [539523, 71379, 55765]
+    },
+    {
+      "tiers": {
+        "Easy": {"order": 0, "sources": [{"name": "Obor", "items": [
+          {"name": "Hill giant club", "drop_denom": 100, "kph": 10}
+        ]}]},
+        "Medium": {"order": 1, "multiplier": 1.1, "sources": [{"name": "Bryophyta", "items": [
+          {"name": "Bryophyta's essence", "drop_denom": 100, "kph": 10}
+        ]}]}
+      },
+      "points": [333333, 366667]
     }
   ]
 }
