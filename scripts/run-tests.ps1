@@ -200,6 +200,7 @@ services:
     ports: !override ["127.0.0.1:${api}:8000"]
     environment:
       API_BACKEND_URL: http://localhost:$api
+      PUBLIC_API_URL: http://localhost:$api
       FRONTEND_URL: http://localhost:$web
   web-app:
     build:

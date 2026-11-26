@@ -240,6 +240,7 @@ services:
     ports: !override ["127.0.0.1:$api:8000"]
     environment:
       API_BACKEND_URL: http://127.0.0.1:$api
+      PUBLIC_API_URL: http://127.0.0.1:$api
       FRONTEND_URL: http://127.0.0.1:$web
   web-app:
     build:

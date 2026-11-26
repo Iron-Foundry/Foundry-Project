@@ -47,6 +47,7 @@ services:
       # over the IPv4 loopback the ports are published on, and these values have
       # to match theirs or CORS and the OAuth redirect stop lining up.
       FRONTEND_URL: http://127.0.0.1:3000
+      PUBLIC_API_URL: http://127.0.0.1:8000
       JWT_SECRET: e2e-test-secret-e2e-test-secret-01
       METRICS_API_KEY: e2e-metrics-key
       DISCORD_CLIENT_ID: e2e
