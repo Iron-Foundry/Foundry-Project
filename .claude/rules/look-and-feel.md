@@ -61,6 +61,11 @@ The preview bench is the `previews/` folder at the repository root. Where the wo
 ## Motion and tokens
 
 - `nothing_repaints_forever`: no infinite animation, transition loop, frame loop, timer re-render or auto-poll. Motion runs on interaction, finitely, and stops. Animate `transform` or `opacity` only. Honour `prefers-reduced-motion`. Never `will-change` something static. A continuous effect needs the operator's approval, listed as an exception.
+- `approved_loops`: the operator approves these continuous effects. Each one stops under `prefers-reduced-motion`.
+
+| effect | where |
+| --- | --- |
+| The Tile Race progress bar pans and shifts its hue without end | `.tilerace-progress-track` in `web-app/styles/globals.css` |
 - `type_sizes_are_rem`: a type size is a rem token, never a px value. The reader's text size is the root font size.
 - `classes_are_tokens`: a class names a theme token or a native step, never a bracket value. A missing value becomes a token first.
 

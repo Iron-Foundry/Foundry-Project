@@ -1,0 +1,14 @@
+[
+  {"id": "m-dashboard", "label": "Dashboard", "section": "account", "signed_in": true, "path": "/members"},
+  {"id": "m-feed", "label": "Dashboard: feed sheet", "section": "account", "signed_in": true, "path": "/members (Activity feed sheet)"},
+  {"id": "m-profile", "label": "Profile", "section": "account", "signed_in": true, "path": "/members/profile"},
+  {"id": "m-tickets", "label": "Tickets", "section": "account", "signed_in": true, "path": "/members/tickets"},
+  {"id": "m-ticket", "label": "Tickets: transcript", "section": "account", "signed_in": true, "path": "/members/tickets (transcript)"},
+  {"id": "m-surveys", "label": "Surveys", "section": "account", "signed_in": true, "path": "/members/surveys"},
+  {"id": "m-survey", "label": "Surveys: answer", "section": "account", "signed_in": true, "path": "/members/surveys/$templateId"},
+  {"id": "m-applications", "label": "Applications", "section": "account", "signed_in": true, "path": "/members/applications"},
+  {"id": "m-application", "label": "Applications: form", "section": "account", "signed_in": true, "path": "/members/applications/$templateId"},
+  {"id": "m-suggestions", "label": "Suggestions", "section": "account", "signed_in": true, "path": "/members/suggestions"},
+  {"id": "m-bugs", "label": "Bug Reports", "section": "account", "signed_in": true, "path": "/members/bugs"},
+  {"id": "m-settings", "label": "Settings", "section": "account", "signed_in": true, "path": "/members/settings"}
+]

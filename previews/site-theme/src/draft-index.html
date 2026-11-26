@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frenzy draft - candidates</title>
+<link rel="stylesheet" href="product.css">
+<link rel="stylesheet" href="bench.css">
+</head>
+<body class="bg-background text-foreground">
+<main class="bench-main">
+  <h1 class="font-rs-bold text-primary bench-title">Frenzy draft (FRZ-3)</h1>
+  <p class="text-muted-foreground text-sm bench-intro">Round 3 (the first three tabs) joins the snake grid, a recent-picks list and every team's full roster on one page. D4 Stacked puts the grid beside the recent picks, then the pool, then the teams. D5 Grid first runs the grid across the page, then the pool beside a longer recent-picks list, then the teams. Each team column lists its captain and all its members, top picks numbered and handed-out members marked auto, and scrolls inside its column. The third tab is the finished draft in this layout. The tabs after it are round 2.</p>
+  <p class="text-muted-foreground text-sm bench-intro">Round 2, at real size: 160 signups, 4 captains, teams of 40, in Top Picks mode with 5 top picks each. Three candidates for the live page: D1 Board shows each team's count and latest picks, D2 Pick feed runs the top picks as a numbered list beside the pool, D3 Snake grid draws the 5 top-pick rounds as rows and folds the handed-out rounds into one line. The other tabs are shared: the drawn order, the result after the snake hands out the rest, a team's full roster with Move to, Full draft mode at pick 87 (staff view, "Pick for (captain)"), and the staff setup. In the live tabs the viewer is Hammer Time on their own turn, so the buttons read "Pick". Long lists scroll in their own frame here; the product draws them as virtual lists. Names and figures are mock.</p>
+  <nav class="bench-tabs" aria-label="Page">{{tabs}}</nav>
+  <table class="bench-table"><tbody>{{rows}}</tbody></table>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Function coverage, round 3</h2>
+  <table class="bench-coverage">
+    <thead><tr><th>Function</th><th>D4 Stacked</th><th>D5 Grid first</th></tr></thead>
+    <tbody>
+      <tr><td>Snake grid of the top-pick rounds, handed-out rounds folded</td><td>Left of the recent picks</td><td>Full width under the turn head</td></tr>
+      <tr><td>Recent picks, newest first, with captain and round</td><td>Right of the grid, 8 picks</td><td>Right of the pool, 10 picks</td></tr>
+      <tr><td>Full teams: captain, every member, count against size</td><td colspan="2">Four team columns at the foot, each scrolling; the picking team carries "Picking now"</td></tr>
+      <tr><td>Whose turn, pick number and round</td><td colspan="2">Turn head and the highlighted grid cell</td></tr>
+      <tr><td>Pool with search, rank filter, sort and Pick</td><td>Full width under the grid</td><td>Left two thirds, beside the recent picks</td></tr>
+      <tr><td>Draft complete, drafted and auto members apart</td><td colspan="2">The complete tab: the filled grid and every team's full roster, auto members marked; Move members for staff</td></tr>
+      <tr><td>Order drawn, roster dialog, Full draft mode, staff setup</td><td colspan="2">Unchanged from round 2 (the later tabs)</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Function coverage, round 2</h2>
+  <table class="bench-coverage">
+    <thead><tr><th>Function</th><th>D1 Board</th><th>D2 Pick feed</th><th>D3 Snake grid</th></tr></thead>
+    <tbody>
+      <tr><td>Staff choose the mode (Full draft or Top Picks) and the top picks per captain (5 to start)</td><td colspan="3">The staff tab: mode switch, number field, and the plan line it implies</td></tr>
+      <tr><td>Staff choose captains from the signups, with "willing to captain" shown</td><td colspan="3">The staff tab, a searchable list of all signups</td></tr>
+      <tr><td>Random round-1 order, shown before the first pick, then Start</td><td colspan="3">The "Order drawn" tab: order strip, team columns, the pool without pick buttons, Start the draft</td></tr>
+      <tr><td>Top Picks: captains pick x each, the snake hands out the rest</td><td>"Top pick 10 of 20 · Round 3 of 5 · the rest are handed out after round 5"</td><td>The list shows only the 20 top picks; the teams panel says how many follow</td><td>5 rows of rounds, then one line for rounds 6 to 39</td></tr>
+      <tr><td>Hundreds of signups</td><td colspan="3">The pool scrolls, with search, a rank filter and sort; a team shows its count against its size and its latest picks</td></tr>
+      <tr><td>Result after the hand-out, drafted and handed-out members apart</td><td colspan="3">The "Complete" tab: each team's top picks and "+34 handed out by the snake"; the "Full roster" dialog marks each member top pick or auto</td></tr>
+      <tr><td>Staff move any member between teams before the event</td><td colspan="3">Move members on the complete page, and Move to on each row of the roster dialog</td></tr>
+      <tr><td>Snake order: each round reverses</td><td>The round's order strip, "then round 3 reverses"</td><td>The round label on each round's first pick</td><td>Row arrows alternate</td></tr>
+      <tr><td>Whose turn, pick number and round</td><td>Turn head and the picking column</td><td>Turn head over the pool and the highlighted list row</td><td>Head line and the highlighted cell</td></tr>
+      <tr><td>The pool of signups left, searchable and sortable</td><td>Pool list with search and sort</td><td>Pool list with search and sort</td><td>Pool list with search</td></tr>
+      <tr><td>A captain picks on their turn; staff pick for an absent captain</td><td colspan="3">"Pick" for the captain whose turn it is, "Pick for (captain)" for staff, no timer</td></tr>
+      <tr><td>Each team filling up</td><td>Team columns</td><td>Teams panel</td><td>Grid columns</td></tr>
+      <tr><td>Live for everyone watching</td><td colspan="3">"Live" marker; each pick arrives over the websocket</td></tr>
+      <tr><td>Full draft mode, every signup picked by the captains</td><td colspan="3">The "Full draft mode" tab, drawn in D1 at pick 87 of 156; D2 and D3 window the same way around the current pick</td></tr>
+    </tbody>
+  </table>
+</main>
+<script>
+  const frames = () => document.querySelectorAll(".bench-table iframe");
+  const fitHeight = (frame) => {
+    const doc = frame.contentDocument;
+    if (doc) frame.height = String(doc.documentElement.scrollHeight);
+  };
+  const showPage = (page) => {
+    document.querySelectorAll(".bench-tab").forEach((tab) => tab.classList.toggle("is-active", tab.dataset.page === page));
+    document.querySelectorAll(".bench-table tr").forEach((row) => {
+      row.querySelectorAll("iframe").forEach((frame) => { frame.src = `frame-${row.dataset.theme}-${page}.html`; });
+    });
+  };
+  frames().forEach((frame) => frame.addEventListener("load", () => fitHeight(frame)));
+  document.querySelectorAll(".bench-tab").forEach((tab) => tab.addEventListener("click", () => showPage(tab.dataset.page)));
+  showPage("{{first}}");
+</script>
+</body>
+</html>

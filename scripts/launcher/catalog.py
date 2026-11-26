@@ -12,7 +12,7 @@ from .actions import Action, Choice, Flag
 
 ENVIRONMENTS = ("dev", "staging", "prod")
 
-EXTRA_SERVICES = "extra compose services, e.g. cache-tiles"
+EXTRA_SERVICES = "extra compose services, e.g. web-app"
 
 CATALOG: tuple[Action, ...] = (
     Action(
@@ -96,24 +96,6 @@ CATALOG: tuple[Action, ...] = (
         build=jobs.docker_cleanup,
         flags=(Flag("dry_run", "Dry run (list only)", default=True),),
         requires=("bash", "docker"),
-    ),
-    Action(
-        slug="reingest-cache",
-        section="Maintenance",
-        label="force cache re-ingest",
-        summary=(
-            "Makes osrs-cache-service re-download and re-decode the current OSRS build, "
-            "so new decoder fields are backfilled without waiting for Jagex to ship one."
-        ),
-        build=stack.reingest_cache,
-        choices=(Choice("env", "Environment", ENVIRONMENTS),),
-        flags=(Flag("apply", "Apply (off = show the ingested build)"),),
-        requires=("infisical", "docker"),
-        warning=(
-            "Restarts osrs-cache-service and re-runs the whole ingest "
-            "(download, icons, map tiles - minutes, and double the volume use "
-            "until it finishes)."
-        ),
     ),
     Action(
         slug="migrate-clan-rank",

@@ -13,7 +13,6 @@
   {"id": "parties", "label": "Parties", "section": "community", "signed_in": true, "path": "/parties"},
   {"id": "parties-create", "label": "Parties: create", "section": "community", "signed_in": true, "path": "/parties (Create dialog)"},
   {"id": "calendar", "label": "Calendar", "section": "community", "signed_in": true, "path": "/calendar"},
-  {"id": "bingo", "label": "Bingo", "section": "community", "signed_in": false, "path": "/bingo"},
   {"id": "frenzy", "label": "Frenzy", "section": "community", "signed_in": true, "path": "/activities/frenzy"},
   {"id": "frenzy-team", "label": "Frenzy: team", "section": "community", "signed_in": false, "path": "/activities/frenzy/$teamSlug"},
   {"id": "tilerace", "label": "Tile Race", "section": "community", "signed_in": true, "path": "/activities/tilerace"},

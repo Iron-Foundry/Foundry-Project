@@ -1,0 +1,96 @@
+/* Frenzy draft candidates: the turn head, the snake order, the team board, the pool and the pick feed. */
+
+/* Turn head */
+.ui-draft-turn { display: grid; gap: 0.9rem; padding: 1.1rem 1.25rem; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); }
+.ui-draft-turn-main { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; }
+.ui-draft-turn-main b { font-family: var(--ui-head-font); font-weight: normal; font-size: 1.6rem; color: var(--ui-accent); }
+.ui-draft-turn-main p { color: var(--mk-body); }
+.ui-draft-meta { display: flex; flex-wrap: wrap; gap: 0.3rem 1.25rem; font-size: 0.85rem; color: var(--ui-muted); }
+.ui-draft-live { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--mk-green); font-weight: 600; }
+.ui-draft-live::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: currentColor; }
+
+/* Snake order strip */
+.ui-draft-order { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem; font-size: 0.85rem; color: var(--ui-muted); }
+.ui-draft-order li { display: inline-flex; align-items: center; gap: 0.35rem; }
+.ui-draft-order li b { font-weight: 600; color: var(--ui-text); }
+.ui-draft-order li.is-now b { color: var(--ui-accent); text-decoration: underline; text-underline-offset: 0.3em; }
+.ui-draft-order .ui-draft-num { font-variant-numeric: tabular-nums; color: var(--ui-muted); }
+.ui-draft-order .ui-icon { color: var(--ui-muted); }
+
+/* Team board */
+.ui-draft-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; }
+.ui-draft-team { display: grid; align-content: start; gap: 0.5rem; padding: 1rem; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); min-width: 0; }
+.ui-draft-team.is-now { border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-line)); }
+.ui-draft-team header { display: grid; gap: 0.15rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--ui-line); }
+.ui-draft-team header b { font-family: var(--ui-head-font); font-weight: normal; font-size: 1.15rem; }
+.ui-draft-team header span { font-size: 0.8rem; color: var(--ui-muted); }
+.ui-draft-team ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+.ui-draft-team li { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.9rem; min-width: 0; }
+.ui-draft-team li .ui-draft-num { width: 1.4rem; flex-shrink: 0; font-size: 0.75rem; color: var(--ui-muted); font-variant-numeric: tabular-nums; }
+.ui-draft-team li .ui-name { flex: 1; min-width: 0; }
+.ui-draft-team li.is-empty .ui-name { color: var(--ui-muted); font-style: italic; }
+.ui-draft-team li.is-next .ui-name { color: var(--ui-accent); font-style: normal; font-weight: 600; }
+
+.ui-draft-team .ui-kicker { margin: 0.25rem 0 0; }
+.ui-draft-team .ui-link { font-size: 0.85rem; color: var(--ui-accent); text-decoration: none; margin-top: 0.25rem; }
+.ui-draft-team li .ui-hint { font-size: 0.7rem; color: var(--ui-muted); }
+
+/* A long list scrolls inside its own frame; the product draws it as a virtual list */
+.ui-draft-scroll { max-height: 26rem; overflow-y: auto; }
+
+/* Pool of signups */
+.ui-draft-pool { display: grid; gap: 0.75rem; }
+.ui-draft-pool-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.ui-draft-pool-head .ui-h3 { margin: 0; }
+.ui-draft-rows { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); overflow: hidden; }
+.ui-draft-rows li { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem 5rem auto; gap: 0.75rem; align-items: center; padding: 0.55rem 1rem; font-size: 0.9rem; }
+.ui-draft-rows li + li { border-top: 1px solid var(--ui-line); }
+.ui-draft-rows li.ui-draft-colhead { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-muted); padding-top: 0.45rem; padding-bottom: 0.45rem; }
+.ui-draft-rows .ui-val { text-align: right; }
+.ui-draft-rows .ui-hint { display: block; }
+
+/* D2 pick feed */
+.ui-draft-cols { display: grid; grid-template-columns: 15rem minmax(0, 1fr) 15rem; gap: 1.25rem; align-items: start; }
+.ui-draft-feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.1rem; font-size: 0.9rem; }
+.ui-draft-feed li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.5rem; padding: 0.35rem 0; }
+.ui-draft-feed li + li { border-top: 1px solid var(--ui-line); }
+.ui-draft-feed li span { color: var(--ui-muted); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.ui-draft-feed li p { min-width: 0; }
+.ui-draft-feed li small { display: block; color: var(--ui-muted); font-size: 0.8rem; }
+.ui-draft-feed li.is-now p { color: var(--ui-accent); font-weight: 600; }
+.ui-draft-feed li.is-later { opacity: 0.55; }
+
+/* D3 snake grid */
+.ui-draft-grid { width: 100%; border-collapse: collapse; font-size: 0.9rem; border: 1px solid var(--ui-line); background: var(--ui-surface); }
+.ui-draft-grid th, .ui-draft-grid td { padding: 0.55rem 0.7rem; text-align: left; border-top: 1px solid var(--ui-line); }
+.ui-draft-grid thead th { font-size: 0.8rem; color: var(--ui-muted); font-weight: 600; }
+.ui-draft-grid thead th b { display: block; font-family: var(--ui-head-font); font-weight: normal; font-size: 1.05rem; color: var(--ui-text); }
+.ui-draft-grid tbody th { width: 6rem; font-size: 0.8rem; color: var(--ui-muted); white-space: nowrap; }
+.ui-draft-grid td.is-empty { color: var(--ui-muted); }
+.ui-draft-grid td.is-now { color: var(--ui-accent); font-weight: 600; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ui-accent) 55%, transparent); }
+.ui-draft-split { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.ui-draft-split--pool { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.ui-draft-scroll--team { max-height: 22rem; }
+
+/* Staff: choose captains */
+.ui-draft-pickers { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); }
+.ui-draft-pickers li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 1rem; font-size: 0.9rem; }
+.ui-draft-pickers li + li { border-top: 1px solid var(--ui-line); }
+.ui-draft-pickers .ui-icon { color: var(--ui-muted); }
+.ui-draft-pickers li.is-on .ui-icon { color: var(--ui-accent); }
+.ui-draft-pickers small { color: var(--ui-muted); font-size: 0.8rem; }
+
+@media (max-width: 1100px) {
+  .ui-draft-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ui-draft-cols > :first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 900px) {
+  .ui-draft-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ui-draft-cols, .ui-draft-split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .ui-draft-board { grid-template-columns: minmax(0, 1fr); }
+  .ui-draft-rows li { grid-template-columns: minmax(0, 1fr) auto; }
+  .ui-draft-rows li > :nth-child(2), .ui-draft-rows li > :nth-child(3) { display: none; }
+  .ui-draft-grid { display: block; overflow-x: auto; }
+}

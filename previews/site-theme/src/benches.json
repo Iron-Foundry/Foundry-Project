@@ -1,0 +1,5 @@
+[
+  ["index.html", "index.html", "themes.json", "pages.json"],
+  ["members.html", "members-index.html", "members-themes.json", "members-pages.json"],
+  ["frenzy-draft.html", "draft-index.html", "draft-themes.json", "draft-pages.json"]
+]

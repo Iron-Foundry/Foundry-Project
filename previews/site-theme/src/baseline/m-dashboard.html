@@ -1,0 +1,70 @@
+<div class="flex flex-col bg-background text-foreground">
+{{topnav}}
+  <div class="flex flex-1 min-h-0">
+{{sidebar}}
+    <div class="flex flex-col flex-1 min-h-0 overflow-hidden"><div class="flex flex-col flex-1 px-6 pt-6 pb-6">
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm lg:col-span-4 pb-1">
+          <div class="grid auto-rows-min items-start gap-2 px-6 pb-3">
+            <div class="flex items-center gap-3">
+              <div class="h-12 w-12 rounded-full bg-muted shrink-0"></div>
+              <div class="min-w-0">
+                <div class="leading-none font-rs-bold text-3xl text-primary">Welcome, Hammer Time!</div>
+                <span class="inline-flex items-center rounded-full border px-1.5 py-0 mt-1 text-[10px] font-medium border-orange-400/60 text-orange-600 dark:text-orange-400">Moderator</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 flex-1 flex flex-col gap-4">
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-muted-foreground">Discord</span><span class="text-foreground">hammertime</span></div>
+              <div class="flex justify-between"><span class="text-muted-foreground">RSN</span><span class="text-foreground">Hammer Time</span></div>
+              <div class="flex justify-between"><span class="text-muted-foreground">Rank</span><span class="text-foreground">Dragonstone</span></div>
+              <div class="flex justify-between"><span class="text-muted-foreground">Discord Rank</span><span class="text-foreground">Moderator</span></div>
+              <div class="flex justify-between"><span class="text-muted-foreground">Collection log</span><span class="text-foreground">1,042<span class="text-muted-foreground"> / 1,699</span></span></div>
+              <div class="flex justify-between"><span class="text-muted-foreground">Personal loot</span><span class="text-foreground">2.4B</span></div>
+            </div>
+            <div class="bg-border h-px w-full"></div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">Account Ranks</p>
+              <div class="space-y-1">
+                <div class="flex items-center justify-between gap-2 text-sm"><span class="truncate">Hammer Time</span><span class="flex items-center gap-2"><span class="text-muted-foreground text-xs">Dragonstone</span><span class="font-rs-bold">18,420</span></span></div>
+                <div class="flex items-center justify-between gap-2 text-sm"><span class="truncate text-muted-foreground text-xs">Anvil Alt</span><span class="flex items-center gap-2"><span class="text-muted-foreground text-xs">Ruby</span><span class="font-rs-bold">6,115</span></span></div>
+              </div>
+            </div>
+            <div class="bg-border h-px w-full"></div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">Badges</p>
+              <div class="flex flex-wrap gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium" style="background:#ff8a1f;color:#1a0e00">Founding Member</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium" style="background:#3fa9ff;color:#04111f">Mentor</span></div>
+            </div>
+            <div class="bg-border h-px w-full"></div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">Name Changes</p>
+              <div class="flex items-center gap-2 py-1 text-sm"><span class="font-medium text-muted-foreground truncate flex-1 min-w-0">Iron Quench</span><span class="text-muted-foreground/40">→</span><span class="font-medium text-foreground truncate flex-1 min-w-0 text-right">Quench</span><span class="text-xs text-muted-foreground/70 pl-1">2d ago</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm lg:col-span-5 pb-1">
+          <div class="px-6 pb-2 font-rs-bold text-xl text-primary">Your Activity Feed</div>
+          <div class="bg-border h-px w-full"></div>
+          <ul class="divide-y divide-border border-b border-border">
+            <li class="flex items-center gap-3 px-4 py-1.5"><span class="h-4 w-4 shrink-0 text-yellow-400">●</span><span class="inline-flex justify-center text-[10px] w-16 text-primary">Loot</span><span class="text-sm font-medium text-foreground truncate flex-1 min-w-0">Dragon warhammer</span><span class="shrink-0 font-rs-bold text-sm text-yellow-400">40.1M gp</span><span class="shrink-0 text-xs text-muted-foreground w-14 text-right">2h ago</span></li>
+            <li class="flex items-center gap-3 px-4 py-1.5"><span class="h-4 w-4 shrink-0 text-green-400">●</span><span class="inline-flex justify-center text-[10px] w-16 text-primary">Level Up</span><span class="text-sm font-medium text-foreground truncate flex-1 min-w-0">Runecraft</span><span class="shrink-0 font-rs-bold text-sm text-green-400">Level 91</span><span class="shrink-0 text-xs text-muted-foreground w-14 text-right">5h ago</span></li>
+            <li class="flex items-center gap-3 px-4 py-1.5"><span class="h-4 w-4 shrink-0 text-blue-400">●</span><span class="inline-flex justify-center text-[10px] w-16 text-primary">XP</span><span class="text-sm font-medium text-foreground truncate flex-1 min-w-0">Slayer</span><span class="shrink-0 font-rs-bold text-sm text-blue-400">10M xp</span><span class="shrink-0 text-xs text-muted-foreground w-14 text-right">2d ago</span></li>
+          </ul>
+          <button class="px-4 py-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-left">Show 128 more events...</button>
+        </div>
+        <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm lg:col-span-3 pb-1">
+          <div class="px-6 pb-2 font-rs-bold text-xl text-primary">Competitions</div>
+          <div class="bg-border h-px w-full"></div>
+          <div class="px-4 flex flex-col gap-1.5">
+            <a href="#" class="flex items-center justify-between gap-2 rounded-md px-3 py-2 text-xs font-medium bg-green-500/10 text-green-700 dark:text-green-400">SOTW: Runecraft<span class="text-[10px]">Live</span></a>
+            <a href="#" class="flex items-center justify-between gap-2 rounded-md px-3 py-2 text-xs font-medium bg-blue-500/10 text-blue-700 dark:text-blue-400">BOTW: Vorkath<span class="text-[10px]">Upcoming</span></a>
+          </div>
+          <ul class="divide-y divide-border">
+            <li class="px-4 py-3 space-y-1.5"><span class="font-medium text-foreground text-sm">SOTW: Agility</span><div class="text-xs text-muted-foreground">Agility</div><div class="text-xs text-muted-foreground">6 Nov 2026 – 13 Nov 2026</div></li>
+          </ul>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>

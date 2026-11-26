@@ -13,6 +13,7 @@ sys.path.insert(0, str(HERE.parent / "site-theme"))
 
 import data  # noqa: E402
 import editor_frames  # noqa: E402
+import killrate_frames  # noqa: E402
 import reference_frames  # noqa: E402
 from class_report import print_report  # noqa: E402
 
@@ -69,7 +70,11 @@ def write_index(sections: dict[str, list[dict]]) -> Path:
 def main() -> None:
     rows = data.load(HERE)
     copy_stylesheet()
-    sections = {"editor": editor_frames.options(rows), "reference": reference_frames.options(rows)}
+    sections = {
+        "killrate": killrate_frames.options(rows),
+        "editor": editor_frames.options(rows),
+        "reference": reference_frames.options(rows),
+    }
     frames = [p for surface, options in sections.items() for p in write_frames(surface, options)]
     index = write_index(sections)
     print_report([HERE / "product.css", HERE / "bench.css"], frames + [index])

@@ -62,7 +62,13 @@
 .theme-mark .ui-cell--finish { color: var(--mk-red); }
 .theme-mark .ui-racemarker { border: 2px solid var(--ui-bg); }
 .theme-mark .ui-racemarker:hover, .theme-mark .ui-racemarker:focus-visible { transform: scale(1.1); transition: transform 150ms; }
-.theme-mark .ui-raceprogress-track { background: linear-gradient(90deg, var(--ui-surface-2), color-mix(in srgb, var(--ui-accent) 35%, var(--ui-surface-2))); }
+.theme-mark .ui-raceprogress-track {
+  background: linear-gradient(90deg, var(--ui-surface-2), color-mix(in srgb, var(--ui-accent) 35%, var(--ui-surface-2)), var(--ui-surface-2));
+  background-size: 200% 100%;
+  animation: mark-raceprogress-pan 24s linear infinite;
+}
+@keyframes mark-raceprogress-pan { from { background-position: 0% 50%; } to { background-position: -200% 50%; } }
+@media (prefers-reduced-motion: reduce) { .theme-mark .ui-raceprogress-track { animation: none; } }
 .theme-mark .ui-dice-face { color: var(--ui-text); }
 .theme-mark .ui-rolls li span b { color: var(--ui-text); }
 

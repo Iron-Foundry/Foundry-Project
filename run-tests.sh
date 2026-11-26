@@ -133,11 +133,10 @@ require_docker() {
 # ----- fast suites -------------------------------------------------------------
 
 run_fast() {
-  spawn "api-backend (fast)"        bash -c 'cd "$ROOT/api-backend" && "$UV" run pytest -q -p no:cacheprovider'
-  spawn "discord-server (fast)"     bash -c 'cd "$ROOT/discord-server" && "$UV" run pytest -q -p no:cacheprovider'
-  spawn "discord-utils (fast)"      bash -c 'cd "$ROOT/discord-utils" && "$UV" run pytest -q -p no:cacheprovider'
-  spawn "osrs-cache-service (fast)" bash -c 'cd "$ROOT/osrs-cache-service" && "$UV" run pytest -q -p no:cacheprovider'
-  spawn "web-app (unit)"            bash -c 'cd "$ROOT/web-app" && "$BUN" test tests/'
+  spawn "api-backend (fast)"    bash -c 'cd "$ROOT/api-backend" && "$UV" run pytest -q -p no:cacheprovider'
+  spawn "discord-server (fast)" bash -c 'cd "$ROOT/discord-server" && "$UV" run pytest -q -p no:cacheprovider'
+  spawn "discord-utils (fast)"  bash -c 'cd "$ROOT/discord-utils" && "$UV" run pytest -q -p no:cacheprovider'
+  spawn "web-app (unit)"        bash -c 'cd "$ROOT/web-app" && "$BUN" test tests/'
   reap_all
 }
 
@@ -145,7 +144,7 @@ run_fast() {
 
 # discord-event has no pytest suite yet, so it appears here (lint + types) but
 # not in run_fast.
-_PY_MODULES="api-backend discord-server discord-utils discord-event osrs-cache-service"
+_PY_MODULES="api-backend discord-server discord-utils discord-event"
 
 run_lint() {
   for module in $_PY_MODULES; do

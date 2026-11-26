@@ -1,0 +1,17 @@
+[
+  {
+    "id": "dr-mark", "name": "Monogram", "class": "theme-mark", "body_class": "",
+    "css": ["product.css", "components.css", "pages.css", "data-pages.css", "draft.css", "theme-mark.css", "theme-mark-pages.css", "theme-mark-data.css"],
+    "note": "The site skin as built. Each tab is one candidate in one draft state. The viewer is staff member Hammer Time, who is also a captain."
+  },
+  {
+    "id": "dr-light", "name": "Monogram, light mode", "class": "theme-mark light", "body_class": "",
+    "css": ["product.css", "components.css", "pages.css", "data-pages.css", "draft.css", "theme-mark.css", "theme-mark-pages.css", "theme-mark-data.css"],
+    "note": "The same candidates in light mode."
+  },
+  {
+    "id": "baseline", "name": "Today", "class": "", "body_class": "bg-background text-foreground",
+    "css": ["product.css"],
+    "note": "The site has no draft today. Teams come from a Wise Old Man sync."
+  }
+]

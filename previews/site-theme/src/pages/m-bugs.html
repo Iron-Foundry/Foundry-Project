@@ -1,0 +1,23 @@
+    <section class="ui-intro">
+      <h1 class="ui-h1 ui-h1--page">Bug Reports</h1>
+      <p class="ui-lede">Report issues and bugs you encounter.</p>
+    </section>
+    <div class="ui-overlay">
+      <div class="ui-dialog" role="dialog" aria-label="Edit Bug Report">
+        <header class="ui-dialog-head"><h2 class="ui-h3">Edit Bug Report</h2><button type="button" class="ui-icon-btn" aria-label="Close">{{icon:x}}</button></header>
+        <form class="ui-form">
+          <label class="ui-field"><span>Title</span><input class="ui-input" value="Party chat skips messages"></label>
+          <label class="ui-field"><span>Description</span><textarea class="ui-input" rows="4">Two messages sent at the same time only show one in the party chat.</textarea></label>
+          <label class="ui-field"><span>Steps to reproduce</span><textarea class="ui-input" rows="3">1. Join a party with a friend. 2. Both send a message in the same second.</textarea></label>
+          <div class="ui-field"><span>Images</span>
+            <div class="ui-attachments">
+              <span class="ui-thumb"><img src="art/clan-photo.png" alt="party-chat.png"><button type="button" class="ui-thumb-remove" aria-label="Remove image">{{icon:x}}</button></span>
+              <button type="button" class="ui-thumb ui-thumb--add">{{icon:image-plus}}Add image</button>
+            </div>
+            <small class="ui-hint">1/5 images</small>
+          </div>
+          <div class="ui-field"><span>Submit anonymously?</span><span class="ui-variant-switch"><button type="button">Yes</button><button type="button" class="is-active">No</button></span></div>
+          <div class="ui-dialog-foot"><button type="button" class="ui-btn ui-btn--alt">Cancel</button><button type="button" class="ui-btn">Save</button></div>
+        </form>
+      </div>
+    </div>

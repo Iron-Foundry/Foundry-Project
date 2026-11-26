@@ -11,8 +11,8 @@
 
 This repository is the monorepo root for The Iron Foundry Project. It tracks five services as
 Git submodules, each in its own repository under the
-[Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub. A sixth service,
-`osrs-cache-service`, lives directly in this repository rather than as a submodule.
+[Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub. OSRS game data and art
+come from the [OSRSClans](https://osrsclans.cc) API.
 
 Submodule references are kept up to date automatically - pushing to `main` in any submodule
 dispatches a GitHub Actions workflow in this repo that advances the recorded commit pointer.
@@ -27,7 +27,7 @@ dispatches a GitHub Actions workflow in this repo that advances the recorded com
 |---|---|---|
 | **discord-server** | Python 3.14+, discord.py | Core bot - ticket system, role management, action logging, server automation |
 | **discord-utils** | Python 3.14+, discord.py | Utility bot - temporary voice channels, music playback, OTW image generation, clan event relay |
-| **discord-event** | Python 3.14+, discord.py | Event bot - bingo events, team coordination, submission review |
+| **discord-event** | Python 3.14+, discord.py | Event bot - clan events, their team channels and roles, event hosts |
 
 ### Backend & Frontend
 
@@ -35,7 +35,6 @@ dispatches a GitHub Actions workflow in this repo that advances the recorded com
 |---|---|---|
 | **api-backend** | Python 3.14+, FastAPI | REST API backend |
 | **web-app** | TypeScript, React 19, Bun | Community web application |
-| **osrs-cache-service** | Python 3.14+, FastAPI | OSRS game cache decoder - item/npc/object definitions, item icons, map tiles |
 
 ### Repositories
 
@@ -46,7 +45,6 @@ dispatches a GitHub Actions workflow in this repo that advances the recorded com
 | discord-event | [Iron-Foundry/discord-event](https://github.com/Iron-Foundry/discord-event) |
 | api-backend | [Iron-Foundry/api-backend](https://github.com/Iron-Foundry/api-backend) |
 | web-app | [Iron-Foundry/web-app](https://github.com/Iron-Foundry/web-app) |
-| osrs-cache-service | in this repository (`osrs-cache-service/`) |
 
 ---
 
@@ -92,7 +90,7 @@ use - nothing to install. Full reference, including the maintenance jobs it expo
 |---|---|
 | Python services | Python 3.14+, `uv` package manager, Ruff, Pyright |
 | Web app | TypeScript, React 19, Bun, TanStack Router, Tailwind CSS 4, Shadcn/ui |
-| Database | PostgreSQL (primary, shared across discord-server, discord-utils, api-backend), a dedicated `cache-postgres` for osrs-cache-service, MongoDB (discord-event), Valkey/Redis (caching, pubsub) |
+| Database | PostgreSQL (primary, shared across discord-server, discord-utils, api-backend), MongoDB (discord-event), Valkey/Redis (caching, pubsub) |
 | Quality | Ruff, Pyright/Mypy, Bandit, pre-commit hooks, `./run test {lint\|fast\|integration\|e2e\|all}` |
 | CI/CD | GitHub Actions (`ubuntu-latest` runners) |
 

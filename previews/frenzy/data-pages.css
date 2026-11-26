@@ -85,7 +85,7 @@
 .ui-tilemap { position: relative; aspect-ratio: 1; max-width: 16rem; border-radius: 8px; }
 .ui-tilemap i { position: absolute; width: 1.25rem; height: 1.25rem; }
 
-/* Events: bingo, frenzy, tile race */
+/* Events: frenzy, tile race */
 .ui-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
 .ui-tiles--five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .ui-tiles--six { grid-template-columns: repeat(6, minmax(0, 1fr)); }

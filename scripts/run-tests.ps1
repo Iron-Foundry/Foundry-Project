@@ -136,9 +136,6 @@ function Invoke-Fast {
   Invoke-Step 'discord-utils (fast)' (Join-Path $Root 'discord-utils') {
     Invoke-Native $Uv $PytestFast
   }
-  Invoke-Step 'osrs-cache-service (fast)' (Join-Path $Root 'osrs-cache-service') {
-    Invoke-Native $Uv $PytestFast
-  }
   Invoke-Step 'web-app (unit)' (Join-Path $Root 'web-app') {
     Invoke-Native $Bun @('test', 'tests/')
   }
@@ -148,7 +145,7 @@ function Invoke-Fast {
 
 # discord-event has no pytest suite yet, so it appears here (lint + types) but
 # not in Invoke-Fast.
-$PyModules = @('api-backend', 'discord-server', 'discord-utils', 'discord-event', 'osrs-cache-service')
+$PyModules = @('api-backend', 'discord-server', 'discord-utils', 'discord-event')
 
 function Invoke-Lint {
   foreach ($module in $PyModules) {

@@ -14,7 +14,7 @@ Read when a session or task begins its domain:
 - `.claude/INDEX.md` - the search index; consult it before searching the tree.
 - `.claude/rules/agent-invocation.md` - the agent-spawn ban, whenever a task tempts you toward an agent.
 - `.claude/intel/INDEX.md` - the PAG intel index (grammar, authoring guides, templates); consult before writing or editing any PAG document.
-- The submodule's own `CLAUDE.md` (e.g. `osrs-cache-service/CLAUDE.md`) when working inside it.
+- The submodule's own `CLAUDE.md` when working inside it.
 
 # BEHAVIORAL RULES
 
@@ -69,17 +69,18 @@ Memory and process
 - `no_ai_look`: a design candidate is simple and clean: plain text navigation, flat panels with neutral borders, icons only where they carry meaning, large readable text; coloured text and gradients are welcome, but never pills everywhere, coloured border strips per card, or glow outlines on cards and images. Digest: [[no-ai-look]].
 - `redesign_keeps_every_function`: a redesign candidate carries every function of the surface today (menus, account states, light mode, mobile access, editor tools, filters); inventory the real components first and put a coverage table on the bench page. Digest: [[redesign-keeps-every-function]].
 - `answer_from_this_repo`: a question about this repo (its todo, its state, its work) is answered from this repo alone; never pull in or name a sibling workspace such as cscolab. The work list is `_TODO.salt.md` at the root. Digest: [[answer-from-this-repo]].
-- `osrsclans_is_the_source`: all OSRS data and art (items, NPCs, sprites, models, names, loot rates) comes from the live OSRSClans API (`https://osrsclans.cc/api/v1`) whenever it serves what is needed. Check its live spec first, because its gaps are being closed. This overrides `/osrs-cache/*` and the Wiki NPC exception in `.claude/rules/osrs-item-sources.md`. Digest: [[osrsclans-api-is-the-art-source]].
+- `osrsclans_is_the_source`: all OSRS data and art (items, NPCs, sprites, models, names, loot rates) comes from the live OSRSClans API (`https://osrsclans.cc/api/v1`) whenever it serves what is needed. Check its live spec first, because its gaps are being closed. Ruleset: `.claude/rules/osrs-item-sources.md`. Digest: [[osrsclans-api-is-the-art-source]].
 - `run_the_lock_from_git_bash`: run the suite join from the Bash tool, never from PowerShell, where `bash` fails with `0x8007274c`. Digest: [[run-lock-from-git-bash]].
 - `a_gap_exists_in_the_game`: before you report a missing OSRSClans value as a gap, confirm that the game defines that value. A rate the game does not have, or one the caller queries, is not a gap. Digest: [[osrsclans-api-is-the-art-source]].
 - `check_the_live_service`: "check <service>'s docs, routes or data" means fetch the deployed service (`/openapi.json`, `/docs`, one sample request), never its local repo or git log. Digest: [[check-the-live-service]].
+- `other_repos_are_not_yours`: work in another repository is the one act the operator asks for; never track, gate-check or remind about its todo rows or releases. Digest: [[other-repos-are-not-yours]].
 - `feedback_capture`: a user correction becomes one new one-line rule here plus one memory file, so it survives the session.
 
 # VERIFYING WORK
 
 Standard runner: root `run-tests.sh {lint|fast|integration|e2e|all}`, run by a session only through the run lock as `npm --prefix collaboration-surface run join -- --suite foundry-<lane>` (the rows of `collaboration-surface/config/join.config.ts`). The operator may still run `./run-tests.sh <lane>` or `./run test <lane>` through the launcher (see [[integration-testing]], [[root-launcher]]). Touching a module means running its suite before done (`tests_follow_code`): every change needs `lint` (ruff check + ruff format --check + pyright per Python module, `tsc --noEmit` for web-app); code that changes runtime behavior needs `fast` as well; anything touching DB/Valkey/pubsub or a cross-service seam needs `integration`; changes to the web<->api / discord<->api / api<->runelite interconnects need `e2e`. A contract change regenerates `api-backend/openapi.json` and `web-app/src/api/schema.d.ts` in the same change. New code lands with its tests in the same change, never deferred.
 
-## Python services (discord-server, discord-utils, discord-event, api-backend, osrs-cache-service)
+## Python services (discord-server, discord-utils, discord-event, api-backend)
 
 `uv` only - never `pip` or `uv pip install`.
 
@@ -108,7 +109,7 @@ bun run typecheck  # tsc --noEmit (strict)
 
 ## Repository structure
 
-Monorepo root for The Iron Foundry Project. All services except `osrs-cache-service` are Git submodules under the [Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers, advanced by `.github/workflows/update-submodules.yml` on a `repository_dispatch` from each submodule's `notify-parent.yml`.
+Monorepo root for The Iron Foundry Project. All services are Git submodules under the [Iron-Foundry](https://github.com/Iron-Foundry) organisation on GitHub; work on a submodule happens in its subdirectory and pushes there, not to the root. The root repo only tracks submodule pointers, advanced by `.github/workflows/update-submodules.yml` on a `repository_dispatch` from each submodule's `notify-parent.yml`.
 
 | Submodule | Stack | DB |
 |---|---|---|
@@ -117,9 +118,8 @@ Monorepo root for The Iron Foundry Project. All services except `osrs-cache-serv
 | `discord-event` | Python 3.14+, discord.py | MongoDB |
 | `api-backend` | Python 3.14+, FastAPI + Gunicorn | PostgreSQL + Valkey |
 | `web-app` | TypeScript, React 19, Bun | - |
-| `osrs-cache-service` | Python 3.14+, FastAPI + Gunicorn | PostgreSQL (dedicated `cache-postgres`) |
 
-`osrs-cache-service` is a plain directory in this monorepo, not a submodule (see `osrs-cache-service/CLAUDE.md`).
+OSRS game data and art (items, NPCs, sprites, loot rates) come from the OSRSClans API (`https://osrsclans.cc/api/v1`); api-backend reads it through `app/services/osrsclans/` and serves it under `/reference/*`.
 
 ## Infrastructure and secrets
 
@@ -150,10 +150,6 @@ FastAPI app with lifespan-managed services. On startup it connects PostgreSQL (S
 ### web-app
 
 Entry `src/index.tsx` (Bun HTTP server). Routes via TanStack Router (`src/routes/`). UI components via Shadcn/ui (Radix UI + Tailwind CSS 4). The prod server (`src/prod-server.ts`) injects `API_URL` and per-route OG meta into `dist/index.html`. Env vars: `BUN_PUBLIC_API_URL` (API base URL), `SITE_URL` (default `https://ironfoundry.cc`).
-
-### osrs-cache-service
-
-Pulls OSRS game cache builds from the OpenRS2 Archive, decodes the JS5 binary cache format, and stores structured definitions (items, npcs, objects, varbits, sprites/icons) plus raw undecoded cache groups in a dedicated `cache-postgres` database. Exposes a read-only FastAPI. Only the latest cache build is retained. See `osrs-cache-service/CLAUDE.md` for the JS5 layer, the decoder registry pattern, and how to add a new definition type.
 
 ### discord-server
 

@@ -1,0 +1,50 @@
+    <section class="ui-intro">
+      <h1 class="ui-h1 ui-h1--page">Settings</h1>
+    </section>
+    <div class="ui-settings">
+      <section class="ui-panel">
+        <div class="ui-panel-head"><h2 class="ui-h3">Profile</h2></div>
+        <div class="ui-who"><span class="ui-avatar">HT</span><div class="ui-who-text"><b>hammertime</b><p>Discord account</p></div></div>
+        <div class="ui-setting"><span>In-game rank</span><span>Dragonstone</span></div>
+        <div class="ui-setting"><span>Community rank</span><span>Moderator</span></div>
+        <div class="ui-setting"><span>Discord role</span><span>Moderator</span></div>
+        <label class="ui-field"><span>Linked RSN</span>
+          <span class="ui-inline"><input class="ui-input" value="Hammer Time" maxlength="12" placeholder="Your RuneScape name"><button type="button" class="ui-btn ui-btn--small">Save</button></span>
+        </label>
+        <p class="ui-ok">RSN updated.</p>
+      </section>
+
+      <section class="ui-panel">
+        <div class="ui-panel-head"><h2 class="ui-h3">Linked Accounts</h2></div>
+        <p class="ui-hint">Up to 5 RSNs. Your primary account is used by default.</p>
+        <ul class="ui-rows">
+          <li><span class="ui-name">Hammer Time</span><small>primary</small><button type="button" class="ui-icon-btn" aria-label="Set another primary first" disabled>{{icon:trash}}</button></li>
+          <li><span class="ui-name">Anvil Alt</span><button type="button" class="ui-tool">Set primary</button><button type="button" class="ui-icon-btn" aria-label="Remove">{{icon:trash}}</button></li>
+          <li><span class="ui-name">Tiny Hammer</span><button type="button" class="ui-tool">Set primary</button><button type="button" class="ui-icon-btn" aria-label="Remove">{{icon:trash}}</button><span class="ui-confirm">Click again to confirm</span></li>
+        </ul>
+        <label class="ui-field"><span>Add alt RSN</span>
+          <span class="ui-inline"><input class="ui-input" placeholder="Alt RSN"><button type="button" class="ui-btn ui-btn--small">Add</button></span>
+        </label>
+      </section>
+
+      <section class="ui-panel">
+        <div class="ui-panel-head"><h2 class="ui-h3">API Key</h2></div>
+        <p class="ui-hint">Authenticate external tools (e.g. RuneLite plugins) with this key.</p>
+        <p class="ui-callout">{{icon:alert}}New key generated. Copy it now - rotate again to replace it.</p>
+        <span class="ui-inline"><code class="ui-keybox">if_7Hk2qa••••••••••••••••••Zt91Lm</code><button type="button" class="ui-icon-btn" aria-label="Show key">{{icon:eye}}</button><button type="button" class="ui-icon-btn" aria-label="Copy to clipboard">{{icon:copy}}</button><span class="ui-ok">Copied!</span></span>
+        <p class="ui-hint">Generated 26 Nov 2026</p>
+        <div class="ui-actions"><button type="button" class="ui-btn ui-btn--alt">{{icon:history}}Rotate key</button></div>
+      </section>
+
+      <section class="ui-panel">
+        <div class="ui-panel-head"><h2 class="ui-h3">Privacy</h2></div>
+        <p class="ui-hint">You can also manage this with the <code class="ui-code-inline">/privacy</code> command in Discord.</p>
+        <div class="ui-setting"><div><span>Opt out of stats tracking</span><small>Your in-game activity won't be stored or shown on leaderboards.</small></div><button type="button" class="ui-switch" role="switch" aria-checked="false" aria-label="Opt out of stats tracking"></button></div>
+        <div class="ui-setting"><div><span>Hide connection notifications</span><small>Don't announce when you connect or disconnect from in-game clan chat.</small></div><button type="button" class="ui-switch" role="switch" aria-checked="true" aria-label="Hide connection notifications"></button></div>
+      </section>
+
+      <section class="ui-panel">
+        <div class="ui-panel-head"><h2 class="ui-h3">Appearance</h2></div>
+        <div class="ui-setting"><div><span>Theme</span><small>Switch between light and dark mode.</small></div><button type="button" class="ui-tool">Light mode</button></div>
+      </section>
+    </div>

@@ -1,0 +1,8 @@
+{
+  "description": "The frenzy draft snake: for a team count, the drawn-order position that makes each pick from pick 1. api-backend app/routers/frenzy/_snake.py and web-app src/lib/frenzyDraft.ts both pin to it.",
+  "cases": [
+    { "team_count": 2, "slots": [0, 1, 1, 0, 0, 1, 1, 0] },
+    { "team_count": 3, "slots": [0, 1, 2, 2, 1, 0, 0, 1, 2] },
+    { "team_count": 4, "slots": [0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3] }
+  ]
+}

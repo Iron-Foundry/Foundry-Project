@@ -16,7 +16,7 @@ USAGE = """usage: ./run [action] [choice ...] [--flag] [-- extra args]
   ./run --list                         print every action and its options
   ./run test fast                      run one test lane
   ./run backfill-events prod --apply   pass a choice and a flag
-  ./run dev -- cache-tiles             append extra arguments
+  ./run dev -- web-app                 append extra arguments
   ./run --print prod                   show the commands without running them
 
 On Windows the same actions are reached through .\\run.ps1

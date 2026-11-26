@@ -26,7 +26,7 @@ The main session reads this table before it starts a routed agent. The agent fil
 |---|---|---|
 | `crew-ui` | 0-1 | `previews/`, `web-app/styles/`, `web-app/src/components/`, `web-app/src/routes/` |
 | `crew-refmem-curator` | 0-1 | the harness memory store, `.claude/reference/`, !`.claude/reference/agent-routing.md` |
-| `crew-release` | 0-1 | `api-backend/CHANGELOG.md`, `discord-event/CHANGELOG.md`, `discord-server/CHANGELOG.md`, `discord-utils/CHANGELOG.md`, `osrs-cache-service/CHANGELOG.md`, `web-app/CHANGELOG.md`, and the git index on the operator's literal commit request (row "release git") |
+| `crew-release` | 0-1 | `api-backend/CHANGELOG.md`, `discord-event/CHANGELOG.md`, `discord-server/CHANGELOG.md`, `discord-utils/CHANGELOG.md`, `web-app/CHANGELOG.md`, and the git index on the operator's literal commit request (row "release git") |
 | `crew-policy` | 0-1 | `PRIVACY.md` |
 | `crew-seo` | 0-1 | `web-app/public/robots.txt`, `web-app/src/lib/sitemap.ts` |
 

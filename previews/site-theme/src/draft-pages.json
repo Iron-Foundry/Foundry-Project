@@ -1,0 +1,13 @@
+[
+  {"id": "d4-live", "label": "D4 Stacked: top pick due", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft"},
+  {"id": "d5-live", "label": "D5 Grid first: top pick due", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft"},
+  {"id": "d4-done", "label": "D4/D5 complete: grid and full teams", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft (complete)"},
+  {"id": "d1-live", "label": "D1 Board: top pick due", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft"},
+  {"id": "d2-live", "label": "D2 Pick feed: top pick due", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft"},
+  {"id": "d3-live", "label": "D3 Snake grid: top pick due", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft"},
+  {"id": "d1-order", "label": "Order drawn", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft (before the first pick)"},
+  {"id": "d1-done", "label": "Complete, after the hand-out", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft (complete)"},
+  {"id": "d-roster", "label": "Full roster dialog", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft (roster dialog)"},
+  {"id": "d1-full", "label": "Full draft mode: pick 87", "section": "community", "signed_in": true, "path": "/activities/frenzy/draft (Full draft)"},
+  {"id": "d-staff", "label": "Staff: setup and captains", "section": "community", "signed_in": true, "path": "Control Panel, Frenzy event"}
+]

@@ -10,7 +10,26 @@
 <body class="bg-background text-foreground">
 <main class="bench-main">
   <h1 class="font-rs-bold text-primary bench-title">Loot rates on OSRSClans</h1>
-  <p class="text-muted-foreground text-sm bench-intro">FRZ-1 steps 2 and 5. The rows, kill rates, prices and item images are live OSRSClans data from 25 Nov 2026. The frenzy points, the hover texts and the note lines are mock. Today's row of each set sits at the bottom.</p>
+  <p class="text-muted-foreground text-sm bench-intro">FRZ-1 steps 2, 4 and 5. The rows, kill rates, prices and item images are live OSRSClans data from 25 Nov 2026. The frenzy points, the hover texts and the note lines are mock. Today's row of each set sits at the bottom.</p>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Round 2: Foundry kill rates on the reference page (step 4)</h2>
+  <p class="text-muted-foreground text-sm bench-intro">Where staff set a kill rate for a source that OSRSClans gives none. The API is built: PUT and DELETE /reference/kill-rates/{source} need frenzy edit, and the loot rate routes serve the rate marked Foundry. The Hallowed Sepulchre sources are live and have no OSRSClans rate. The Grand Hallowed Coffin rate of 6 an hour and Hammer Time as the staff member who set it are mock. Each candidate also moves the page onto the OSRSClans routes (step 5).</p>
+  <table class="bench-table"><tbody>{{killrate}}</tbody></table>
+
+  <h2 class="font-rs-bold text-primary bench-subtitle">Round 2 function coverage</h2>
+  <table class="bench-coverage">
+    <thead><tr><th>Function</th><th>K1</th><th>K2</th><th>K3</th></tr></thead>
+    <tbody>
+      <tr><td>See which sources have no kill rate</td><td>No rate in the table</td><td>No rate in the table</td><td>The tab lists only them, with a filter for Foundry rates</td></tr>
+      <tr><td>Set a rate</td><td>Set, in a popover</td><td>In the source dialog</td><td>A field on each row</td></tr>
+      <tr><td>Change or remove a Foundry rate</td><td>Pencil, in the same popover</td><td>Remove and Save in the dialog</td><td>Remove and Save on the row</td></tr>
+      <tr><td>Who set a rate, and when</td><td>In the popover</td><td>In the dialog</td><td>Set by column</td></tr>
+      <tr><td>Staff without frenzy edit</td><td colspan="3">See the rates. The Set, pencil, Save and Remove controls do not show.</td></tr>
+      <tr><td>A source with an OSRSClans rate</td><td colspan="3">Keeps that rate. No control shows.</td></tr>
+      <tr><td>Drop table of a source</td><td>Opens in the R1 dialog</td><td>The same dialog, under the rate</td><td>From the category tabs, as K1</td></tr>
+      <tr><td>Save error, loading and empty states</td><td colspan="3">An error line under the field. "All sources in this list have a rate." when nothing is left to set.</td></tr>
+    </tbody>
+  </table>
 
   <h2 class="font-rs-bold text-primary bench-subtitle">Frenzy item editor (step 2)</h2>
   <p class="text-muted-foreground text-sm bench-intro">Three frenzy source cards: Draconic visage from Vorkath, Twisted bow from the Chambers of Xeric at a deathless trio's 65,000 points, and Ring of endurance from the Grand Hallowed Coffin, which has no kill rate.</p>

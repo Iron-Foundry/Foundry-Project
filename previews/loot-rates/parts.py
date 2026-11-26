@@ -88,7 +88,8 @@ def kph_label(row: dict) -> str:
 
 def measurer(row: dict) -> str:
     names = {"wom": "WOM", "droptracker": "DropTracker", "clue_scroll": "Clue scroll",
-             "item_drop": "Item drop", "superior": "Superior", "fixed": "Fixed"}
+             "item_drop": "Item drop", "superior": "Superior", "fixed": "Fixed",
+             "foundry": "Foundry"}
     return names.get(row.get("killRateSource") or "", "No rate")
 
 

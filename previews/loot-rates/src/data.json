@@ -4791,5 +4791,575 @@
    "highAlchemy": 38400,
    "readAt": "2026-11-25T04:33:22.443951Z"
   }
+ ],
+ "hallowed": [
+  {
+   "source": "Coffin (Hallowed Sepulchre)",
+   "page": "Coffin (Hallowed Sepulchre)",
+   "section": null,
+   "category": "skilling",
+   "dropTypes": [
+    "thieving"
+   ],
+   "rows": 7,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Coffin (Hallowed Sepulchre)#Low",
+   "page": "Coffin (Hallowed Sepulchre)",
+   "section": "Low",
+   "category": "skilling",
+   "dropTypes": [
+    "thieving"
+   ],
+   "rows": 10,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Coffin (Hallowed Sepulchre)#Mid",
+   "page": "Coffin (Hallowed Sepulchre)",
+   "section": "Mid",
+   "category": "skilling",
+   "dropTypes": [
+    "thieving"
+   ],
+   "rows": 10,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Coffin (Hallowed Sepulchre)#High",
+   "page": "Coffin (Hallowed Sepulchre)",
+   "section": "High",
+   "category": "skilling",
+   "dropTypes": [
+    "thieving"
+   ],
+   "rows": 10,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropTypes": [
+    "thieving"
+   ],
+   "rows": 13,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Hallowed sack",
+   "page": "Hallowed sack",
+   "section": null,
+   "category": "minigame",
+   "dropTypes": [
+    "reward"
+   ],
+   "rows": 27,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  },
+  {
+   "source": "Skeleton (Hallowed Sepulchre)",
+   "page": "Skeleton (Hallowed Sepulchre)",
+   "section": null,
+   "category": "minigame",
+   "dropTypes": [
+    "reward"
+   ],
+   "rows": 1,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null
+  }
+ ],
+ "coffin": [
+  {
+   "itemId": 24711,
+   "itemName": "Hallowed mark",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Uniques",
+   "lines": [
+    {
+     "rarity": "Always",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "8\u201310",
+     "quantityLow": 8.0,
+     "quantityHigh": 10.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Uniques"
+    }
+   ],
+   "chance": 1.0,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": null,
+   "highAlchemy": null,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 24844,
+   "itemName": "Ring of endurance (uncharged)",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Uniques",
+   "lines": [
+    {
+     "rarity": "1/200",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1",
+     "quantityLow": 1.0,
+     "quantityHigh": 1.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Uniques"
+    }
+   ],
+   "chance": 0.0050000000000000044,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 2087896,
+   "highAlchemy": 38400,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 1319,
+   "itemName": "Rune 2h sword",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Weapons and armour",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1",
+     "quantityLow": 1.0,
+     "quantityHigh": 1.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Weapons and armour"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 38052,
+   "highAlchemy": 38400,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 1127,
+   "itemName": "Rune platebody",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Weapons and armour",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1",
+     "quantityLow": 1.0,
+     "quantityHigh": 1.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Weapons and armour"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 38976,
+   "highAlchemy": 39000,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 563,
+   "itemName": "Law rune",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Runes and ammunition",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "150\u2013250",
+     "quantityLow": 150.0,
+     "quantityHigh": 250.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Runes and ammunition"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 118,
+   "highAlchemy": 144,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 565,
+   "itemName": "Blood rune",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Runes and ammunition",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "150\u2013250",
+     "quantityLow": 150.0,
+     "quantityHigh": 250.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Runes and ammunition"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 331,
+   "highAlchemy": 240,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 566,
+   "itemName": "Soul rune",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Runes and ammunition",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "150\u2013250",
+     "quantityLow": 150.0,
+     "quantityHigh": 250.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Runes and ammunition"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 290,
+   "highAlchemy": 180,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 9144,
+   "itemName": "Runite bolts",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Runes and ammunition",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "100\u2013300",
+     "quantityLow": 100.0,
+     "quantityHigh": 300.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Runes and ammunition"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 59,
+   "highAlchemy": 180,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 7946,
+   "itemName": "Monkfish",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Resources",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "2\u20136",
+     "quantityLow": 2.0,
+     "quantityHigh": 6.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Resources"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 121,
+   "highAlchemy": 138,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 10925,
+   "itemName": "Sanfew serum(4)",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Resources",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1\u20132",
+     "quantityLow": 1.0,
+     "quantityHigh": 2.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Resources"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 17095,
+   "highAlchemy": 180,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 5295,
+   "itemName": "Ranarr seed",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Other",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1\u20132",
+     "quantityLow": 1.0,
+     "quantityHigh": 2.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Other"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": 23522,
+   "highAlchemy": 30,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 995,
+   "itemName": "Coins",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Other",
+   "lines": [
+    {
+     "rarity": "1/10",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "17500\u201325000",
+     "quantityLow": 17500.0,
+     "quantityHigh": 25000.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Other"
+    }
+   ],
+   "chance": 0.09999999999999998,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": null,
+   "highAlchemy": 1,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  },
+  {
+   "itemId": 12073,
+   "itemName": "Clue scroll (elite)",
+   "source": "Grand Hallowed Coffin",
+   "page": "Grand Hallowed Coffin",
+   "section": null,
+   "category": "skilling",
+   "dropType": "thieving",
+   "group": "Tertiary",
+   "lines": [
+    {
+     "rarity": "1/30",
+     "altRarity": null,
+     "rolls": 1.0,
+     "quantity": "1",
+     "quantityLow": 1.0,
+     "quantityHigh": 1.0,
+     "noted": false,
+     "approximate": false,
+     "group": "Tertiary"
+    }
+   ],
+   "chance": 0.033333333333333326,
+   "altChance": null,
+   "perPurple": false,
+   "uniquesPerRaid": null,
+   "chancePerRaid": null,
+   "killsPerHour": null,
+   "killsPerHourIronman": null,
+   "killRateSource": null,
+   "womMetric": null,
+   "skill": null,
+   "gePrice": null,
+   "highAlchemy": 12,
+   "readAt": "2026-11-25T04:33:22.443951Z"
+  }
  ]
 }

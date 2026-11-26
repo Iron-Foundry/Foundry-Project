@@ -20,7 +20,7 @@ ART = [
     "Diamond256.png", "Dragonstone256.png", "Onyx256.png", "Zenyte256.png",
     "IF_PURPLE.png", "IF_ELECTRIC_BLUE.png", "IF_GREEN.png", "IF_YELLOW.png",
 ]
-SECTIONS = ["foundry", "community", "resources", "members"]
+SECTIONS = ["foundry", "community", "resources", "members", "account"]
 STYLESHEETS = ["product.css", "components.css", "bench.css"]
 ICON_SVG = (
     '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
@@ -72,7 +72,9 @@ def baseline_body(page: dict) -> str:
     if not source.exists():
         return NOT_DRAWN.format(page["path"])
     topnav = fill(read(SRC / "baseline" / "topnav.html"), section_marks(page, "text-primary!"))
-    return fill(read(source), {"topnav": topnav})
+    marks = {f"on_{page['id']}": "bg-muted text-primary!"}
+    sidebar = fill(read(SRC / "baseline" / "sidebar.html"), marks) if page["section"] == "account" else ""
+    return fill(read(source), {"topnav": topnav, "sidebar": sidebar})
 
 
 def frame_body(theme: dict, page: dict) -> str:
@@ -83,7 +85,8 @@ def frame_body(theme: dict, page: dict) -> str:
     marks |= {f"row_{s}": "is-current" if s == page["section"] else "" for s in SECTIONS}
     marks["account"] = "is-signed-in" if page["signed_in"] else ""
     content = read(SRC / "pages" / f"{page['id']}.html")
-    return fill(read(SRC / "shell.html"), {"theme": theme["class"], "content": content, **marks})
+    rail = fill(read(SRC / "rail.html"), marks) if page["section"] == "account" else ""
+    return fill(read(SRC / "shell.html"), {"theme": theme["class"], "content": content, "rail": rail, **marks})
 
 
 def frame_name(theme_id: str, page_id: str) -> str:
@@ -115,26 +118,28 @@ def bench_row(theme: dict, first_page: str) -> str:
     })
 
 
-def write_index(themes: list[dict], pages: list[dict]) -> Path:
+def write_index(out: str, source: str, themes: list[dict], pages: list[dict]) -> Path:
     tabs = "".join(
         f'<button type="button" class="bench-tab" data-page="{p["id"]}">{p["label"]}</button>' for p in pages
     )
     rows = "".join(bench_row(t, pages[0]["id"]) for t in themes)
-    path = HERE / "index.html"
-    path.write_text(fill(read(SRC / "index.html"), {"tabs": tabs, "rows": rows}), encoding="utf-8")
+    values = {"tabs": tabs, "rows": rows, "first": pages[0]["id"]}
+    path = HERE / out
+    path.write_text(fill(read(SRC / source), values), encoding="utf-8")
     return path
 
 
 def main() -> None:
-    themes = json.loads(read(SRC / "themes.json"))
-    pages = json.loads(read(SRC / "pages.json"))
     icons = json.loads(read(SRC / "icons.json"))
     copy_sources()
-    frames = write_frames(themes, pages, icons)
-    index = write_index(themes, pages)
-    css_files = sorted({HERE / s for t in themes for s in t["css"]} | {HERE / s for s in STYLESHEETS})
-    print_report(css_files, frames + [index])
-    print(f"wrote {len(frames)} frames and {index.name}")
+    written, css_files = [], set()
+    for out, source, themes_file, pages_file in json.loads(read(SRC / "benches.json")):
+        themes = json.loads(read(SRC / themes_file))
+        pages = json.loads(read(SRC / pages_file))
+        written += write_frames(themes, pages, icons) + [write_index(out, source, themes, pages)]
+        css_files |= {HERE / s for t in themes for s in t["css"]}
+    print_report(sorted(css_files | {HERE / s for s in STYLESHEETS}), written)
+    print(f"wrote {len(written)} pages")
 
 
 if __name__ == "__main__":

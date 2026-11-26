@@ -54,7 +54,6 @@ services:
       DISCORD_REDIRECT_URI: http://127.0.0.1:3000/auth/callback
       GUILD_ID: "1"
       DISCORD_SERVER_TOKEN: e2e
-      API_BACKEND_URL: http://127.0.0.1:8000
     ports:
       - "127.0.0.1:8000:8000"
     networks: [e2e]

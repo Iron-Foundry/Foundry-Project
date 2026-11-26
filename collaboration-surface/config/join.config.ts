@@ -21,7 +21,7 @@ export const suites: Readonly<Record<string, SuiteDeclaration>> = {
         tree: WORKSPACE,
         command: "bash run-tests.sh fast",
         report: null,
-        note: "the suites that need no Docker: api-backend, discord-server, discord-utils, osrs-cache-service and the web-app unit tests.",
+        note: "the suites that need no Docker: api-backend, discord-server, discord-utils and the web-app unit tests.",
     },
     "foundry-integration": {
         tree: WORKSPACE,

@@ -22,7 +22,7 @@ THIS POLICY ENFORCES that tests ship in the same change as the code they cover, 
 %% META %%:
     intent: "Coverage grows with the code, never lags behind it, and never past the point where a test earns its place"
     objective: "No behavioural change merges without its tests in the same change and a green suite, and no test lands that pins nothing which could break"
-    context: "Monorepo: api-backend, discord-server, discord-utils, discord-event, osrs-cache-service, web-app and their cross-service interconnects; the runner is root run-tests.sh, reached through the run lock"
+    context: "Monorepo: api-backend, discord-server, discord-utils, discord-event, web-app and their cross-service interconnects; the runner is root run-tests.sh, reached through the run lock"
     priority: high
     trust: suite_output = TRUSTED, "it should pass" = UNTRUSTED
 

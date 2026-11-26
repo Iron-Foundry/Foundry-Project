@@ -8,7 +8,7 @@
       </div>
       <div class="ui-menu-host">
         <button type="button" class="ui-sec {{sec_community}}">Community{{icon:chevron-down}}</button>
-        <div class="ui-menu"><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">Bingo</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a></div>
+        <div class="ui-menu"><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a></div>
       </div>
       <div class="ui-menu-host">
         <button type="button" class="ui-sec {{sec_resources}}">Resources{{icon:chevron-down}}</button>
@@ -33,7 +33,7 @@
       <summary aria-label="Open navigation">{{icon:menu}}</summary>
       <div class="ui-mobile-panel">
         <p class="ui-kicker">Foundry</p><a href="#">Home</a><a href="#">About</a><a href="#">Rules</a><a href="#">Our Team</a>
-        <p class="ui-kicker">Community</p><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">Bingo</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a>
+        <p class="ui-kicker">Community</p><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a>
         <p class="ui-kicker">Resources</p><a href="#">Plugins</a><a href="#">Resources &amp; Guides</a><a href="#">Feedback Board</a>
         <p class="ui-kicker ui-signed-in-only">Account</p><a class="ui-signed-in-only" href="#">Members</a><a class="ui-signed-in-only" href="#">Control Panel</a><a class="ui-signed-in-only" href="#">Settings</a><a class="ui-signed-in-only" href="#">Logout</a>
         <a class="ui-btn ui-signed-out-only" href="#">Log in</a>
@@ -44,18 +44,21 @@
     <a class="ui-pg {{on_home}}" href="#">Home</a><a class="ui-pg {{on_about}}" href="#">About</a><a class="ui-pg {{on_rules}}" href="#">Rules</a><a class="ui-pg {{on_team}}" href="#">Our Team</a>
   </nav>
   <nav class="ui-pages {{row_community}}" aria-label="Community pages">
-    <a class="ui-pg {{on_leaderboard}}{{on_clog}}{{on_kc}}{{on_clues}}{{on_ranking}}{{on_ranking-sheet}}" href="#">Leaderboards</a><a class="ui-pg {{on_competitions}}" href="#">Competitions</a><a class="ui-pg {{on_parties}}{{on_parties-create}}" href="#">Parties</a><a class="ui-pg {{on_calendar}}" href="#">Calendar</a><a class="ui-pg {{on_bingo}}" href="#">Bingo</a><a class="ui-pg {{on_frenzy}}{{on_frenzy-team}}" href="#">PVM Frenzy</a><a class="ui-pg {{on_tilerace}}" href="#">Tile Race</a>
+    <a class="ui-pg {{on_leaderboard}}{{on_clog}}{{on_kc}}{{on_clues}}{{on_ranking}}{{on_ranking-sheet}}" href="#">Leaderboards</a><a class="ui-pg {{on_competitions}}" href="#">Competitions</a><a class="ui-pg {{on_parties}}{{on_parties-create}}" href="#">Parties</a><a class="ui-pg {{on_calendar}}" href="#">Calendar</a><a class="ui-pg {{on_frenzy}}{{on_frenzy-team}}" href="#">PVM Frenzy</a><a class="ui-pg {{on_tilerace}}" href="#">Tile Race</a>
   </nav>
   <nav class="ui-pages {{row_resources}}" aria-label="Resources pages">
     <a class="ui-pg" href="#">Plugins</a><a class="ui-pg {{on_guide}}{{on_guide-embeds}}{{on_resources}}" href="#">Resources &amp; Guides</a><a class="ui-pg {{on_feedback}}{{on_feedback-submit}}{{on_feedback-resolved}}" href="#">Feedback Board</a>
   </nav>
+  <nav class="ui-pages ui-pages--account {{row_account}}" aria-label="Members pages">
+    <a class="ui-pg {{on_m-dashboard}}{{on_m-feed}}" href="#">Dashboard</a><a class="ui-pg {{on_m-profile}}" href="#">Profile</a><a class="ui-pg {{on_m-tickets}}{{on_m-ticket}}" href="#">Tickets</a><a class="ui-pg {{on_m-surveys}}{{on_m-survey}}" href="#">Surveys</a><a class="ui-pg {{on_m-applications}}{{on_m-application}}" href="#">Applications</a><a class="ui-pg {{on_m-suggestions}}" href="#">Suggestions</a><a class="ui-pg {{on_m-bugs}}" href="#">Bug Reports</a><a class="ui-pg ui-pg--end {{on_m-settings}}" href="#">{{icon:settings}}Settings</a>
+  </nav>
   <main class="ui-main">
-{{content}}
+{{rail}}{{content}}
   </main>
   <footer class="ui-footer">
     <div class="ui-footer-brand"><b>Iron Foundry</b><p>An OSRS clan focused on community, competition, and growth.</p></div>
     <div class="ui-footer-col"><p class="ui-kicker">Foundry</p><a href="#">Home</a><a href="#">About</a><a href="#">Rules</a><a href="#">Our Team</a></div>
-    <div class="ui-footer-col"><p class="ui-kicker">Community</p><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">Bingo</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a></div>
+    <div class="ui-footer-col"><p class="ui-kicker">Community</p><a href="#">Leaderboards</a><a href="#">Competitions</a><a href="#">Parties</a><a href="#">Calendar</a><a href="#">PVM Frenzy</a><a href="#">Tile Race</a></div>
     <div class="ui-footer-col"><p class="ui-kicker">Resources</p><a href="#">Plugins</a><a href="#">Resources &amp; Guides</a><a href="#">Feedback Board</a></div>
     <div class="ui-footer-col"><p class="ui-kicker">Links</p><a href="#">Join our Discord{{icon:external}}</a><a href="#">GitHub{{icon:external}}</a><a href="#">Support Server Costs{{icon:external}}</a></div>
     <div class="ui-footer-col"><p class="ui-kicker">Follow</p>

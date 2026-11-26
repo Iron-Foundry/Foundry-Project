@@ -1,0 +1,22 @@
+[
+  {
+    "id": "m1", "name": "M1 Page row", "class": "theme-mark", "body_class": "",
+    "css": ["product.css", "components.css", "pages.css", "data-pages.css", "members.css", "theme-mark.css", "theme-mark-pages.css", "theme-mark-data.css"],
+    "note": "The members pages sit in the page row under the bar, the same row the public sections use. Settings sits at the right end of the row. The content takes the full width."
+  },
+  {
+    "id": "m2", "name": "M2 Side rail", "class": "theme-mark is-rail", "body_class": "",
+    "css": ["product.css", "components.css", "pages.css", "data-pages.css", "members.css", "theme-mark.css", "theme-mark-pages.css", "theme-mark-data.css"],
+    "note": "The members pages sit in a rail beside the content, with your name at its head and Settings at its foot, as today. Under 900 px the rail becomes the page row."
+  },
+  {
+    "id": "m1-light", "name": "M1 Page row, light mode", "class": "theme-mark light", "body_class": "",
+    "css": ["product.css", "components.css", "pages.css", "data-pages.css", "members.css", "theme-mark.css", "theme-mark-pages.css", "theme-mark-data.css"],
+    "note": "M1 in the light mode that the Settings page switches to. M2 takes the same tokens."
+  },
+  {
+    "id": "baseline", "name": "Today", "class": "", "body_class": "bg-background text-foreground",
+    "css": ["product.css"],
+    "note": "What ships today, drawn from the real components where drawn."
+  }
+]
